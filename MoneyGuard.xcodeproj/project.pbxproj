@@ -56,14 +56,54 @@
 		7279633D26B04810003B1E86 /* MoneyGuard */ = {
 			isa = PBXGroup;
 			children = (
-				7279633E26B04810003B1E86 /* AppDelegate.swift */,
-				7279634026B04810003B1E86 /* SceneDelegate.swift */,
-				7279634226B04810003B1E86 /* ViewController.swift */,
-				7279634726B04817003B1E86 /* Assets.xcassets */,
-				7279634926B04817003B1E86 /* LaunchScreen.storyboard */,
-				7279634C26B04817003B1E86 /* Info.plist */,
+				7279635226B05ED6003B1E86 /* App */,
+				7279635426B05F1F003B1E86 /* Components */,
+				7279635526B05F2F003B1E86 /* Resources */,
+				7279635326B05EFF003B1E86 /* Screens */,
+				7279635626B05F4C003B1E86 /* Services */,
 			);
 			path = MoneyGuard;
+			sourceTree = "<group>";
+		};
+		7279635226B05ED6003B1E86 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				7279633E26B04810003B1E86 /* AppDelegate.swift */,
+				7279634026B04810003B1E86 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7279635326B05EFF003B1E86 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				7279634226B04810003B1E86 /* ViewController.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		7279635426B05F1F003B1E86 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7279635526B05F2F003B1E86 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7279634C26B04817003B1E86 /* Info.plist */,
+				7279634726B04817003B1E86 /* Assets.xcassets */,
+				7279634926B04817003B1E86 /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7279635626B05F4C003B1E86 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -284,7 +324,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6T236AQSCQ;
-				INFOPLIST_FILE = MoneyGuard/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/MoneyGuard/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -292,7 +332,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sukharevich.MoneyGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -303,7 +343,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6T236AQSCQ;
-				INFOPLIST_FILE = MoneyGuard/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/MoneyGuard/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,7 +351,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sukharevich.MoneyGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
