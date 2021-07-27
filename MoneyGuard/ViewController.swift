@@ -11,7 +11,10 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view.
+    //TODO:
+    // 1. Delete storyboard
+    // 2. Connect snap kit
+    // 3. Test view
     view.backgroundColor = .red
   }
 
