@@ -3,16 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		7279633F26B04810003B1E86 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7279633E26B04810003B1E86 /* AppDelegate.swift */; };
 		7279634126B04810003B1E86 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7279634026B04810003B1E86 /* SceneDelegate.swift */; };
 		7279634326B04810003B1E86 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7279634226B04810003B1E86 /* ViewController.swift */; };
-		7279634626B04811003B1E86 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7279634426B04811003B1E86 /* Main.storyboard */; };
 		7279634826B04817003B1E86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7279634726B04817003B1E86 /* Assets.xcassets */; };
 		7279634B26B04817003B1E86 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7279634926B04817003B1E86 /* LaunchScreen.storyboard */; };
+		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +20,6 @@
 		7279633E26B04810003B1E86 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7279634026B04810003B1E86 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		7279634226B04810003B1E86 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		7279634526B04811003B1E86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7279634726B04817003B1E86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7279634A26B04817003B1E86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7279634C26B04817003B1E86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -31,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,15 +56,54 @@
 		7279633D26B04810003B1E86 /* MoneyGuard */ = {
 			isa = PBXGroup;
 			children = (
-				7279633E26B04810003B1E86 /* AppDelegate.swift */,
-				7279634026B04810003B1E86 /* SceneDelegate.swift */,
-				7279634226B04810003B1E86 /* ViewController.swift */,
-				7279634426B04811003B1E86 /* Main.storyboard */,
-				7279634726B04817003B1E86 /* Assets.xcassets */,
-				7279634926B04817003B1E86 /* LaunchScreen.storyboard */,
-				7279634C26B04817003B1E86 /* Info.plist */,
+				7279635226B05ED6003B1E86 /* App */,
+				7279635426B05F1F003B1E86 /* Components */,
+				7279635526B05F2F003B1E86 /* Resources */,
+				7279635326B05EFF003B1E86 /* Screens */,
+				7279635626B05F4C003B1E86 /* Services */,
 			);
 			path = MoneyGuard;
+			sourceTree = "<group>";
+		};
+		7279635226B05ED6003B1E86 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				7279633E26B04810003B1E86 /* AppDelegate.swift */,
+				7279634026B04810003B1E86 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		7279635326B05EFF003B1E86 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				7279634226B04810003B1E86 /* ViewController.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		7279635426B05F1F003B1E86 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7279635526B05F2F003B1E86 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7279634C26B04817003B1E86 /* Info.plist */,
+				7279634726B04817003B1E86 /* Assets.xcassets */,
+				7279634926B04817003B1E86 /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7279635626B05F4C003B1E86 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +122,9 @@
 			dependencies = (
 			);
 			name = MoneyGuard;
+			packageProductDependencies = (
+				BEB3C02326B0538E00F744A3 /* SnapKit */,
+			);
 			productName = MoneyGuard;
 			productReference = 7279633B26B04810003B1E86 /* MoneyGuard.app */;
 			productType = "com.apple.product-type.application";
@@ -110,6 +152,9 @@
 				Base,
 			);
 			mainGroup = 7279633226B04810003B1E86;
+			packageReferences = (
+				BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 7279633C26B04810003B1E86 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -126,7 +171,6 @@
 			files = (
 				7279634B26B04817003B1E86 /* LaunchScreen.storyboard in Resources */,
 				7279634826B04817003B1E86 /* Assets.xcassets in Resources */,
-				7279634626B04811003B1E86 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,14 +190,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		7279634426B04811003B1E86 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7279634526B04811003B1E86 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7279634926B04817003B1E86 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -288,7 +324,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6T236AQSCQ;
-				INFOPLIST_FILE = MoneyGuard/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/MoneyGuard/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,7 +332,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sukharevich.MoneyGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -307,7 +343,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6T236AQSCQ;
-				INFOPLIST_FILE = MoneyGuard/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/MoneyGuard/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,7 +351,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sukharevich.MoneyGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -341,6 +377,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BEB3C02326B0538E00F744A3 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7279633326B04810003B1E86 /* Project object */;
 }
