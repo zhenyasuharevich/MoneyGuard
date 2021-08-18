@@ -37,6 +37,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		723B15D026CD717D0093FD77 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		723B15D126CD71860093FD77 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		723B15D226CD718B0093FD77 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		7279633226B04810003B1E86 = {
 			isa = PBXGroup;
 			children = (
@@ -57,10 +78,11 @@
 			isa = PBXGroup;
 			children = (
 				7279635226B05ED6003B1E86 /* App */,
-				7279635426B05F1F003B1E86 /* Components */,
+				723B15D026CD717D0093FD77 /* Components */,
 				7279635526B05F2F003B1E86 /* Resources */,
 				7279635326B05EFF003B1E86 /* Screens */,
-				7279635626B05F4C003B1E86 /* Services */,
+				723B15D126CD71860093FD77 /* Services */,
+				723B15D226CD718B0093FD77 /* Utilities */,
 			);
 			path = MoneyGuard;
 			sourceTree = "<group>";
@@ -82,13 +104,6 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		7279635426B05F1F003B1E86 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
 		7279635526B05F2F003B1E86 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,13 +112,6 @@
 				7279634926B04817003B1E86 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		7279635626B05F4C003B1E86 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
