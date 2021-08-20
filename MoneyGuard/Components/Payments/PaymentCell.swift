@@ -45,19 +45,22 @@ final class PaymentCell: UICollectionViewCell {
     self.state = state
   }
   
+  func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    addPaymentLabel.textColor = colorTheme.textColor
+    backgroundColor = colorTheme.cellBackgroundColor
+  }
+  
 }
 
 extension PaymentCell {
   
   private func setupSubviews() {
     layer.cornerRadius = 20
-    backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.1529411765, blue: 0.2941176471, alpha: 1)
     
     contentView.addSubview(addPaymentLabel)
     
     addPaymentLabel.numberOfLines = 0
     addPaymentLabel.textAlignment = .center
-    addPaymentLabel.textColor = .white
     addPaymentLabel.text = "+"
     addPaymentLabel.font = .systemFont(ofSize: 40, weight: .semibold)
     

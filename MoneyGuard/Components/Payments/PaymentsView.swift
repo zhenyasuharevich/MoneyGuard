@@ -21,6 +21,9 @@ final class PaymentsView: UIView {
   
   weak var delegate: PaymentsViewDelegate?
   
+  private var currentColorTheme: ColorThemeProtocol?
+  private var currentTheme: ThemeType?
+  
   lazy var collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .horizontal
@@ -46,6 +49,15 @@ final class PaymentsView: UIView {
   @objc private func titlePressed() {
     delegate?.showMorePaymentsPressed()
   }
+  
+  func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    self.currentColorTheme = colorTheme
+    self.currentTheme = theme
+    titleLabel.textColor = colorTheme.textColor
+    
+    collectionView.reloadData()
+  }
+  
 }
 
 extension PaymentsView: UICollectionViewDataSource {
@@ -57,6 +69,11 @@ extension PaymentsView: UICollectionViewDataSource {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaymentCell.reuseIdentifier, for: indexPath) as? PaymentCell else { print(#line,#function,"Error: Can't get PaymentCell"); return UICollectionViewCell() }
     let cellType = PaymentCellType.getCellType(for: indexPath)
     cell.setState(state: cellType)
+    
+    if let colorTheme = self.currentColorTheme,
+       let theme = self.currentTheme {
+      cell.setupColorTheme(colorTheme, theme)
+    }
     
     return cell
   }
@@ -112,7 +129,6 @@ extension PaymentsView {
     }
     
     titleLabel.text = "Payments"
-    titleLabel.textColor = .white
     titleLabel.textAlignment = .left
     
     mainActiveButton.snp.makeConstraints { make in
