@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		720EA37926D12A4C00971489 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37826D12A4C00971489 /* Transaction.swift */; };
+		720EA37B26D12D1700971489 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37A26D12D1700971489 /* Payment.swift */; };
+		720EA37D26D12D9300971489 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37C26D12D9300971489 /* Category.swift */; };
 		72282AA726CFFD310094780B /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA326CFFD310094780B /* ColorScheme.swift */; };
 		72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA426CFFD310094780B /* ColorSchemeManager.swift */; };
 		72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA526CFFD310094780B /* ColorSchemeFactory.swift */; };
@@ -26,6 +29,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		720EA37826D12A4C00971489 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		720EA37A26D12D1700971489 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		720EA37C26D12D9300971489 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		72282AA326CFFD310094780B /* ColorScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		72282AA426CFFD310094780B /* ColorSchemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSchemeManager.swift; sourceTree = "<group>"; };
 		72282AA526CFFD310094780B /* ColorSchemeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSchemeFactory.swift; sourceTree = "<group>"; };
@@ -57,6 +63,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		720EA37426D129B000971489 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				720EA37526D129E000971489 /* Models */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		720EA37526D129E000971489 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				720EA37726D129F600971489 /* Runtime */,
+				720EA37626D129E800971489 /* Stored */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		720EA37626D129E800971489 /* Stored */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Stored;
+			sourceTree = "<group>";
+		};
+		720EA37726D129F600971489 /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				720EA37826D12A4C00971489 /* Transaction.swift */,
+				720EA37A26D12D1700971489 /* Payment.swift */,
+				720EA37C26D12D9300971489 /* Category.swift */,
+			);
+			path = Runtime;
+			sourceTree = "<group>";
+		};
 		72282AA226CFFD310094780B /* ColorScheme */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +129,7 @@
 		723B15D126CD71860093FD77 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				720EA37426D129B000971489 /* Storage */,
 				72282AAB26CFFDED0094780B /* UserDefaults */,
 				72282AA226CFFD310094780B /* ColorScheme */,
 			);
@@ -251,11 +292,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				720EA37926D12A4C00971489 /* Transaction.swift in Sources */,
 				7279634326B04810003B1E86 /* DashboardViewController.swift in Sources */,
 				72282AAA26CFFD310094780B /* ColorSchemeManagerLocator.swift in Sources */,
 				7279633F26B04810003B1E86 /* AppDelegate.swift in Sources */,
+				720EA37B26D12D1700971489 /* Payment.swift in Sources */,
 				72282AB126D000CD0094780B /* BaseController.swift in Sources */,
 				72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */,
+				720EA37D26D12D9300971489 /* Category.swift in Sources */,
 				72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */,
 				723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */,
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
