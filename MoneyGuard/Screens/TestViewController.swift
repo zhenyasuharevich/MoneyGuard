@@ -30,16 +30,23 @@ extension TestViewController {
 //      make.leading.equalToSuperview().offset(0)
 //      make.height.equalTo(UIScreen.main.bounds.height > 736 ? 120 : 100)
 //    }
+    
+    view.backgroundColor = #colorLiteral(red: 0.05098039216, green: 0.09019607843, blue: 0.1921568627, alpha: 1)
     view.addSubview(lastTransactions)
     
     lastTransactions.snp.makeConstraints { make in
       make.bottom.equalToSuperview().offset(0)
       make.trailing.equalToSuperview().offset(0)
       make.leading.equalToSuperview().offset(0)
-      make.height.equalTo(UIScreen.main.bounds.height > 736 ? 200 : 180)
+      make.height.equalTo(212)
     }
     
-    lastTransactions.backgroundColor = .blue
+    lastTransactions.backgroundColor = .clear
   }
   
+}
+
+extension TestViewController: LastTransactionsViewDelegate {
+  func lastTransactionsPressed(for indexPath: IndexPath) { print(#line, #function, "lastTransactionsPressed pressed with indexPath: \(indexPath)") }
+  func showMoreLastTransactionsPressed() { print(#line,#function,"Title pressed") }
 }
