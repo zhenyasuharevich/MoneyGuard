@@ -11,34 +11,19 @@ import SnapKit
 final class DashboardViewController: BaseController {
   
   private let paymentsView = PaymentsView()
-  private let topBarView = UIView()
-  
-  private let changeThemeButton = UIButton()
+  private let topBarView = TopBarView()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setupSubviews()
-    setupActions()
   }
   
-  override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
-    super.setupColorTheme(colorTheme, theme)
-    
-    paymentsView.setupColorTheme(colorTheme, theme)
-    topBarView.backgroundColor = colorTheme.cellBackgroundColor
-    changeThemeButton.backgroundColor = colorTheme.activeColor
-  }
+    override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+      super.setupColorTheme(colorTheme, theme)
   
-  @objc private func changeThemeButtonPressed() {
-    switch colorSchemeManager.currentTheme {
-    case .dark:
-      colorSchemeManager.currentTheme = .light
-    case .light:
-      colorSchemeManager.currentTheme = .system
-    case .system:
-      colorSchemeManager.currentTheme = .dark
+      paymentsView.setupColorTheme(colorTheme, theme)
+      topBarView.setupColorTheme(colorTheme, theme)
     }
-  }
   
 }
 
@@ -47,20 +32,15 @@ extension DashboardViewController {
     
     view.addSubview(paymentsView)
     view.addSubview(topBarView)
-    view.addSubview(changeThemeButton)
     
+    topBarView.delegate = self
     paymentsView.delegate = self
     
     topBarView.snp.makeConstraints { make in
-      make.leading.trailing.top.equalToSuperview()
-      make.height.equalTo(100)
-    }
-    
-    changeThemeButton.snp.makeConstraints { make in
-      make.trailing.equalTo(topBarView.snp.trailing).offset(-20)
-      make.bottom.equalTo(topBarView.snp.bottom).offset(-20)
-      make.width.equalTo(32)
-      make.height.equalTo(32)
+      make.top.equalToSuperview().offset(0)
+      make.trailing.equalToSuperview().offset(0)
+      make.leading.equalToSuperview().offset(0)
+      make.height.equalTo(UIScreen.main.bounds.height > 736 ? 120 : 100)
     }
     
     paymentsView.snp.makeConstraints {make in
@@ -71,8 +51,18 @@ extension DashboardViewController {
     }
   }
   
-  private func setupActions() {
-    changeThemeButton.addTarget(self, action: #selector(changeThemeButtonPressed), for: .touchUpInside)
+}
+
+extension DashboardViewController: TopBarViewDelegate {
+  func settingsButtonPressed() {
+    switch colorSchemeManager.currentTheme {
+    case .light:
+      colorSchemeManager.currentTheme = .dark
+    case .dark:
+      colorSchemeManager.currentTheme = .system
+    case .system:
+      colorSchemeManager.currentTheme = .light
+    }
   }
 }
 
