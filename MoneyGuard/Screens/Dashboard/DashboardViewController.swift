@@ -22,7 +22,7 @@ final class DashboardViewController: BaseController {
       super.setupColorTheme(colorTheme, theme)
   
       paymentsView.setupColorTheme(colorTheme, theme)
-      topBarView.backgroundColor = colorTheme.cellBackgroundColor
+      topBarView.setupColorTheme(colorTheme, theme)
     }
   
 }
@@ -33,6 +33,7 @@ extension DashboardViewController {
     view.addSubview(paymentsView)
     view.addSubview(topBarView)
     
+    topBarView.delegate = self
     paymentsView.delegate = self
     
     topBarView.snp.makeConstraints { make in
@@ -50,6 +51,19 @@ extension DashboardViewController {
     }
   }
   
+}
+
+extension DashboardViewController: TopBarViewDelegate {
+  func settingsButtonPressed() {
+    switch colorSchemeManager.currentTheme {
+    case .light:
+      colorSchemeManager.currentTheme = .dark
+    case .dark:
+      colorSchemeManager.currentTheme = .system
+    case .system:
+      colorSchemeManager.currentTheme = .light
+    }
+  }
 }
 
 extension DashboardViewController: PaymentsViewDelegate {

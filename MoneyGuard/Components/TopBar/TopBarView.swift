@@ -7,14 +7,19 @@
 
 import UIKit
 
+protocol TopBarViewDelegate: AnyObject {
+  func settingsButtonPressed()
+}
+
 final class TopBarView: UIView {
   
   private let topBarSettingButton = UIButton()
   private let topBarLogotype = UILabel()
-  private let image = UIImage(named: "imageForTopBar")
+  private let settingsIcon: UIImage? = {
+    UIImage(named: "imageForTopBar")?.withRenderingMode(.alwaysTemplate)
+  }()
   
-  private var currentColorTheme: ColorThemeProtocol?
-  private var currentTheme: ThemeType?
+  weak var delegate: TopBarViewDelegate?
   
   override init(frame: CGRect) {
     super.init(frame: .zero)
@@ -27,20 +32,17 @@ final class TopBarView: UIView {
   }
   
   @objc func buttonAction(_ sender:UIButton!) {
-    print("Button tapped")
+    delegate?.settingsButtonPressed()
   }
   
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
-    self.currentColorTheme = colorTheme
-    self.currentTheme = theme
     topBarLogotype.textColor = colorTheme.textColor
-    topBarSettingButton.backgroundColor = colorTheme.textColor
-    image?.withTintColor(colorTheme.textColor)
+    topBarSettingButton.imageView?.tintColor = colorTheme.textColor
     self.backgroundColor = colorTheme.formBackgroundColor
   }
   
   private func setupForSettingsButton() {
-    topBarSettingButton.addTarget(self, action: #selector(self.buttonAction), for: .touchUpInside)
+    topBarSettingButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
   }
   
 }
@@ -58,11 +60,11 @@ extension TopBarView {
     topBarSettingButton.snp.makeConstraints { make in
       make.bottom.equalToSuperview().offset(-28)
       make.trailing.equalToSuperview().offset(-28)
-      make.height.equalTo(32)
-      make.width.equalTo(32)
+      make.height.equalTo(24)
+      make.width.equalTo(24)
     }
     
-    topBarSettingButton.setImage(image, for: .normal)
+    topBarSettingButton.setImage(settingsIcon, for: .normal)
     
     topBarLogotype.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(28)
