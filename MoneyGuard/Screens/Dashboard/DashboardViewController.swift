@@ -12,6 +12,7 @@ final class DashboardViewController: BaseController {
   
   private let paymentsView = PaymentsView()
   private let topBarView = UIView()
+  private let categoriesView = CategoriesView()
   
   private let changeThemeButton = UIButton()
   
@@ -25,6 +26,7 @@ final class DashboardViewController: BaseController {
     super.setupColorTheme(colorTheme, theme)
     
     paymentsView.setupColorTheme(colorTheme, theme)
+    categoriesView.setupColorTheme(colorTheme, theme)
     topBarView.backgroundColor = colorTheme.cellBackgroundColor
     changeThemeButton.backgroundColor = colorTheme.activeColor
   }
@@ -48,8 +50,10 @@ extension DashboardViewController {
     view.addSubview(paymentsView)
     view.addSubview(topBarView)
     view.addSubview(changeThemeButton)
+    view.addSubview(categoriesView)
     
     paymentsView.delegate = self
+    categoriesView.delegate = self
     
     topBarView.snp.makeConstraints { make in
       make.leading.trailing.top.equalToSuperview()
@@ -69,6 +73,12 @@ extension DashboardViewController {
       make.leading.equalToSuperview()
       make.height.equalTo(212) //title with button 36 + 176 collection
     }
+    
+    categoriesView.snp.makeConstraints {make in
+      make.top.equalTo(paymentsView.snp.bottom).offset(20)
+      make.trailing.leading.equalToSuperview()
+      make.height.equalTo(124) //title with button 36 + 88 collection
+    }
   }
   
   private func setupActions() {
@@ -80,4 +90,10 @@ extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
   func addPaymentPressed(for indexPath: IndexPath) { print(#line, #function, "Add payment pressed with indexPath: \(indexPath)") }
   func showMorePaymentsPressed() { print(#line,#function,"Title pressed") }
+}
+
+extension DashboardViewController: CategoriesViewDelegate {
+  func CategoriesPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
+  func addCategoriesPressed(for indexPath: IndexPath) { print(#line, #function, "Add payment pressed with indexPath: \(indexPath)") }
+  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
 }
