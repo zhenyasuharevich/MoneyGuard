@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(frame: windowScene.coordinateSpace.bounds)
     window?.windowScene = windowScene
-    window?.rootViewController = TestViewController()//ViewController()
+    window?.rootViewController = DashboardViewController()
     window?.makeKeyAndVisible()
   }
 

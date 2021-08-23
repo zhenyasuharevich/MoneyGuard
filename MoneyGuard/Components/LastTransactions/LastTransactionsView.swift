@@ -12,7 +12,7 @@ protocol LastTransactionsViewDelegate: AnyObject {
   func showMoreLastTransactionsPressed()
 }
 
-final class LastTransactions: UIView {
+final class LastTransactionsView: UIView {
   
   private let transactionsTitle = UILabel()
   private let disclosureIndicatorImageView = UIImageView()
@@ -31,6 +31,7 @@ final class LastTransactions: UIView {
     cv.delegate = self
     cv.showsVerticalScrollIndicator = false
     cv.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    cv.isScrollEnabled = false
     
     return cv
   }()
@@ -40,31 +41,28 @@ final class LastTransactions: UIView {
     setupSubViews()
   }
   
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
-  @objc func buttonAction(_ sender:UIButton!) {
-    print("Button tapped")
-    delegate?.showMoreLastTransactionsPressed()
-  }
+  @objc func buttonAction(_ sender: UIButton ) { delegate?.showMoreLastTransactionsPressed() }
   
 }
 
-extension LastTransactions : UICollectionViewDataSource {
+extension LastTransactionsView : UICollectionViewDataSource {
+  
+  func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
+  
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 6 }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LastTransactionsCell.reuseIdentifier, for: indexPath) as? LastTransactionsCell else {print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell() }
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LastTransactionsCell.reuseIdentifier, for: indexPath) as? LastTransactionsCell else { print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell() }
     let cellType = LastTransactionsCellType.getCellType(for: indexPath)
     cell.setState(state: cellType)
     return cell
   }
   
-  func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
 }
 
-extension LastTransactions: UICollectionViewDelegate {
+extension LastTransactionsView: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let cellType = LastTransactionsCellType.getCellType(for: indexPath)
     
@@ -77,18 +75,18 @@ extension LastTransactions: UICollectionViewDelegate {
   }
 }
 
-extension LastTransactions: UICollectionViewDelegateFlowLayout {
+extension LastTransactionsView: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let widthCell = collectionView.frame.width - 32 //width for cell
-    return CGSize(width: widthCell, height: 60)
+    let widthCell = collectionView.frame.width - 32
+    return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/6)
   }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 10 }
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 4 }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 10 }
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 4 }
 }
 
-extension LastTransactions {
+extension LastTransactionsView {
   private func setupSubViews() {
     
     addSubview(transactionsTitle)
