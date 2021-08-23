@@ -6,6 +6,8 @@
 //
 
 import UIKit
+@_exported import RealmSwift
+@_exported import Realm
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
