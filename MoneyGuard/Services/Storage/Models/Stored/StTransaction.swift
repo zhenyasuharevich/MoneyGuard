@@ -32,35 +32,14 @@ class StTransaction: Object {
 
 extension StTransaction: StorableProtocol {
   func createRuntimeModel() -> RunTimeModelProtocol {
-    var transactionType = TransactionType.getMoney
+    let transactionType = TransactionType(rawValue: self.type) ?? .unowned
     
-    if let _transactionType = TransactionType(rawValue: type) {
-      transactionType = _transactionType
-    }
-    
-    switch transactionType {
-    case .getMoney:
-      return GetTransaction(identifier: self.identifier,
-                            date: self.date,
-                            paymentName: self.paymentName,
-                            description: self.transactionDescription)
-    case .sendMoney:
-      if let _categoryName = self.categoryName {
-        return SendTransaction(identifier: self.identifier,
-                               date: self.date,
-                               paymentName: self.paymentName,
-                               categoryName: _categoryName,
-                               description: self.transactionDescription)
-      } else {
-        print("Error: Can't get category name for send transaction")
-        return SendTransaction(identifier: self.identifier,
-                               date: self.date,
-                               paymentName: self.paymentName,
-                               categoryName: "Error category",
-                               description: self.transactionDescription)
-      }
-      
-    }
+    return Transaction(identifier: self.identifier,
+                       type: transactionType,
+                       date: self.date,
+                       paymentName: self.paymentName,
+                       categoryName: self.categoryName,
+                       description: self.description)
   }
   
   func getIdentifier() -> String {

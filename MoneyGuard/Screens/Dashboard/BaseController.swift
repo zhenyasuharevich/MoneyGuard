@@ -27,70 +27,45 @@ class BaseController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupColorThemeSubscriber()
+    loadData()
+  }
+  
+  private func loadData() {
+    let dispatchGroup = DispatchGroup()
     
-//    dataService.getAll(of: Payment.self, completion: BlockObject<[Payment], Void>({ payments in
-//      print("Payments loaded")
-//      print("Payments count: \(payments.count)")
-//      for payment in payments {
-//        print("Name: \(payment.name), amount: \(payment.amount)")
-//      }
-//    }))
-//
-//    let payment = Payment(identifier: UUID().uuidString, name: "TestPayment", amount: 1200, type: .card)
-//
-//    let completionBlock = EmptyBlock {
-//      print("Payment with name: \(payment.name) was added succesfully")
-//    }
-//
-//    dataService.addOrUpdate(object: payment, completion: completionBlock)
+    dispatchGroup.enter()
+    dataService.getAll(of: Payment.self, completion: BlockObject<[Payment], Void>({ payments in
+      print("Payments loaded")
+      print("Payments count: \(payments.count)")
+      for payment in payments {
+        print("Name: \(payment.name), amount: \(payment.amount)")
+      }
+      dispatchGroup.leave()
+    }))
     
-//    dataService.getAll(of: Category.self, completion: BlockObject<[Category], Void>({ categories in
-//      print("Categories loaded")
-//      print("Categories count: \(categories.count)")
-//      for category in categories {
-//        print("Name: \(category.name), amountSpent: \(category.amountSpent)")
-//      }
-//    }))
-//
-//    let category = Category(identifier: UUID().uuidString, name: "TestCategory", amountSpent: 500)
-//
-//    let completionBlock = EmptyBlock {
-//      print("Payment with name: \(category.name) was added succesfully")
-//    }
-//
-//    dataService.addOrUpdate(object: category, completion: completionBlock)
+    dispatchGroup.enter()
+    dataService.getAll(of: Category.self, completion: BlockObject<[Category], Void>({ categories in
+      print("Categories loaded")
+      print("Categories count: \(categories.count)")
+      for category in categories {
+        print("Name: \(category.name), amountSpent: \(category.amountSpent)")
+      }
+      dispatchGroup.leave()
+    }))
     
-//    dataService.getAll(of: GetTransaction.self, completion: BlockObject<[GetTransaction], Void>({ transactions in
-//      print("Get Transactions loaded")
-//      print("Get Transactions count: \(transactions.count)")
-//      for getTransaction in transactions {
-//        print("Date: \(getTransaction.date)")
-//      }
-//    }))
-
-//    let getTransaction = GetTransaction(identifier: UUID().uuidString, date: Date(), paymentName: "TestPayment")
-//
-//    let completionBlock3 = EmptyBlock {
-//      print("get transaction was added succesfully")
-//    }
-//
-//    dataService.addOrUpdate(object: getTransaction, completion: completionBlock3)
+    dispatchGroup.enter()
+    dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
+      print("Transactions loaded")
+      print("Transactions count: \(transactions.count)")
+      for transaction in transactions {
+        print("Date: \(transaction.date), type: \(transaction.type)")
+      }
+      dispatchGroup.leave()
+    }))
     
-//    dataService.getAll(of: SendTransaction.self, completion: BlockObject<[SendTransaction], Void>({ transactions in
-//      print("Send Transactions loaded")
-//      print("Send Transactions count: \(transactions.count)")
-//      for getTransaction in transactions {
-//        print("Date: \(getTransaction.date)")
-//      }
-//    }))
-
-//    let spendTransaction = SendTransaction(identifier: UUID().uuidString, date: Date(), paymentName: "TestPayment", categoryName: "TestCategory")
-//
-//    let completionBlock4 = EmptyBlock {
-//      print("send transaction was added succesfully")
-//    }
-//
-//    dataService.addOrUpdate(object: spendTransaction, completion: completionBlock4)
+    dispatchGroup.notify(queue: .main) {
+      print("Data loading finished")
+    }
   }
   
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {

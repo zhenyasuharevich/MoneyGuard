@@ -10,41 +10,20 @@ import Foundation
 enum TransactionType: String {
   case sendMoney
   case getMoney
+  case unowned
 }
 
-protocol Transaction {
-  var identifier: String { get }
-  var type: TransactionType { get }
-  var date: Date { get }
-  var description: String? { get }
-  var paymentName: String { get }
-}
-
-class GetTransaction: Transaction {
-  var identifier: String
-  var type: TransactionType = .getMoney
-  var date: Date
-  var description: String?
-  var paymentName: String
-
-  init(identifier: String, date: Date, paymentName: String, description: String? = nil) {
+class Transaction {
+  let identifier: String
+  let type: TransactionType
+  let date: Date
+  let description: String?
+  let paymentName: String
+  let categoryName: String? 
+  
+  init(identifier: String, type: TransactionType, date: Date, paymentName: String, categoryName: String?, description: String? = nil) {
     self.identifier = identifier
-    self.date = date
-    self.paymentName = paymentName
-    self.description = description
-  }
-}
-
-class SendTransaction: Transaction {
-  var identifier: String
-  var type: TransactionType = .sendMoney
-  var date: Date
-  var description: String?
-  var paymentName: String
-  var categoryName: String
-
-  init(identifier: String, date: Date, paymentName: String, categoryName: String, description: String? = nil) {
-    self.identifier = identifier
+    self.type = type
     self.date = date
     self.paymentName = paymentName
     self.description = description
@@ -52,7 +31,7 @@ class SendTransaction: Transaction {
   }
 }
 
-extension GetTransaction: RunTimeModelProtocol {
+extension Transaction: RunTimeModelProtocol {
   static func storableType() -> StorableProtocol.Type {
     StTransaction.self
   }
@@ -61,22 +40,7 @@ extension GetTransaction: RunTimeModelProtocol {
     StTransaction(identifier: self.identifier,
                   date: self.date,
                   description: self.description,
-                  type: .getMoney,
-                  paymentName: self.paymentName,
-                  categoryName: nil)
-  }
-}
-
-extension SendTransaction: RunTimeModelProtocol {
-  static func storableType() -> StorableProtocol.Type {
-    StTransaction.self
-  }
-  
-  func convertToStorable() -> StorableProtocol {
-    StTransaction(identifier: self.identifier,
-                  date: self.date,
-                  description: self.description,
-                  type: .sendMoney,
+                  type: self.type,
                   paymentName: self.paymentName,
                   categoryName: self.categoryName)
   }
