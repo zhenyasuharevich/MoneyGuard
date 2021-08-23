@@ -14,11 +14,14 @@ protocol LastTransactionsViewDelegate: AnyObject {
 
 final class LastTransactionsView: UIView {
   
-  private let transactionsTitle = UILabel()
+  private let transactionsTitleLabel = UILabel()
   private let disclosureIndicatorImageView = UIImageView()
-  private let transactionsButton = UIButton()
+  private let mainActiveButton = UIButton()
   
   weak var delegate: LastTransactionsViewDelegate?
+  
+  private var currentColorTheme: ColorThemeProtocol?
+  private var currentTheme: ThemeType?
   
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
@@ -43,7 +46,16 @@ final class LastTransactionsView: UIView {
   
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
-  @objc func buttonAction(_ sender: UIButton ) { delegate?.showMoreLastTransactionsPressed() }
+  func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    self.currentColorTheme = colorTheme
+    self.currentTheme = theme
+    
+    transactionsTitleLabel.textColor = colorTheme.textColor
+    
+    collectionView.reloadData()
+  }
+  
+  @objc func titlePressed(_ sender: UIButton ) { delegate?.showMoreLastTransactionsPressed() }
   
 }
 
@@ -56,7 +68,14 @@ extension LastTransactionsView : UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LastTransactionsCell.reuseIdentifier, for: indexPath) as? LastTransactionsCell else { print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell() }
     let cellType = LastTransactionsCellType.getCellType(for: indexPath)
+    
+    if let colorTheme = self.currentColorTheme,
+       let theme = self.currentTheme {
+      cell.setupColorTheme(colorTheme, theme)
+    }
+    
     cell.setState(state: cellType)
+    
     return cell
   }
   
@@ -89,21 +108,20 @@ extension LastTransactionsView: UICollectionViewDelegateFlowLayout {
 extension LastTransactionsView {
   private func setupSubViews() {
     
-    addSubview(transactionsTitle)
+    addSubview(transactionsTitleLabel)
     addSubview(disclosureIndicatorImageView)
-    addSubview(transactionsButton)
+    addSubview(mainActiveButton)
     addSubview(collectionView)
 
-    transactionsTitle.snp.makeConstraints { make in
+    transactionsTitleLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(16)
       make.top.equalToSuperview()
       make.trailing.equalTo(disclosureIndicatorImageView.snp.leading).offset(-8)
       make.height.equalTo(28)
     }
     
-    transactionsTitle.text = "Last transactions"
-    transactionsTitle.textColor = .white
-    transactionsTitle.textAlignment = .left
+    transactionsTitleLabel.text = "Last transactions"
+    transactionsTitleLabel.textAlignment = .left
     
     disclosureIndicatorImageView.snp.makeConstraints { make in
       make.trailing.equalToSuperview().offset(-16)
@@ -113,16 +131,16 @@ extension LastTransactionsView {
     
     disclosureIndicatorImageView.backgroundColor = .red
     
-    transactionsButton.snp.makeConstraints { make in
+    mainActiveButton.snp.makeConstraints { make in
       make.leading.top.trailing.equalToSuperview()
       make.height.equalTo(36)
     }
     
-    transactionsButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+    mainActiveButton.addTarget(self, action: #selector(titlePressed), for: .touchUpInside)
     
     collectionView.snp.makeConstraints { make in
       make.leading.trailing.bottom.equalToSuperview()
-      make.top.equalTo(transactionsButton.snp.bottom)
+      make.top.equalTo(mainActiveButton.snp.bottom)
     }
     
     collectionView.backgroundColor = .clear

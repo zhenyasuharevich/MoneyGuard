@@ -28,8 +28,10 @@ final class LastTransactionsCell: UICollectionViewCell {
       switch state {
       case .otherTransactions:
         otherTransactionsLabel.isHidden = false
+        otherTransactionsLabel.textAlignment = .center
       case .transactions:
         otherTransactionsLabel.isHidden = true
+        otherTransactionsLabel.textAlignment = .left
       }
     }
   }
@@ -44,6 +46,11 @@ final class LastTransactionsCell: UICollectionViewCell {
     self.state = .transactions
   }
   
+  func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    backgroundColor = colorTheme.cellBackgroundColor
+    otherTransactionsLabel.textColor = colorTheme.textColor
+  }
+  
   func setState(state: LastTransactionsCellType) {
     self.state = state
   }
@@ -53,13 +60,11 @@ extension LastTransactionsCell {
   
   private func setupSubviews() {
     layer.cornerRadius = 20
-    backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.1529411765, blue: 0.2941176471, alpha: 1)
     
     contentView.addSubview(otherTransactionsLabel)
     
     otherTransactionsLabel.numberOfLines = 0
-    otherTransactionsLabel.textAlignment = .center
-    otherTransactionsLabel.textColor = .white
+    otherTransactionsLabel.textAlignment = .left
     otherTransactionsLabel.text = "See all transactions"
     otherTransactionsLabel.font = .systemFont(ofSize: 18, weight: .semibold)
     
