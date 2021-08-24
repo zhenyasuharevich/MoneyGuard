@@ -11,8 +11,9 @@ import SnapKit
 final class DashboardViewController: BaseController {
   
   private let mainScrollView = UIScrollView()
-  private let paymentsView = PaymentsView()
   private let topBarView = TopBarView()
+  private let paymentsView = PaymentsView()
+  private let categoriesView = CategoriesView()
   private let lastTransactions = LastTransactionsView()
   
   override func viewDidLoad() {
@@ -20,13 +21,14 @@ final class DashboardViewController: BaseController {
     setupSubviews()
   }
   
-    override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
-      super.setupColorTheme(colorTheme, theme)
+  override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    super.setupColorTheme(colorTheme, theme)
   
-      topBarView.setupColorTheme(colorTheme, theme)
-      paymentsView.setupColorTheme(colorTheme, theme)
-      lastTransactions.setupColorTheme(colorTheme, theme)
-    }
+    topBarView.setupColorTheme(colorTheme, theme)
+    categoriesView.setupColorTheme(colorTheme, theme)
+    paymentsView.setupColorTheme(colorTheme, theme)
+    lastTransactions.setupColorTheme(colorTheme, theme)
+  }
   
 }
 
@@ -42,10 +44,12 @@ extension DashboardViewController {
     mainScrollView.addSubview(scrollContentView)
     scrollContentView.addSubview(paymentsView)
     scrollContentView.addSubview(lastTransactions)
+    scrollContentView.addSubview(categoriesView)
     scrollContentView.addSubview(helperView)
     
     topBarView.delegate = self
     paymentsView.delegate = self
+    categoriesView.delegate = self
     lastTransactions.delegate = self
     
     topBarView.snp.makeConstraints { make in
@@ -64,17 +68,22 @@ extension DashboardViewController {
     }
     
     paymentsView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(20)
+      make.top.equalToSuperview().offset(DashboardConstants.PaymentsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.PaymentsComponent.height)
     }
     
+    categoriesView.snp.makeConstraints {make in
+      make.top.equalTo(paymentsView.snp.bottom).offset(DashboardConstants.CategoriesComponent.topOffset)
+      make.trailing.leading.equalToSuperview()
+      make.height.equalTo(DashboardConstants.CategoriesComponent.height)
+    }
+    
     lastTransactions.snp.makeConstraints { make in
-      make.top.equalTo(paymentsView.snp.bottom).offset(20)
+      make.top.equalTo(categoriesView.snp.bottom).offset(DashboardConstants.LastTransactionsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
     }
-    
     
     helperView.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
@@ -107,6 +116,12 @@ extension DashboardViewController: PaymentsViewDelegate {
   func showMorePaymentsPressed() { print(#line,#function,"Title pressed") }
 }
 
+extension DashboardViewController: CategoriesViewDelegate {
+  func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
+  func addCategoryPressed(for indexPath: IndexPath) { print(#line, #function, "Add category pressed with indexPath: \(indexPath)") }
+  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
+}
+
 extension DashboardViewController: LastTransactionsViewDelegate {
   func lastTransactionsPressed(for indexPath: IndexPath) { print("Transaction pressed at: \(indexPath.row)") }
   func showMoreLastTransactionsPressed() { print("Show more transactions pressed") }
@@ -120,14 +135,21 @@ struct DashboardConstants {
   
   struct PaymentsComponent {
     static var height: CGFloat = 212 //title with button 36 + 176 collection
+    static var topOffset: CGFloat = 20
   }
   
   struct LastTransactionsComponent {
     static var height: CGFloat = 396 //title with button 36 + 6 cells(every cell with 60 height)
+    static var topOffset: CGFloat = 20
   }
   
   struct MainScrollView {
     static var contentHeight: CGFloat = PaymentsComponent.height + LastTransactionsComponent.height + 500 + 20 + 20 + 20
   }
   
+  struct CategoriesComponent {
+    static var height: CGFloat = 124 //title with button 36 + 88 collection
+    static var topOffset: CGFloat = 20
+  }
+
 }
