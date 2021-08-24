@@ -10,39 +10,38 @@ import Foundation
 enum TransactionType: String {
   case sendMoney
   case getMoney
+  case unowned
 }
 
-protocol Transaction {
-  var type: TransactionType { get }
-  var date: Date { get }
-  var description: String? { get }
-  var paymentName: String { get }
-}
-
-class GetTransaction: Transaction {
-  var type: TransactionType = .getMoney
-  var date: Date
-  var description: String?
-  var paymentName: String
-
-  init(paymentName: String, description: String? = nil) {
-    self.date = Date()
-    self.paymentName = paymentName
-    self.description = description
-  }
-}
-
-class SendTransaction: Transaction {
-  var type: TransactionType = .sendMoney
-  var date: Date
-  var description: String?
-  var paymentName: String
-  var categoryName: String
-
-  init(paymentName: String, categoryName: String, description: String? = nil) {
-    self.date = Date()
+class Transaction {
+  let identifier: String
+  let type: TransactionType
+  let date: Date
+  let description: String?
+  let paymentName: String
+  let categoryName: String? 
+  
+  init(identifier: String, type: TransactionType, date: Date, paymentName: String, categoryName: String?, description: String? = nil) {
+    self.identifier = identifier
+    self.type = type
+    self.date = date
     self.paymentName = paymentName
     self.description = description
     self.categoryName = categoryName
+  }
+}
+
+extension Transaction: RunTimeModelProtocol {
+  static func storableType() -> StorableProtocol.Type {
+    StTransaction.self
+  }
+  
+  func convertToStorable() -> StorableProtocol {
+    StTransaction(identifier: self.identifier,
+                  date: self.date,
+                  description: self.description,
+                  type: self.type,
+                  paymentName: self.paymentName,
+                  categoryName: self.categoryName)
   }
 }

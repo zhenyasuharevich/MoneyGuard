@@ -10,6 +10,8 @@
 		720EA37926D12A4C00971489 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37826D12A4C00971489 /* Transaction.swift */; };
 		720EA37B26D12D1700971489 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37A26D12D1700971489 /* Payment.swift */; };
 		720EA37D26D12D9300971489 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720EA37C26D12D9300971489 /* Category.swift */; };
+		72250CC826D53876002F8C2F /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72250CC626D53875002F8C2F /* CategoriesView.swift */; };
+		72250CC926D53876002F8C2F /* CategoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72250CC726D53875002F8C2F /* CategoriesCell.swift */; };
 		72282AA726CFFD310094780B /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA326CFFD310094780B /* ColorScheme.swift */; };
 		72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA426CFFD310094780B /* ColorSchemeManager.swift */; };
 		72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AA526CFFD310094780B /* ColorSchemeFactory.swift */; };
@@ -25,8 +27,16 @@
 		7279634326B04810003B1E86 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7279634226B04810003B1E86 /* DashboardViewController.swift */; };
 		7279634826B04817003B1E86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7279634726B04817003B1E86 /* Assets.xcassets */; };
 		7279634B26B04817003B1E86 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7279634926B04817003B1E86 /* LaunchScreen.storyboard */; };
-		BE498B5226D405010069CADE /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE498B5126D405010069CADE /* CategoriesView.swift */; };
-		BE498B5426D4052F0069CADE /* CategoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE498B5326D4052F0069CADE /* CategoriesCell.swift */; };
+		72A0A65E26D3E2010008902A /* LastTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A65C26D3E2010008902A /* LastTransactionsView.swift */; };
+		72A0A65F26D3E2010008902A /* LastTransactionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A65D26D3E2010008902A /* LastTransactionsCell.swift */; };
+		72A0A66326D3F8970008902A /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 72A0A66226D3F8970008902A /* Realm */; };
+		72A0A66526D3F8970008902A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 72A0A66426D3F8970008902A /* RealmSwift */; };
+		72A0A66726D3F8CD0008902A /* RealmServiceLoacator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66626D3F8CD0008902A /* RealmServiceLoacator.swift */; };
+		72A0A66926D3F8F30008902A /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66826D3F8F30008902A /* RealmService.swift */; };
+		72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66A26D3FC470008902A /* StTransaction.swift */; };
+		72A0A66D26D3FC570008902A /* StPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66C26D3FC570008902A /* StPayment.swift */; };
+		72A0A66F26D3FC620008902A /* StCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66E26D3FC620008902A /* StCategory.swift */; };
+		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +44,8 @@
 		720EA37826D12A4C00971489 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		720EA37A26D12D1700971489 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		720EA37C26D12D9300971489 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		72250CC626D53875002F8C2F /* CategoriesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		72250CC726D53875002F8C2F /* CategoriesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesCell.swift; sourceTree = "<group>"; };
 		72282AA326CFFD310094780B /* ColorScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		72282AA426CFFD310094780B /* ColorSchemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSchemeManager.swift; sourceTree = "<group>"; };
 		72282AA526CFFD310094780B /* ColorSchemeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSchemeFactory.swift; sourceTree = "<group>"; };
@@ -51,8 +63,14 @@
 		7279634726B04817003B1E86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7279634A26B04817003B1E86 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7279634C26B04817003B1E86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BE498B5126D405010069CADE /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
-		BE498B5326D4052F0069CADE /* CategoriesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesCell.swift; sourceTree = "<group>"; };
+		72A0A65C26D3E2010008902A /* LastTransactionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LastTransactionsView.swift; sourceTree = "<group>"; };
+		72A0A65D26D3E2010008902A /* LastTransactionsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LastTransactionsCell.swift; sourceTree = "<group>"; };
+		72A0A66626D3F8CD0008902A /* RealmServiceLoacator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmServiceLoacator.swift; sourceTree = "<group>"; };
+		72A0A66826D3F8F30008902A /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
+		72A0A66A26D3FC470008902A /* StTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StTransaction.swift; sourceTree = "<group>"; };
+		72A0A66C26D3FC570008902A /* StPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StPayment.swift; sourceTree = "<group>"; };
+		72A0A66E26D3FC620008902A /* StCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StCategory.swift; sourceTree = "<group>"; };
+		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72A0A66526D3F8970008902A /* RealmSwift in Frameworks */,
+				72A0A66326D3F8970008902A /* Realm in Frameworks */,
 				BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +91,8 @@
 			isa = PBXGroup;
 			children = (
 				720EA37526D129E000971489 /* Models */,
+				72A0A66626D3F8CD0008902A /* RealmServiceLoacator.swift */,
+				72A0A66826D3F8F30008902A /* RealmService.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -87,6 +109,9 @@
 		720EA37626D129E800971489 /* Stored */ = {
 			isa = PBXGroup;
 			children = (
+				72A0A66A26D3FC470008902A /* StTransaction.swift */,
+				72A0A66C26D3FC570008902A /* StPayment.swift */,
+				72A0A66E26D3FC620008902A /* StCategory.swift */,
 			);
 			path = Stored;
 			sourceTree = "<group>";
@@ -99,6 +124,15 @@
 				720EA37C26D12D9300971489 /* Category.swift */,
 			);
 			path = Runtime;
+			sourceTree = "<group>";
+		};
+		72250CC526D53875002F8C2F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				72250CC626D53875002F8C2F /* CategoriesView.swift */,
+				72250CC726D53875002F8C2F /* CategoriesCell.swift */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		72282AA226CFFD310094780B /* ColorScheme */ = {
@@ -151,7 +185,9 @@
 		723B15D826CD7A990093FD77 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				BE498B5026D404DC0069CADE /* Categories */,
+				72250CC526D53875002F8C2F /* Categories */,
+				72A0A65B26D3E2010008902A /* LastTransactions */,
+				BEB04E0026D04F8200A550E6 /* TopBar */,
 				723B15D926CD7A990093FD77 /* Payments */,
 			);
 			path = Components;
@@ -222,13 +258,21 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		BE498B5026D404DC0069CADE /* Categories */ = {
+		72A0A65B26D3E2010008902A /* LastTransactions */ = {
 			isa = PBXGroup;
 			children = (
-				BE498B5126D405010069CADE /* CategoriesView.swift */,
-				BE498B5326D4052F0069CADE /* CategoriesCell.swift */,
+				72A0A65C26D3E2010008902A /* LastTransactionsView.swift */,
+				72A0A65D26D3E2010008902A /* LastTransactionsCell.swift */,
 			);
-			path = Categories;
+			path = LastTransactions;
+			sourceTree = "<group>";
+		};
+		BEB04E0026D04F8200A550E6 /* TopBar */ = {
+			isa = PBXGroup;
+			children = (
+				BEB04E0126D04FE000A550E6 /* TopBarView.swift */,
+			);
+			path = TopBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,6 +293,8 @@
 			name = MoneyGuard;
 			packageProductDependencies = (
 				BEB3C02326B0538E00F744A3 /* SnapKit */,
+				72A0A66226D3F8970008902A /* Realm */,
+				72A0A66426D3F8970008902A /* RealmSwift */,
 			);
 			productName = MoneyGuard;
 			productReference = 7279633B26B04810003B1E86 /* MoneyGuard.app */;
@@ -279,6 +325,7 @@
 			mainGroup = 7279633226B04810003B1E86;
 			packageReferences = (
 				BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				72A0A66126D3F8970008902A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
 			);
 			productRefGroup = 7279633C26B04810003B1E86 /* Products */;
 			projectDirPath = "";
@@ -306,22 +353,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72A0A66F26D3FC620008902A /* StCategory.swift in Sources */,
 				720EA37926D12A4C00971489 /* Transaction.swift in Sources */,
 				7279634326B04810003B1E86 /* DashboardViewController.swift in Sources */,
+				72250CC826D53876002F8C2F /* CategoriesView.swift in Sources */,
 				72282AAA26CFFD310094780B /* ColorSchemeManagerLocator.swift in Sources */,
+				BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */,
 				7279633F26B04810003B1E86 /* AppDelegate.swift in Sources */,
 				720EA37B26D12D1700971489 /* Payment.swift in Sources */,
 				72282AB126D000CD0094780B /* BaseController.swift in Sources */,
-				BE498B5226D405010069CADE /* CategoriesView.swift in Sources */,
 				72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */,
+				72A0A66726D3F8CD0008902A /* RealmServiceLoacator.swift in Sources */,
 				720EA37D26D12D9300971489 /* Category.swift in Sources */,
-				BE498B5426D4052F0069CADE /* CategoriesCell.swift in Sources */,
+				72A0A65F26D3E2010008902A /* LastTransactionsCell.swift in Sources */,
+				72250CC926D53876002F8C2F /* CategoriesCell.swift in Sources */,
+				72A0A65E26D3E2010008902A /* LastTransactionsView.swift in Sources */,
 				72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */,
 				723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */,
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
 				723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */,
+				72A0A66D26D3FC570008902A /* StPayment.swift in Sources */,
+				72A0A66926D3F8F30008902A /* RealmService.swift in Sources */,
 				72282AAE26CFFDEE0094780B /* UserDefaultsServiceLocator.swift in Sources */,
 				7279634126B04810003B1E86 /* SceneDelegate.swift in Sources */,
+				72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */,
 				72282AAF26CFFDEE0094780B /* UserDefaultsProtocol.swift in Sources */,
 				723B15DD26CD7A9A0093FD77 /* PaymentsView.swift in Sources */,
 			);
@@ -519,6 +574,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		72A0A66126D3F8970008902A /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.12.0;
+			};
+		};
 		BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -530,6 +593,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		72A0A66226D3F8970008902A /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72A0A66126D3F8970008902A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = Realm;
+		};
+		72A0A66426D3F8970008902A /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72A0A66126D3F8970008902A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			productName = RealmSwift;
+		};
 		BEB3C02326B0538E00F744A3 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BEB3C02226B0538E00F744A3 /* XCRemoteSwiftPackageReference "SnapKit" */;
