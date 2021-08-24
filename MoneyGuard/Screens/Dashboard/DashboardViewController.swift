@@ -14,6 +14,7 @@ final class DashboardViewController: BaseController {
   private let topBarView = UIView()
   private let categoriesView = CategoriesView()
   
+  
   private let changeThemeButton = UIButton()
   
   override func viewDidLoad() {
@@ -93,7 +94,7 @@ extension DashboardViewController: PaymentsViewDelegate {
 }
 
 extension DashboardViewController: CategoriesViewDelegate {
-  func CategoriesPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
-  func addCategoriesPressed(for indexPath: IndexPath) { print(#line, #function, "Add payment pressed with indexPath: \(indexPath)") }
+  func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
+  func addCategoryPressed(for indexPath: IndexPath) { print(#line, #function, "Add category pressed with indexPath: \(indexPath)") }
   func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
 }

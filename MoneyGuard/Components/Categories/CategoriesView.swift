@@ -9,8 +9,8 @@ import UIKit
 import SnapKit
 
 protocol CategoriesViewDelegate: AnyObject {
-  func CategoriesPressed(for indexPath: IndexPath)
-  func addCategoriesPressed(for indexPath: IndexPath)
+  func categoryPressed(for indexPath: IndexPath)
+  func addCategoryPressed(for indexPath: IndexPath)
   func showMoreCategoriesPressed()
 }
 
@@ -87,9 +87,9 @@ extension CategoriesView : UICollectionViewDelegate {
     
     switch cellType {
     case .addCategory:
-      delegate?.addCategoriesPressed(for: indexPath)
+      delegate?.addCategoryPressed(for: indexPath)
     case .category:
-      delegate?.CategoriesPressed(for: indexPath)
+      delegate?.categoryPressed(for: indexPath)
     }
   }
   
