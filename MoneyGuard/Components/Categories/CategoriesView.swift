@@ -55,6 +55,7 @@ final class CategoriesView: UIView {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     categoriesTitleLabel.textColor = colorTheme.textColor
+    disclosureIndicatorImageView.tintColor = colorTheme.textColor
     
     collectionView.reloadData()
   }
@@ -128,12 +129,13 @@ extension CategoriesView {
     
     disclosureIndicatorImageView.snp.makeConstraints { make in
       make.trailing.equalToSuperview().offset(-16)
-      make.top.equalToSuperview()
-      make.height.equalTo(28)
-      make.width.equalTo(28)
+      make.height.equalTo(20)
+      make.width.equalTo(20)
+      make.centerY.equalTo(categoriesTitleLabel)
     }
-    
-    disclosureIndicatorImageView.backgroundColor = .red
+    let image = UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)
+    disclosureIndicatorImageView.image = image
+    disclosureIndicatorImageView.contentMode = .scaleAspectFit
     
     mainActiveButton.snp.makeConstraints { make in
       make.leading.top.trailing.equalToSuperview()

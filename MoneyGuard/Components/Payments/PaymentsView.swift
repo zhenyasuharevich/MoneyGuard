@@ -54,6 +54,7 @@ final class PaymentsView: UIView {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     titleLabel.textColor = colorTheme.textColor
+    disclosureIndicatorImageView.tintColor = colorTheme.textColor
     
     collectionView.reloadData()
   }
@@ -112,24 +113,25 @@ extension PaymentsView {
     addSubview(mainActiveButton)
     addSubview(collectionView)
     
-    disclosureIndicatorImageView.snp.makeConstraints { make in
-      make.trailing.equalToSuperview().offset(-16)
-      make.top.equalToSuperview()
-      make.height.equalTo(28)
-      make.width.equalTo(28)
-    }
-    
-    disclosureIndicatorImageView.backgroundColor = .red
-    
     titleLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(16)
       make.top.equalToSuperview()
       make.trailing.equalTo(disclosureIndicatorImageView.snp.leading).offset(-8)
       make.height.equalTo(28)
     }
-    
     titleLabel.text = "Payments"
     titleLabel.textAlignment = .left
+    
+    disclosureIndicatorImageView.snp.makeConstraints { make in
+      make.trailing.equalToSuperview().offset(-16)
+      
+      make.height.equalTo(20)
+      make.width.equalTo(20)
+      make.centerY.equalTo(titleLabel)
+    }
+    let image = UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)
+    disclosureIndicatorImageView.image = image
+    disclosureIndicatorImageView.contentMode = .scaleAspectFit
     
     mainActiveButton.snp.makeConstraints { make in
       make.leading.top.trailing.equalToSuperview()
