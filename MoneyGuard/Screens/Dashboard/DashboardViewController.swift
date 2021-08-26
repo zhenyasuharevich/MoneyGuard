@@ -11,6 +11,7 @@ import SnapKit
 final class DashboardViewController: BaseController {
   
   private let mainScrollView = UIScrollView()
+  private let statsView = StatsView()
   private let paymentsView = PaymentsView()
   private let topBarView = TopBarView()
   private let lastTransactions = LastTransactionsView()
@@ -22,8 +23,9 @@ final class DashboardViewController: BaseController {
   
     override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
       super.setupColorTheme(colorTheme, theme)
-  
+      
       topBarView.setupColorTheme(colorTheme, theme)
+      statsView.setupColorTheme(colorTheme, theme)
       paymentsView.setupColorTheme(colorTheme, theme)
       lastTransactions.setupColorTheme(colorTheme, theme)
     }
@@ -40,6 +42,7 @@ extension DashboardViewController {
     view.addSubview(topBarView)
     
     mainScrollView.addSubview(scrollContentView)
+    scrollContentView.addSubview(statsView)
     scrollContentView.addSubview(paymentsView)
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(helperView)
@@ -63,8 +66,15 @@ extension DashboardViewController {
       make.left.right.equalTo(view)
     }
     
-    paymentsView.snp.makeConstraints { make in
+    statsView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(20)
+      make.leading.equalToSuperview().offset(16)
+      make.trailing.equalToSuperview().offset(-16)
+      make.height.equalTo(DashboardConstants.StatsComponent.height)
+    }
+    
+    paymentsView.snp.makeConstraints { make in
+      make.top.equalTo(statsView.snp.bottom).offset(20)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.PaymentsComponent.height)
     }
@@ -116,6 +126,10 @@ struct DashboardConstants {
   
   struct TopBar {
     static var height: CGFloat = UIScreen.main.bounds.height > 736 ? 120 : 100
+  }
+  
+  struct StatsComponent {
+    static var height: CGFloat = 400 //title with button 44 + 356 collection
   }
   
   struct PaymentsComponent {

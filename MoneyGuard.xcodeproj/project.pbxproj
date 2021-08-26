@@ -34,8 +34,10 @@
 		72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66A26D3FC470008902A /* StTransaction.swift */; };
 		72A0A66D26D3FC570008902A /* StPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66C26D3FC570008902A /* StPayment.swift */; };
 		72A0A66F26D3FC620008902A /* StCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66E26D3FC620008902A /* StCategory.swift */; };
+		BE66B24726D57CAC0000C002 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66B24626D57CAC0000C002 /* StatsView.swift */; };
 		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
+		BEB91FB526D80FD8002B9BF4 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB91FB426D80FD8002B9BF4 /* StatsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +68,9 @@
 		72A0A66A26D3FC470008902A /* StTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StTransaction.swift; sourceTree = "<group>"; };
 		72A0A66C26D3FC570008902A /* StPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StPayment.swift; sourceTree = "<group>"; };
 		72A0A66E26D3FC620008902A /* StCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StCategory.swift; sourceTree = "<group>"; };
+		BE66B24626D57CAC0000C002 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		BEB91FB426D80FD8002B9BF4 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +176,7 @@
 		723B15D826CD7A990093FD77 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				BE66B24526D57C620000C002 /* Stats */,
 				72A0A65B26D3E2010008902A /* LastTransactions */,
 				BEB04E0026D04F8200A550E6 /* TopBar */,
 				723B15D926CD7A990093FD77 /* Payments */,
@@ -251,6 +256,15 @@
 				72A0A65D26D3E2010008902A /* LastTransactionsCell.swift */,
 			);
 			path = LastTransactions;
+			sourceTree = "<group>";
+		};
+		BE66B24526D57C620000C002 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				BE66B24626D57CAC0000C002 /* StatsView.swift */,
+				BEB91FB426D80FD8002B9BF4 /* StatsViewController.swift */,
+			);
+			path = Stats;
 			sourceTree = "<group>";
 		};
 		BEB04E0026D04F8200A550E6 /* TopBar */ = {
@@ -347,6 +361,7 @@
 				7279633F26B04810003B1E86 /* AppDelegate.swift in Sources */,
 				720EA37B26D12D1700971489 /* Payment.swift in Sources */,
 				72282AB126D000CD0094780B /* BaseController.swift in Sources */,
+				BEB91FB526D80FD8002B9BF4 /* StatsViewController.swift in Sources */,
 				72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */,
 				72A0A66726D3F8CD0008902A /* RealmServiceLoacator.swift in Sources */,
 				720EA37D26D12D9300971489 /* Category.swift in Sources */,
@@ -355,6 +370,7 @@
 				72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */,
 				723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */,
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
+				BE66B24726D57CAC0000C002 /* StatsView.swift in Sources */,
 				723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */,
 				72A0A66D26D3FC570008902A /* StPayment.swift in Sources */,
 				72A0A66926D3F8F30008902A /* RealmService.swift in Sources */,
