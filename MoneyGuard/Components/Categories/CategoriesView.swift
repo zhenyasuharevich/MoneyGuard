@@ -25,6 +25,8 @@ final class CategoriesView: UIView {
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
+  private var categories: [Category] = []
+  
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .horizontal
@@ -58,6 +60,14 @@ final class CategoriesView: UIView {
     disclosureIndicatorImageView.tintColor = colorTheme.textColor
     
     collectionView.reloadData()
+  }
+  
+  func setData(categories: [Category]) {
+    self.categories = categories
+    
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+    }
   }
   
 }
