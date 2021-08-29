@@ -21,6 +21,9 @@ final class DashboardViewController: BaseController {
   private let categoriesView = CategoriesView()
   private let lastTransactions = LastTransactionsView()
   
+  private let addCategoryView = AddCategoryView() // EDIT
+  private let addPaymentView = AddPaymentView()
+  
   private let transactionButton = UIButton()
   private let addTransactionButton = UIButton()
   private let sendTransactionButton = UIButton()
@@ -62,6 +65,9 @@ final class DashboardViewController: BaseController {
     categoriesView.setupColorTheme(colorTheme, theme)
     paymentsView.setupColorTheme(colorTheme, theme)
     lastTransactions.setupColorTheme(colorTheme, theme)
+    
+    addCategoryView.setupColorTheme(colorTheme, theme) // EDIT
+    addPaymentView.setupColorTheme(colorTheme, theme)
     
     transactionButton.backgroundColor = colorTheme.activeColor
     addTransactionButton.backgroundColor = colorTheme.activeColor
@@ -108,7 +114,10 @@ extension DashboardViewController {
     scrollContentView.addSubview(paymentsView)
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(categoriesView)
+    
     scrollContentView.addSubview(helperView)
+//    scrollContentView.addSubview(addCategoryView)
+    scrollContentView.addSubview(addPaymentView)
     
     topBarView.delegate = self
     paymentsView.delegate = self
@@ -198,6 +207,20 @@ extension DashboardViewController {
       make.top.equalTo(categoriesView.snp.bottom).offset(DashboardConstants.LastTransactionsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
+    }
+    
+//    addCategoryView.snp.makeConstraints { make in
+//      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+//      make.trailing.equalToSuperview().offset(-16)
+//      make.leading.equalToSuperview().offset(16)
+//      make.height.equalTo(188)
+//    }
+    
+    addPaymentView.snp.makeConstraints { make in
+      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview().offset(16)
+      make.height.equalTo(496)
     }
     
     helperView.snp.makeConstraints { make in
