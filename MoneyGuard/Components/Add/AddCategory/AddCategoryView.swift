@@ -36,7 +36,7 @@ class AddCategoryView: UIView {
     mainAddCategoryView.backgroundColor = colorTheme.cellBackgroundColor
     addCategoryNameLabel.textColor = colorTheme.textColor
     addCategoryNameTextField.backgroundColor = colorTheme.backgroundColor
-    addCategoryNameButton.backgroundColor = colorTheme.activeColor
+    addCategoryNameButton.backgroundColor = .none
     addCategoryNameButtonTitle.textColor = colorTheme.textColor
   }
   
@@ -52,24 +52,24 @@ class AddCategoryView: UIView {
 
 extension AddCategoryView: UITextFieldDelegate {
 
-  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {  // func to hide keyboard, when you touch outside the creens
       super.touchesBegan(touches, with: event)
-      
-      endEditing(true) // Скрывает клавиатуру, вызванную для любого объекта
+      endEditing(true)
   }
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {  //func to hide keyboard, when button "return" is tapped
     endEditing(true)
     return true
   }
-
-  func textFieldDidEndEditing(_ textField: UITextField) { // func to hide button, when textfield is empty
-    if addCategoryNameTextField.text == "" {
-      addCategoryNameButton.isHidden = true
+  
+  func textFieldDidChangeSelection(_ textField: UITextField) {
+    guard let text = addCategoryNameTextField.text, !text.isEmpty else {
+      addCategoryNameButton.isEnabled = false
+      addCategoryNameButton.backgroundColor = .none
+      return
     }
-    else {
-      addCategoryNameButton.isHidden = false
-    }
+    addCategoryNameButton.isEnabled = true
+    addCategoryNameButton.backgroundColor = currentColorTheme?.activeColor
   }
 
 }
@@ -123,8 +123,10 @@ extension AddCategoryView {
     }
     
     addCategoryNameButton.layer.cornerRadius = 20
+    addCategoryNameButton.layer.borderWidth = 1
+    addCategoryNameButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
     addCategoryNameButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    addCategoryNameButton.isHidden = true
+    addCategoryNameButton.isEnabled = false
     
     addCategoryNameButtonTitle.snp.makeConstraints { make in
       make.centerY.equalToSuperview()

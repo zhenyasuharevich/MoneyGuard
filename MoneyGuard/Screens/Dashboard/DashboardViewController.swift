@@ -116,8 +116,8 @@ extension DashboardViewController {
     scrollContentView.addSubview(categoriesView)
     
     scrollContentView.addSubview(helperView)
-//    scrollContentView.addSubview(addCategoryView)
-    scrollContentView.addSubview(addPaymentView)
+    scrollContentView.addSubview(addCategoryView)
+//    scrollContentView.addSubview(addPaymentView)
     
     topBarView.delegate = self
     paymentsView.delegate = self
@@ -209,19 +209,19 @@ extension DashboardViewController {
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
     }
     
-//    addCategoryView.snp.makeConstraints { make in
-//      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
-//      make.trailing.equalToSuperview().offset(-16)
-//      make.leading.equalToSuperview().offset(16)
-//      make.height.equalTo(188)
-//    }
-    
-    addPaymentView.snp.makeConstraints { make in
+    addCategoryView.snp.makeConstraints { make in
       make.top.equalTo(lastTransactions.snp.bottom).offset(20)
       make.trailing.equalToSuperview().offset(-16)
       make.leading.equalToSuperview().offset(16)
-      make.height.equalTo(496)
+      make.height.equalTo(188)
     }
+    
+//    addPaymentView.snp.makeConstraints { make in
+//      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+//      make.trailing.equalToSuperview().offset(-16)
+//      make.leading.equalToSuperview().offset(16)
+//      make.height.equalTo(496)
+//    }
     
     helperView.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
