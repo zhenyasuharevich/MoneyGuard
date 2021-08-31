@@ -36,6 +36,7 @@
 		72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66A26D3FC470008902A /* StTransaction.swift */; };
 		72A0A66D26D3FC570008902A /* StPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66C26D3FC570008902A /* StPayment.swift */; };
 		72A0A66F26D3FC620008902A /* StCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66E26D3FC620008902A /* StCategory.swift */; };
+		72E9708E26DE30260008F675 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9708D26DE30260008F675 /* Int+Extension.swift */; };
 		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		72A0A66A26D3FC470008902A /* StTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StTransaction.swift; sourceTree = "<group>"; };
 		72A0A66C26D3FC570008902A /* StPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StPayment.swift; sourceTree = "<group>"; };
 		72A0A66E26D3FC620008902A /* StCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StCategory.swift; sourceTree = "<group>"; };
+		72E9708D26DE30260008F675 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
 		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -178,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				723B15DE26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift */,
+				72E9708D26DE30260008F675 /* Int+Extension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */,
 				72A0A66726D3F8CD0008902A /* RealmServiceLoacator.swift in Sources */,
 				720EA37D26D12D9300971489 /* Category.swift in Sources */,
+				72E9708E26DE30260008F675 /* Int+Extension.swift in Sources */,
 				72A0A65F26D3E2010008902A /* LastTransactionsCell.swift in Sources */,
 				72250CC926D53876002F8C2F /* CategoriesCell.swift in Sources */,
 				72A0A65E26D3E2010008902A /* LastTransactionsView.swift in Sources */,

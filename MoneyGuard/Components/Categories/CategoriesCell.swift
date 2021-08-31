@@ -11,8 +11,8 @@ enum CategoriesCellType: Int {
   case addCategory = 0
   case category = 1
   
-  static func getCellType(for indexPath: IndexPath) -> CategoriesCellType {
-    if indexPath.row == 0 && indexPath.section == 0 {
+  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> CategoriesCellType {
+    if (indexPath.row == 5 || indexPath.row == arrayCount) && indexPath.section == 0 {
       return .addCategory
     }
     return .category
