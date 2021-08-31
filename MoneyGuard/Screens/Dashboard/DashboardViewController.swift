@@ -29,6 +29,15 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
+  let mocCategories: [Category] = [Category(identifier: UUID().uuidString, name: "Transport", amountSpent: 2134),
+                                   Category(identifier: UUID().uuidString, name: "Workong activity", amountSpent: 213),
+                                   Category(identifier: UUID().uuidString, name: "Food", amountSpent: 196000),
+                                   Category(identifier: UUID().uuidString, name: "Test 1", amountSpent: 1234),
+                                   Category(identifier: UUID().uuidString, name: "Test 2", amountSpent: 346246),
+                                   Category(identifier: UUID().uuidString, name: "Test 3", amountSpent: 5245),
+                                   Category(identifier: UUID().uuidString, name: "Test 4", amountSpent: 65),
+                                   Category(identifier: UUID().uuidString, name: "Test 5", amountSpent: 987)]
+  
   private var state: DashboardState {
     didSet {
       switch state {
@@ -56,6 +65,8 @@ final class DashboardViewController: BaseController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupSubviews()
+    
+    categoriesView.setData(categories: self.mocCategories)
   }
   
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {

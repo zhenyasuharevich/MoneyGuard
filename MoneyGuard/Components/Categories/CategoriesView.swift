@@ -73,16 +73,30 @@ final class CategoriesView: UIView {
 }
 
 extension CategoriesView: UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 10 }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    if categories.count < 5 {
+      return categories.count + 1
+    } else {
+      return 6
+    }
+  }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoriesCell.reuseIdentifier, for: indexPath) as? CategoriesCell else { print(#line,#function,"Error: Can't get CategoriesCell"); return UICollectionViewCell() }
     
-    let cellType = CategoriesCellType.getCellType(for: indexPath)
+    let cellType = CategoriesCellType.getCellType(for: indexPath, arrayCount: categories.count)
     cell.setState(state: cellType)
     if let colorTheme = self.currentColorTheme,
        let theme = self.currentTheme {
       cell.setupColorTheme(colorTheme, theme)
+    }
+    
+    switch cellType {
+    case .category:
+      let category = categories[indexPath.row]
+      cell.setData(category: category)
+    case .addCategory:
+      break
     }
     
     return cell
@@ -94,7 +108,7 @@ extension CategoriesView: UICollectionViewDataSource {
 
 extension CategoriesView : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = CategoriesCellType.getCellType(for: indexPath)
+    let cellType = CategoriesCellType.getCellType(for: indexPath, arrayCount: categories.count)
     
     switch cellType {
     case .addCategory:

@@ -36,9 +36,10 @@
 		72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66A26D3FC470008902A /* StTransaction.swift */; };
 		72A0A66D26D3FC570008902A /* StPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66C26D3FC570008902A /* StPayment.swift */; };
 		72A0A66F26D3FC620008902A /* StCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66E26D3FC620008902A /* StCategory.swift */; };
-		BE4A3D2B26DB7A2E003DE569 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4A3D2A26DB7A2E003DE569 /* AddCategoryView.swift */; };
-		BE4A3D2E26DBA48B003DE569 /* AddPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4A3D2D26DBA48B003DE569 /* AddPaymentView.swift */; };
-		BE4A3D3026DBAB6F003DE569 /* SupportFileTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4A3D2F26DBAB6F003DE569 /* SupportFileTextField.swift */; };
+		72E9708E26DE30260008F675 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9708D26DE30260008F675 /* Int+Extension.swift */; };
+		72E9709526DE46ED0008F675 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709126DE46ED0008F675 /* AddCategoryView.swift */; };
+		72E9709626DE46EE0008F675 /* SupportFileTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709226DE46ED0008F675 /* SupportFileTextField.swift */; };
+		72E9709726DE46EE0008F675 /* AddPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709426DE46ED0008F675 /* AddPaymentView.swift */; };
 		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -73,9 +74,10 @@
 		72A0A66A26D3FC470008902A /* StTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StTransaction.swift; sourceTree = "<group>"; };
 		72A0A66C26D3FC570008902A /* StPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StPayment.swift; sourceTree = "<group>"; };
 		72A0A66E26D3FC620008902A /* StCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StCategory.swift; sourceTree = "<group>"; };
-		BE4A3D2A26DB7A2E003DE569 /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
-		BE4A3D2D26DBA48B003DE569 /* AddPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentView.swift; sourceTree = "<group>"; };
-		BE4A3D2F26DBAB6F003DE569 /* SupportFileTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFileTextField.swift; sourceTree = "<group>"; };
+		72E9708D26DE30260008F675 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
+		72E9709126DE46ED0008F675 /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
+		72E9709226DE46ED0008F675 /* SupportFileTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportFileTextField.swift; sourceTree = "<group>"; };
+		72E9709426DE46ED0008F675 /* AddPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentView.swift; sourceTree = "<group>"; };
 		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -184,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				723B15DE26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift */,
+				72E9708D26DE30260008F675 /* Int+Extension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -191,7 +194,7 @@
 		723B15D826CD7A990093FD77 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				BE4A3D2826DB79D8003DE569 /* Add */,
+				72E9708F26DE46ED0008F675 /* Add */,
 				72250CC526D53875002F8C2F /* Categories */,
 				72A0A65B26D3E2010008902A /* LastTransactions */,
 				BEB04E0026D04F8200A550E6 /* TopBar */,
@@ -282,28 +285,28 @@
 			path = UIElements;
 			sourceTree = "<group>";
 		};
-		BE4A3D2826DB79D8003DE569 /* Add */ = {
+		72E9708F26DE46ED0008F675 /* Add */ = {
 			isa = PBXGroup;
 			children = (
-				BE4A3D2C26DBA467003DE569 /* AddPayment */,
-				BE4A3D2926DB79FD003DE569 /* AddCategory */,
-				BE4A3D2F26DBAB6F003DE569 /* SupportFileTextField.swift */,
+				72E9709026DE46ED0008F675 /* AddCategory */,
+				72E9709226DE46ED0008F675 /* SupportFileTextField.swift */,
+				72E9709326DE46ED0008F675 /* AddPayment */,
 			);
 			path = Add;
 			sourceTree = "<group>";
 		};
-		BE4A3D2926DB79FD003DE569 /* AddCategory */ = {
+		72E9709026DE46ED0008F675 /* AddCategory */ = {
 			isa = PBXGroup;
 			children = (
-				BE4A3D2A26DB7A2E003DE569 /* AddCategoryView.swift */,
+				72E9709126DE46ED0008F675 /* AddCategoryView.swift */,
 			);
 			path = AddCategory;
 			sourceTree = "<group>";
 		};
-		BE4A3D2C26DBA467003DE569 /* AddPayment */ = {
+		72E9709326DE46ED0008F675 /* AddPayment */ = {
 			isa = PBXGroup;
 			children = (
-				BE4A3D2D26DBA48B003DE569 /* AddPaymentView.swift */,
+				72E9709426DE46ED0008F675 /* AddPaymentView.swift */,
 			);
 			path = AddPayment;
 			sourceTree = "<group>";
@@ -396,23 +399,24 @@
 			files = (
 				72A0A66F26D3FC620008902A /* StCategory.swift in Sources */,
 				720EA37926D12A4C00971489 /* Transaction.swift in Sources */,
+				72E9709626DE46EE0008F675 /* SupportFileTextField.swift in Sources */,
 				7279634326B04810003B1E86 /* DashboardViewController.swift in Sources */,
 				72250CC826D53876002F8C2F /* CategoriesView.swift in Sources */,
 				72282AAA26CFFD310094780B /* ColorSchemeManagerLocator.swift in Sources */,
 				BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */,
+				72E9709726DE46EE0008F675 /* AddPaymentView.swift in Sources */,
 				7279633F26B04810003B1E86 /* AppDelegate.swift in Sources */,
 				720EA37B26D12D1700971489 /* Payment.swift in Sources */,
 				72282AB126D000CD0094780B /* BaseController.swift in Sources */,
-				BE4A3D3026DBAB6F003DE569 /* SupportFileTextField.swift in Sources */,
 				72282AA826CFFD310094780B /* ColorSchemeManager.swift in Sources */,
 				72A0A66726D3F8CD0008902A /* RealmServiceLoacator.swift in Sources */,
 				720EA37D26D12D9300971489 /* Category.swift in Sources */,
-				BE4A3D2B26DB7A2E003DE569 /* AddCategoryView.swift in Sources */,
+				72E9708E26DE30260008F675 /* Int+Extension.swift in Sources */,
 				72A0A65F26D3E2010008902A /* LastTransactionsCell.swift in Sources */,
+				72E9709526DE46ED0008F675 /* AddCategoryView.swift in Sources */,
 				72250CC926D53876002F8C2F /* CategoriesCell.swift in Sources */,
 				72A0A65E26D3E2010008902A /* LastTransactionsView.swift in Sources */,
 				72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */,
-				BE4A3D2E26DBA48B003DE569 /* AddPaymentView.swift in Sources */,
 				723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */,
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
 				723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */,
