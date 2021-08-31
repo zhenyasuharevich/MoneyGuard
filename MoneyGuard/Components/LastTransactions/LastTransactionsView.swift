@@ -49,7 +49,7 @@ final class LastTransactionsView: UIView {
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
-    
+    disclosureIndicatorImageView.tintColor = colorTheme.textColor
     transactionsTitleLabel.textColor = colorTheme.textColor
     
     collectionView.reloadData()
@@ -125,11 +125,13 @@ extension LastTransactionsView {
     
     disclosureIndicatorImageView.snp.makeConstraints { make in
       make.trailing.equalToSuperview().offset(-16)
-      make.top.equalToSuperview()
-      make.height.width.equalTo(28)
+      make.height.equalTo(20)
+      make.width.equalTo(20)
+      make.centerY.equalTo(transactionsTitleLabel)
     }
-    
-    disclosureIndicatorImageView.backgroundColor = .red
+    let image = UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)
+    disclosureIndicatorImageView.image = image
+    disclosureIndicatorImageView.contentMode = .scaleAspectFit
     
     mainActiveButton.snp.makeConstraints { make in
       make.leading.top.trailing.equalToSuperview()
