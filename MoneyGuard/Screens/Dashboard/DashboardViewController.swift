@@ -33,10 +33,7 @@ final class DashboardViewController: BaseController {
   private let overlayView = UIView()
   
   var categories: [Category] = []
-  var payments: [Payment] = [Payment(identifier: UUID().uuidString, name: "Test 1", amount: 2512, type: .card),
-                             Payment(identifier: UUID().uuidString, name: "Test 2", amount: 2512, type: .card),
-                             Payment(identifier: UUID().uuidString, name: "Test 3", amount: 2512, type: .card),
-                             Payment(identifier: UUID().uuidString, name: "Test 4", amount: 2512, type: .card)]
+  var payments: [Payment] = []
   
   private var state: DashboardState {
     didSet {
@@ -109,11 +106,7 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Payment.self, completion: BlockObject<[Payment], Void>({ payments in
-//      print("Payments loaded")
-//      print("Payments count: \(payments.count)")
-//      for payment in payments {
-//        print("Name: \(payment.name), amount: \(payment.amount)")
-//      }
+      self.payments = payments
       dispatchGroup.leave()
     }))
     
@@ -125,11 +118,6 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
-//      print("Transactions loaded")
-//      print("Transactions count: \(transactions.count)")
-//      for transaction in transactions {
-//        print("Date: \(transaction.date), type: \(transaction.type)")
-//      }
       dispatchGroup.leave()
     }))
     
@@ -141,6 +129,7 @@ final class DashboardViewController: BaseController {
   private func reloadData() {
     DispatchQueue.main.async {
       self.categoriesView.setData(categories: self.categories)
+      self.paymentsView.setData(payments: self.payments)
     }
   }
   
@@ -347,8 +336,16 @@ extension DashboardViewController: LastTransactionsViewDelegate {
 
 extension DashboardViewController: AddPaymentViewDelegate {
   func addPayment(newPayment: Payment) {
-    print("Add payment. Name: \(newPayment.name), Amount: \(newPayment.amount), Type: \(newPayment.type)")
-    self.state = .normal
+    self.payments.append(newPayment)
+    
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.paymentsView.setData(payments: self.payments)
+      }
+      self.state = .normal
+    }
+    
+    dataService.addOrUpdate(object: newPayment, completion: comletionBlock)
   }
 }
 
