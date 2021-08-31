@@ -9,17 +9,22 @@ import UIKit
 
 import UIKit
 
+protocol AddCategoryViewDelegate: AnyObject {
+  func addCategory(newCategory: Category)
+}
+
 class AddCategoryView: UIView {
   
   private let mainAddCategoryView = UIView()
-  private let addCategoryNameLabel = UILabel()
-  private let addCategoryNameTextField = UITextField()
-  private let addCategoryNameButton = UIButton()
-  private let addCategoryNameButtonTitle = UILabel()
+  private let categoryNameLabel = UILabel()
+  private let categoryNameTextField = UITextField()
+  private let addCategoryButton = UIButton()
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
 
+  weak var delegate: AddCategoryViewDelegate?
+  
   override init(frame: CGRect) {
     super.init(frame: .zero)
     setupSubview()
@@ -34,42 +39,42 @@ class AddCategoryView: UIView {
     self.currentTheme = theme
     
     mainAddCategoryView.backgroundColor = colorTheme.cellBackgroundColor
-    addCategoryNameLabel.textColor = colorTheme.textColor
-    addCategoryNameTextField.backgroundColor = colorTheme.backgroundColor
-    addCategoryNameButton.backgroundColor = .none
-    addCategoryNameButtonTitle.textColor = colorTheme.textColor
+    
+    categoryNameLabel.textColor = colorTheme.textColor
+    categoryNameTextField.backgroundColor = colorTheme.backgroundColor
+    categoryNameTextField.textColor = colorTheme.textColor.withAlphaComponent(0.8)
+    categoryNameLabel.tintColor = colorTheme.textColor.withAlphaComponent(0.8)
+    
+    addCategoryButton.backgroundColor = .none
   }
   
   @objc func dismissKeyboard() {
       endEditing(true)
   }
 
-  @objc func buttonTapped(){
-    print("Adding new category...")
+  @objc func createCategoryPressed(){
+    guard let text = categoryNameTextField.text, !text.isEmpty else { print("Error: Can't create category with empty name"); return }
+    
+    let newCategory = Category(identifier: UUID().uuidString, name: text, amountSpent: Double(0))
+    delegate?.addCategory(newCategory: newCategory)
   }
   
 }
 
 extension AddCategoryView: UITextFieldDelegate {
 
-  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {  // func to hide keyboard, when you touch outside the creens
-      super.touchesBegan(touches, with: event)
-      endEditing(true)
-  }
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { super.touchesBegan(touches, with: event); endEditing(true) }
 
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {  //func to hide keyboard, when button "return" is tapped
-    endEditing(true)
-    return true
-  }
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool { endEditing(true); return true }
   
   func textFieldDidChangeSelection(_ textField: UITextField) {
-    guard let text = addCategoryNameTextField.text, !text.isEmpty else {
-      addCategoryNameButton.isEnabled = false
-      addCategoryNameButton.backgroundColor = .none
+    guard let text = categoryNameTextField.text, !text.isEmpty else {
+      addCategoryButton.isEnabled = false
+      addCategoryButton.backgroundColor = .none
       return
     }
-    addCategoryNameButton.isEnabled = true
-    addCategoryNameButton.backgroundColor = currentColorTheme?.activeColor
+    addCategoryButton.isEnabled = true
+    addCategoryButton.backgroundColor = currentColorTheme?.activeColor
   }
 
 }
@@ -78,13 +83,12 @@ extension AddCategoryView {
   private func setupSubview() {
     backgroundColor = .clear
     
-    addCategoryNameTextField.delegate = self
+    categoryNameTextField.delegate = self
     
     addSubview(mainAddCategoryView)
-    mainAddCategoryView.addSubview(addCategoryNameLabel)
-    mainAddCategoryView.addSubview(addCategoryNameTextField)
-    addSubview(addCategoryNameButton)
-    addCategoryNameButton.addSubview(addCategoryNameButtonTitle)
+    mainAddCategoryView.addSubview(categoryNameLabel)
+    mainAddCategoryView.addSubview(categoryNameTextField)
+    addSubview(addCategoryButton)
     
     mainAddCategoryView.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
@@ -95,45 +99,37 @@ extension AddCategoryView {
     mainAddCategoryView.layer.masksToBounds = true
     mainAddCategoryView.layer.cornerRadius = 20
     
-    addCategoryNameLabel.snp.makeConstraints { make in
+    categoryNameLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(12)
       make.trailing.equalToSuperview().offset(-16)
       make.leading.equalToSuperview().offset(16)
       make.height.equalTo(24)
     }
     
-    addCategoryNameLabel.textAlignment = .center
-    addCategoryNameLabel.text = "Category name"
+    categoryNameLabel.textAlignment = .center
+    categoryNameLabel.text = "Category name"
     
-    addCategoryNameTextField.snp.makeConstraints { make in
-      make.top.equalTo(addCategoryNameLabel.snp.bottom).offset(8)
+    categoryNameTextField.snp.makeConstraints { make in
+      make.top.equalTo(categoryNameLabel.snp.bottom).offset(8)
       make.trailing.equalToSuperview().offset(-24)
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(36)
     }
+    categoryNameTextField.textAlignment = .center
+    categoryNameTextField.layer.cornerRadius = 8
+    categoryNameTextField.hideKeyboardWhenDoneButtonTapped()
     
-    addCategoryNameTextField.layer.cornerRadius = 8
-    addCategoryNameTextField.layer.opacity = 0.6
-    addCategoryNameTextField.hideKeyboardWhenDoneButtonTapped()
-    
-    addCategoryNameButton.snp.makeConstraints { make in
+    addCategoryButton.snp.makeConstraints { make in
       make.top.equalTo(mainAddCategoryView.snp.bottom).offset(16)
-      make.trailing.leading.equalToSuperview()
+      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview().offset(16)
       make.height.equalTo(40)
     }
-    
-    addCategoryNameButton.layer.cornerRadius = 20
-    addCategoryNameButton.layer.borderWidth = 1
-    addCategoryNameButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
-    addCategoryNameButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    addCategoryNameButton.isEnabled = false
-    
-    addCategoryNameButtonTitle.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-    
-    addCategoryNameButtonTitle.text = "Create"
-    addCategoryNameButtonTitle.textAlignment = .center
+    addCategoryButton.setTitle("Create", for: .normal)
+    addCategoryButton.layer.cornerRadius = 20
+    addCategoryButton.layer.borderWidth = 1
+    addCategoryButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
+    addCategoryButton.addTarget(self, action: #selector(createCategoryPressed), for: .touchUpInside)
+    addCategoryButton.isEnabled = false
   }
 }

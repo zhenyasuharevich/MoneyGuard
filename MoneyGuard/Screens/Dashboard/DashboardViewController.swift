@@ -116,7 +116,7 @@ extension DashboardViewController {
     scrollContentView.addSubview(categoriesView)
     
     scrollContentView.addSubview(helperView)
-//    scrollContentView.addSubview(addCategoryView)
+    scrollContentView.addSubview(addCategoryView)
     scrollContentView.addSubview(addPaymentView)
     
     topBarView.delegate = self
@@ -209,23 +209,25 @@ extension DashboardViewController {
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
     }
     
-//    addCategoryView.snp.makeConstraints { make in
-//      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
-//      make.trailing.equalToSuperview().offset(-16)
-//      make.leading.equalToSuperview().offset(16)
-//      make.height.equalTo(188)
-//    }
+    addCategoryView.snp.makeConstraints { make in
+      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview().offset(16)
+      make.height.equalTo(188)
+    }
+    addCategoryView.delegate = self
     
     addPaymentView.snp.makeConstraints { make in
-      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+      make.top.equalTo(addCategoryView.snp.bottom).offset(20)
       make.trailing.equalToSuperview().offset(-16)
       make.leading.equalToSuperview().offset(16)
       make.height.equalTo(496)
     }
+    addPaymentView.delegate = self
     
     helperView.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
-      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+      make.top.equalTo(addPaymentView.snp.bottom).offset(20)
       make.height.equalTo(500)
       make.bottom.equalTo(scrollContentView.snp.bottom)
     }
@@ -263,6 +265,18 @@ extension DashboardViewController: CategoriesViewDelegate {
 extension DashboardViewController: LastTransactionsViewDelegate {
   func lastTransactionsPressed(for indexPath: IndexPath) { print("Transaction pressed at: \(indexPath.row)") }
   func showMoreLastTransactionsPressed() { print("Show more transactions pressed") }
+}
+
+extension DashboardViewController: AddPaymentViewDelegate {
+  func addPayment(newPayment: Payment) {
+    print("Add payment. Name: \(newPayment.name), Amount: \(newPayment.amount), Type: \(newPayment.type)")
+  }
+}
+
+extension DashboardViewController: AddCategoryViewDelegate {
+  func addCategory(newCategory: Category) {
+    print("Add category. Name: \(newCategory.name), amountSpent: \(newCategory.amountSpent)")
+  }
 }
 
 struct DashboardConstants {

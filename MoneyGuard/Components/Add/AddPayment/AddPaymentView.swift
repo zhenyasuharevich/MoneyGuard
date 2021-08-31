@@ -7,35 +7,48 @@
 
 import UIKit
 
-enum AddPaymentState {
-  case cashButton, cardButton, onlineButton, otherButton
+protocol AddPaymentViewDelegate: AnyObject {
+  func addPayment(newPayment: Payment)
 }
 
 class AddPaymentView: UIView {
 
   private let mainAddPaymentView = UIView()
-  private let addPaymentNameLabel = UILabel()
-  private let addPaymentNameTextField = UITextField()
+  private let paymentNameLabel = UILabel()
+  private let paymentNameTextField = UITextField()
   private let startAmountLabel = UILabel()
   private let startAmountTextField = UITextField()
   private let typeOfPaymentsLabel = UILabel()
-  private let cashTypeButton = UIButton()
-  private let cashTypeButtonTitleLabel = UILabel()
-  private let cardTypeButton = UIButton()
-  private let cardTypeButtonTitleLabel = UILabel()
-  private let onlineWalletTypeButton = UIButton()
-  private let onlineWalletButtonTitleLabel = UILabel()
-  private let otherTypeButton = UIButton()
-  private let otherButtonTitleLabel = UILabel()
-  private let addPaymentButton = UIButton()
-  private let addPaymentButtonTitle = UILabel()
   
-  private var buttonIsSelected : Bool = false
+  private let cashTypeButton = UIButton()
+  private let cardTypeButton = UIButton()
+  private let onlineWalletTypeButton = UIButton()
+  private let otherTypeButton = UIButton()
+  private let addPaymentButton = UIButton()
+  
+  private var selectedPaymentType: PaymentType = .other
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
+  weak var delegate: AddPaymentViewDelegate?
+  
+  private var isCreateEnable: Bool {
+    didSet {
+      guard let colorTheme = self.currentColorTheme else { print(#line,#function,"Error: Don't found color theme"); return }
+      
+      if isCreateEnable {
+        addPaymentButton.backgroundColor = colorTheme.activeColor
+        addPaymentButton.isEnabled = true
+      } else {
+        addPaymentButton.isEnabled = false
+        addPaymentButton.backgroundColor = .clear
+      }
+    }
+  }
+  
   override init(frame: CGRect) {
+    isCreateEnable = false
     super.init(frame: .zero)
     setupSubview()
   }
@@ -49,138 +62,112 @@ class AddPaymentView: UIView {
     self.currentTheme = theme
     
     mainAddPaymentView.backgroundColor = colorTheme.cellBackgroundColor
-    addPaymentNameLabel.textColor = colorTheme.textColor
-    addPaymentNameTextField.backgroundColor = colorTheme.backgroundColor
+    
+    paymentNameLabel.textColor = colorTheme.textColor
+    paymentNameTextField.backgroundColor = colorTheme.backgroundColor
+    paymentNameTextField.textColor = colorTheme.textColor.withAlphaComponent(0.8)
+    paymentNameTextField.tintColor = colorTheme.textColor.withAlphaComponent(0.8)
+    
     startAmountLabel.textColor = colorTheme.textColor
     startAmountTextField.backgroundColor = colorTheme.backgroundColor
+    startAmountTextField.textColor = colorTheme.textColor.withAlphaComponent(0.8)
+    startAmountTextField.tintColor = colorTheme.textColor.withAlphaComponent(0.8)
+    
     typeOfPaymentsLabel.textColor = colorTheme.textColor
-    cashTypeButton.backgroundColor = colorTheme.cellBackgroundColor
+    
     cashTypeButton.layer.borderColor = colorTheme.textColor.cgColor
-    cashTypeButtonTitleLabel.textColor = colorTheme.textColor
-    cardTypeButton.backgroundColor = colorTheme.cellBackgroundColor
+    cashTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    
     cardTypeButton.layer.borderColor = colorTheme.textColor.cgColor
-    cardTypeButtonTitleLabel.textColor = colorTheme.textColor
-    onlineWalletTypeButton.backgroundColor = colorTheme.cellBackgroundColor
+    cardTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    
     onlineWalletTypeButton.layer.borderColor = colorTheme.textColor.cgColor
-    onlineWalletButtonTitleLabel.textColor = colorTheme.textColor
-    otherTypeButton.backgroundColor = colorTheme.cellBackgroundColor
+    onlineWalletTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    
     otherTypeButton.layer.borderColor = colorTheme.textColor.cgColor
-    otherButtonTitleLabel.textColor = colorTheme.textColor
-    addPaymentButton.backgroundColor = .none
-    addPaymentButtonTitle.textColor = colorTheme.textColor
+    otherTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+
+    addPaymentButton.backgroundColor = .clear
+    
+    changeButtonsSelection(oldType: .other, newType: .other)
   }
   
-  @objc func buttonTapped(){
-    print("Adding new payment...")
-    
-    
+  private func paymentTypePressed(type: PaymentType) {
+    guard !(selectedPaymentType == type) else { print("Error: \(type.rawValue) already selected"); return }
+    changeButtonsSelection(oldType: selectedPaymentType, newType: type)
   }
   
-  @objc func cashButtonIsChosen() {
-    cashTypeButton.backgroundColor = currentColorTheme?.activeColor
-    cardTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    
-    buttonIsSelected = true
-    //
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isEnabled = false
-  
-      addPaymentButton.backgroundColor = .none
-    }
-    else {
-      addPaymentButton.isEnabled = true
-      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
-    }
-    //
-    print("button is chosen...")
-    
-    
+  private func changeButtonsSelection(oldType: PaymentType, newType: PaymentType) {
+    deselectButtons()
+    selectButton(with: newType)
   }
   
-  @objc func cardButtonIsChosen() {
-    cashTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    cardTypeButton.backgroundColor = currentColorTheme?.activeColor
-    onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    buttonIsSelected = true
-    
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isEnabled = false
-  
-      addPaymentButton.backgroundColor = .none
-    }
-    else {
-      addPaymentButton.isEnabled = true
-      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
-    }
-    
-    print("button is chosen...")
+  private func deselectButtons() {
+    cardTypeButton.backgroundColor = .clear
+    cashTypeButton.backgroundColor = .clear
+    onlineWalletTypeButton.backgroundColor = .clear
+    otherTypeButton.backgroundColor = .clear
   }
   
-  @objc func onlineWalletButtonIsChosen() {
-    cashTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    cardTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    onlineWalletTypeButton.backgroundColor = currentColorTheme?.activeColor
-    otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    buttonIsSelected = true
-    
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isEnabled = false
-  
-      addPaymentButton.backgroundColor = .none
-    }
-    else {
-      addPaymentButton.isEnabled = true
-      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
-    }
-    print("button is chosen...")
+  private func selectButton(with type: PaymentType) {
+    guard let colorTheme = self.currentColorTheme else { print(#line,#function,"Error: Don't found color theme"); return }
+    let newSelectedButton = getButtonFor(type: type)
+    newSelectedButton.backgroundColor = colorTheme.activeColor
+    selectedPaymentType = type
   }
   
-  @objc func otherButtonIsChosen() {
-    cashTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    cardTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
-    otherTypeButton.backgroundColor = currentColorTheme?.activeColor
-    buttonIsSelected = true
-    
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isEnabled = false
-  
-      addPaymentButton.backgroundColor = .none
+  private func getButtonFor(type: PaymentType) -> UIButton {
+    switch type {
+    case .card:
+      return self.cardTypeButton
+    case .cash:
+      return self.cashTypeButton
+    case .onlineWallet:
+      return self.onlineWalletTypeButton
+    case .other:
+      return self.otherTypeButton
     }
-    else {
-      addPaymentButton.isEnabled = true
-      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
-    }
-    print("button is chosen...")
   }
+  
+  @objc func createButtonTapped(){
+    guard let text = paymentNameTextField.text,
+          !text.isEmpty else { print(#line,#function,"Error: Can't create payment with empty name"); return }
+    
+    let paymentName = text
+    var startAmount: Double = 0
+    
+    if let amountText = startAmountTextField.text,
+       !amountText.isEmpty,
+       let amount = Double(amountText) {
+      startAmount = amount
+    }
+    
+    let newPayment = Payment(identifier: UUID().uuidString, name: paymentName, amount: startAmount, type: selectedPaymentType)
+    delegate?.addPayment(newPayment: newPayment)
+  }
+  
+  @objc func cashButtonPressed() { paymentTypePressed(type: .cash) }
+  @objc func cardButtonPressed() { paymentTypePressed(type: .card) }
+  @objc func onlineWalletButtonPressed() { paymentTypePressed(type: .onlineWallet) }
+  @objc func otherButtonPressed() { paymentTypePressed(type: .other) }
 }
 
 extension AddPaymentView: UITextFieldDelegate {
 
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
       super.touchesBegan(touches, with: event)
-      
       endEditing(true)
   }
 
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool { //func to hide keyboard, when button "return" is tapped
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     endEditing(true)
     return true
   }
-
-  func textFieldDidChangeSelection(_ textField: UITextField) { // func to hide button, when textfield is empty
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isEnabled = false
   
-      addPaymentButton.backgroundColor = .none
-    }
-    else {
-      addPaymentButton.isEnabled = true
-      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
-    }
+  @objc private func paymentNameTextFieldValueChanged(_ sender: UITextField) {
+    guard let text = sender.text,
+          !text.isEmpty else { isCreateEnable = false; return }
+    isCreateEnable = true
   }
 
 }
@@ -189,24 +176,19 @@ extension AddPaymentView {
   private func setupSubview() {
     backgroundColor = .clear
     
-    addPaymentNameTextField.delegate = self
+    paymentNameTextField.delegate = self
     
     addSubview(mainAddPaymentView)
-    mainAddPaymentView.addSubview(addPaymentNameLabel)
-    mainAddPaymentView.addSubview(addPaymentNameTextField)
+    mainAddPaymentView.addSubview(paymentNameLabel)
+    mainAddPaymentView.addSubview(paymentNameTextField)
     mainAddPaymentView.addSubview(startAmountLabel)
     mainAddPaymentView.addSubview(startAmountTextField)
     mainAddPaymentView.addSubview(typeOfPaymentsLabel)
     mainAddPaymentView.addSubview(cashTypeButton)
-    cashTypeButton.addSubview(cashTypeButtonTitleLabel)
     mainAddPaymentView.addSubview(cardTypeButton)
-    cardTypeButton.addSubview(cardTypeButtonTitleLabel)
     mainAddPaymentView.addSubview(onlineWalletTypeButton)
-    onlineWalletTypeButton.addSubview(onlineWalletButtonTitleLabel)
     mainAddPaymentView.addSubview(otherTypeButton)
-    otherTypeButton.addSubview(otherButtonTitleLabel)
     addSubview(addPaymentButton)
-    addPaymentButton.addSubview(addPaymentButtonTitle)
     
     mainAddPaymentView.snp.makeConstraints { make in
           make.top.equalToSuperview().offset(16)
@@ -217,30 +199,30 @@ extension AddPaymentView {
     mainAddPaymentView.layer.masksToBounds = true
     mainAddPaymentView.layer.cornerRadius = 20
     
-    addPaymentNameLabel.snp.makeConstraints { make in
+    paymentNameLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(12)
       make.trailing.equalToSuperview().offset(-24)
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(24)
     }
     
-    addPaymentNameLabel.textAlignment = .center
-    addPaymentNameLabel.text = "Payment name"
+    paymentNameLabel.textAlignment = .center
+    paymentNameLabel.text = "Payment name"
     
-    addPaymentNameTextField.snp.makeConstraints { make in
-      make.top.equalTo(addPaymentNameLabel.snp.bottom).offset(8)
+    paymentNameTextField.snp.makeConstraints { make in
+      make.top.equalTo(paymentNameLabel.snp.bottom).offset(8)
       make.trailing.equalToSuperview().offset(-24)
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(36)
     }
     
-    addPaymentNameTextField.layer.cornerRadius = 8
-    addPaymentNameTextField.layer.opacity = 0.6
-    addPaymentNameTextField.textAlignment = .center
-    addPaymentNameTextField.hideKeyboardWhenDoneButtonTapped()
+    paymentNameTextField.layer.cornerRadius = 8
+    paymentNameTextField.textAlignment = .center
+    paymentNameTextField.hideKeyboardWhenDoneButtonTapped()
+    paymentNameTextField.addTarget(self, action: #selector(paymentNameTextFieldValueChanged(_:)), for: .editingChanged)
     
     startAmountLabel.snp.makeConstraints { make in
-      make.top.equalTo(addPaymentNameTextField.snp.bottom).offset(8)
+      make.top.equalTo(paymentNameTextField.snp.bottom).offset(8)
       make.trailing.equalToSuperview().offset(-24)
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(24)
@@ -258,9 +240,8 @@ extension AddPaymentView {
     
     startAmountTextField.keyboardType = .decimalPad
     startAmountTextField.layer.cornerRadius = 8
-    startAmountTextField.layer.opacity = 0.6
     startAmountTextField.textAlignment = .center
-    startAmountTextField.placeholder = "0"
+    startAmountTextField.text = "\(Double(0))"
     startAmountTextField.hideKeyboardWhenDoneButtonTapped()
 
     typeOfPaymentsLabel.snp.makeConstraints { make in
@@ -279,18 +260,10 @@ extension AddPaymentView {
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(40)
     }
-
+    cashTypeButton.setTitle("cash", for: .normal)
     cashTypeButton.layer.cornerRadius = 8
     cashTypeButton.layer.borderWidth = 1
-    cashTypeButton.addTarget(self, action: #selector(cashButtonIsChosen), for: .touchUpInside)
-
-    cashTypeButtonTitleLabel.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-
-    cashTypeButtonTitleLabel.text = "cash"
-    cashTypeButtonTitleLabel.textAlignment = .center
+    cashTypeButton.addTarget(self, action: #selector(cashButtonPressed), for: .touchUpInside)
 
     cardTypeButton.snp.makeConstraints { make in
       make.top.equalTo(cashTypeButton.snp.bottom).offset(16)
@@ -298,18 +271,10 @@ extension AddPaymentView {
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(40)
     }
-
+    cardTypeButton.setTitle("card", for: .normal)
     cardTypeButton.layer.cornerRadius = 8
     cardTypeButton.layer.borderWidth = 1
-    cardTypeButton.addTarget(self, action: #selector(cardButtonIsChosen), for: .touchUpInside)
-
-    cardTypeButtonTitleLabel.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-
-    cardTypeButtonTitleLabel.text = "card"
-    cardTypeButtonTitleLabel.textAlignment = .center
+    cardTypeButton.addTarget(self, action: #selector(cardButtonPressed), for: .touchUpInside)
 
     onlineWalletTypeButton.snp.makeConstraints { make in
       make.top.equalTo(cardTypeButton.snp.bottom).offset(16)
@@ -317,18 +282,10 @@ extension AddPaymentView {
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(40)
     }
-
+    onlineWalletTypeButton.setTitle("online wallet", for: .normal)
     onlineWalletTypeButton.layer.cornerRadius = 8
     onlineWalletTypeButton.layer.borderWidth = 1
-    onlineWalletTypeButton.addTarget(self, action: #selector(onlineWalletButtonIsChosen), for: .touchUpInside)
-    
-    onlineWalletButtonTitleLabel.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-
-    onlineWalletButtonTitleLabel.text = "online wallet"
-    onlineWalletButtonTitleLabel.textAlignment = .center
+    onlineWalletTypeButton.addTarget(self, action: #selector(onlineWalletButtonPressed), for: .touchUpInside)
 
     otherTypeButton.snp.makeConstraints { make in
       make.top.equalTo(onlineWalletTypeButton.snp.bottom).offset(16)
@@ -336,18 +293,10 @@ extension AddPaymentView {
       make.leading.equalToSuperview().offset(24)
       make.height.equalTo(40)
     }
-
+    otherTypeButton.setTitle("other", for: .normal)
     otherTypeButton.layer.cornerRadius = 8
     otherTypeButton.layer.borderWidth = 1
-    otherTypeButton.addTarget(self, action: #selector(otherButtonIsChosen), for: .touchUpInside)
-
-    otherButtonTitleLabel.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-
-    otherButtonTitleLabel.text = "other"
-    otherButtonTitleLabel.textAlignment = .center
+    otherTypeButton.addTarget(self, action: #selector(otherButtonPressed), for: .touchUpInside)
 
     addPaymentButton.snp.makeConstraints { make in
       make.top.equalTo(mainAddPaymentView.snp.bottom).offset(16)
@@ -355,20 +304,12 @@ extension AddPaymentView {
       make.leading.equalToSuperview().offset(16)
       make.height.equalTo(40)
     }
-
+    addPaymentButton.setTitle("Create", for: .normal)
     addPaymentButton.layer.cornerRadius = 20
     addPaymentButton.layer.borderWidth = 1
     addPaymentButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
-    addPaymentButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    addPaymentButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
     addPaymentButton.isEnabled = false
-
-    addPaymentButtonTitle.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.centerX.equalToSuperview()
-    }
-
-    addPaymentButtonTitle.text = "Create"
-    addPaymentButtonTitle.textAlignment = .center
   }
   
 }
