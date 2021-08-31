@@ -17,11 +17,12 @@ final class DashboardViewController: BaseController {
   
   private let mainScrollView = UIScrollView()
   private let topBarView = TopBarView()
+  private let statsView = StatsView()
   private let paymentsView = PaymentsView()
   private let categoriesView = CategoriesView()
   private let lastTransactions = LastTransactionsView()
   
-  private let addCategoryView = AddCategoryView() // EDIT
+  private let addCategoryView = AddCategoryView()
   private let addPaymentView = AddPaymentView()
   
   private let transactionButton = UIButton()
@@ -68,11 +69,11 @@ final class DashboardViewController: BaseController {
     
     categoriesView.setData(categories: self.mocCategories)
   }
-  
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
   
     topBarView.setupColorTheme(colorTheme, theme)
+    statsView.setupColorTheme(colorTheme, theme)
     categoriesView.setupColorTheme(colorTheme, theme)
     paymentsView.setupColorTheme(colorTheme, theme)
     lastTransactions.setupColorTheme(colorTheme, theme)
@@ -121,7 +122,8 @@ extension DashboardViewController {
     view.addSubview(sendTransactionButton)
     
     mainScrollView.addSubview(scrollContentView)
-    
+
+    scrollContentView.addSubview(statsView)
     scrollContentView.addSubview(paymentsView)
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(categoriesView)
@@ -202,8 +204,15 @@ extension DashboardViewController {
       make.left.right.equalTo(view)
     }
     
+    statsView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(20)
+      make.leading.equalToSuperview().offset(16)
+      make.trailing.equalToSuperview().offset(-16)
+      make.height.equalTo(DashboardConstants.StatsComponent.height)
+    }
+    
     paymentsView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(DashboardConstants.PaymentsComponent.topOffset)
+      make.top.equalTo(statsView.snp.bottom).offset(DashboardConstants.PaymentsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.PaymentsComponent.height)
     }
@@ -294,6 +303,10 @@ struct DashboardConstants {
   
   struct TopBar {
     static var height: CGFloat = UIScreen.main.bounds.height > 736 ? 120 : 100
+  }
+  
+  struct StatsComponent {
+    static var height: CGFloat = 400 //title with button 44 + 356 collection
   }
   
   struct PaymentsComponent {

@@ -40,6 +40,7 @@
 		72E9709526DE46ED0008F675 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709126DE46ED0008F675 /* AddCategoryView.swift */; };
 		72E9709626DE46EE0008F675 /* SupportFileTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709226DE46ED0008F675 /* SupportFileTextField.swift */; };
 		72E9709726DE46EE0008F675 /* AddPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709426DE46ED0008F675 /* AddPaymentView.swift */; };
+		72E9709C26DE4A5A0008F675 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709A26DE4A5A0008F675 /* StatsView.swift */; };
 		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		72E9709126DE46ED0008F675 /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 		72E9709226DE46ED0008F675 /* SupportFileTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportFileTextField.swift; sourceTree = "<group>"; };
 		72E9709426DE46ED0008F675 /* AddPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentView.swift; sourceTree = "<group>"; };
+		72E9709A26DE4A5A0008F675 /* StatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 		723B15D826CD7A990093FD77 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				72E9709826DE4A5A0008F675 /* Stats */,
 				72E9708F26DE46ED0008F675 /* Add */,
 				72250CC526D53875002F8C2F /* Categories */,
 				72A0A65B26D3E2010008902A /* LastTransactions */,
@@ -311,6 +314,14 @@
 			path = AddPayment;
 			sourceTree = "<group>";
 		};
+		72E9709826DE4A5A0008F675 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				72E9709A26DE4A5A0008F675 /* StatsView.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
 		BEB04E0026D04F8200A550E6 /* TopBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,6 +427,7 @@
 				72E9709526DE46ED0008F675 /* AddCategoryView.swift in Sources */,
 				72250CC926D53876002F8C2F /* CategoriesCell.swift in Sources */,
 				72A0A65E26D3E2010008902A /* LastTransactionsView.swift in Sources */,
+				72E9709C26DE4A5A0008F675 /* StatsView.swift in Sources */,
 				72282AA926CFFD310094780B /* ColorSchemeFactory.swift in Sources */,
 				723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */,
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
