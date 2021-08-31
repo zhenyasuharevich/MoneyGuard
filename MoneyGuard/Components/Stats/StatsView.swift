@@ -12,10 +12,12 @@ class StatsView: UIView {
 
   private let statsHeaderView = UIView()
   private let statsTitleLabel = UILabel()
+  
   private let statsButtonView = UIView()
   private let statsButtonLabel = UILabel()
   private let statsButtonImageView = UIImageView()
   private let statsMainButton = UIButton()
+  
   private let statsHeaderLineView = UIView()
   
   private var currentColorTheme: ColorThemeProtocol?
@@ -34,6 +36,8 @@ class StatsView: UIView {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     self.backgroundColor = colorTheme.cellBackgroundColor
+    
+    statsButtonView.backgroundColor = colorTheme.activeColor
     statsTitleLabel.textColor = colorTheme.textColor
     statsButtonLabel.textColor = colorTheme.textColor
     statsHeaderLineView.backgroundColor = colorTheme.textColor
@@ -54,6 +58,7 @@ extension StatsView {
     addSubview(statsHeaderView)
     statsHeaderView.addSubview(statsTitleLabel)
     statsHeaderView.addSubview(statsButtonView)
+    
     statsButtonView.addSubview(statsButtonLabel)
     statsButtonView.addSubview(statsButtonImageView)
     statsButtonView.addSubview(statsMainButton)
@@ -94,16 +99,13 @@ extension StatsView {
     statsButtonLabel.textAlignment = .left
     statsButtonLabel.font = .systemFont(ofSize: 24, weight: .semibold)
     
-    //statsHeaderView.backgroundColor = .red
-    statsButtonView.backgroundColor = .red
-    
     statsButtonImageView.snp.makeConstraints{ make in
       make.centerY.equalToSuperview()
       make.trailing.equalToSuperview().offset(-12)
       make.height.width.equalTo(24)
     }
     
-    statsButtonImageView.backgroundColor = .white
+    statsButtonImageView.backgroundColor = .red
     
     statsMainButton.snp.makeConstraints{ make in
       make.top.trailing.bottom.leading.equalToSuperview()
@@ -117,8 +119,6 @@ extension StatsView {
       make.trailing.equalToSuperview().offset(-20)
       make.height.equalTo(1)
     }
-    
-    statsHeaderLineView.backgroundColor = .red
     
   }
   

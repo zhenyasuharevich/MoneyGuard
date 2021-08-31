@@ -1,6 +1,6 @@
 //
 //  UserDefaultsServiceLocator.swift
-//  onestat
+//  MoneyGuard
 //
 //  Created by Zhenya Suharevich on 06.05.2021.
 //

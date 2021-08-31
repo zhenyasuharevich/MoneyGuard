@@ -28,7 +28,7 @@ class StPayment: Object {
 
 extension StPayment: StorableProtocol {
   func createRuntimeModel() -> RunTimeModelProtocol {
-    var paymentType: PaymentType = .card
+    var paymentType: PaymentType = .other
     
     if let _paymentType = PaymentType(rawValue: type) {
       paymentType = _paymentType
