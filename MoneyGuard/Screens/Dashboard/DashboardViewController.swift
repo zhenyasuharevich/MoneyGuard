@@ -32,14 +32,11 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
-  var categories: [Category] = []//Category(identifier: UUID().uuidString, name: "Transport", amountSpent: 2134),
-//                                   Category(identifier: UUID().uuidString, name: "Workong activity", amountSpent: 213),
-//                                   Category(identifier: UUID().uuidString, name: "Food", amountSpent: 196000),
-//                                   Category(identifier: UUID().uuidString, name: "Test 1", amountSpent: 1234),
-//                                   Category(identifier: UUID().uuidString, name: "Test 2", amountSpent: 346246),
-//                                   Category(identifier: UUID().uuidString, name: "Test 3", amountSpent: 5245),
-//                                   Category(identifier: UUID().uuidString, name: "Test 4", amountSpent: 65),
-//                                   Category(identifier: UUID().uuidString, name: "Test 5", amountSpent: 987)]
+  var categories: [Category] = []
+  var payments: [Payment] = [Payment(identifier: UUID().uuidString, name: "Test 1", amount: 2512, type: .card),
+                             Payment(identifier: UUID().uuidString, name: "Test 2", amount: 2512, type: .card),
+                             Payment(identifier: UUID().uuidString, name: "Test 3", amount: 2512, type: .card),
+                             Payment(identifier: UUID().uuidString, name: "Test 4", amount: 2512, type: .card)]
   
   private var state: DashboardState {
     didSet {
@@ -88,6 +85,7 @@ final class DashboardViewController: BaseController {
     setupSubviews()
     loadData()
     categoriesView.setData(categories: self.categories)
+    paymentsView.setData(payments: self.payments)
   }
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
@@ -121,13 +119,7 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Category.self, completion: BlockObject<[Category], Void>({ categories in
-//      print("Categories loaded")
-//      print("Categories count: \(categories.count)")
-//      for category in categories {
-//        print("Name: \(category.name), amountSpent: \(category.amountSpent)")
-//      }
       self.categories = categories
-      
       dispatchGroup.leave()
     }))
     
