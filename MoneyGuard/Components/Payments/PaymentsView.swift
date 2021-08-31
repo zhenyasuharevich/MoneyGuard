@@ -24,6 +24,8 @@ final class PaymentsView: UIView {
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
+  private var payments: [Payment] = []
+  
   lazy var collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .horizontal
@@ -46,6 +48,14 @@ final class PaymentsView: UIView {
   
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
+  func setData(payments: [Payment]) {
+    self.payments = payments
+    
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+    }
+  }
+  
   @objc private func titlePressed() {
     delegate?.showMorePaymentsPressed()
   }
@@ -64,12 +74,26 @@ final class PaymentsView: UIView {
 extension PaymentsView: UICollectionViewDataSource {
   func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
   
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 10 }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    if payments.count < 5 {
+      return payments.count + 1
+    } else {
+      return 6
+    }
+  }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaymentCell.reuseIdentifier, for: indexPath) as? PaymentCell else { print(#line,#function,"Error: Can't get PaymentCell"); return UICollectionViewCell() }
-    let cellType = PaymentCellType.getCellType(for: indexPath)
+    let cellType = PaymentCellType.getCellType(for: indexPath, arrayCount: payments.count)
     cell.setState(state: cellType)
+    
+    switch cellType {
+    case .payment:
+      let payment = payments[indexPath.row]
+      cell.setData(payment: payment)
+    case .addPayment:
+      break
+    }
     
     if let colorTheme = self.currentColorTheme,
        let theme = self.currentTheme {
@@ -82,7 +106,7 @@ extension PaymentsView: UICollectionViewDataSource {
 
 extension PaymentsView: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = PaymentCellType.getCellType(for: indexPath)
+    let cellType = PaymentCellType.getCellType(for: indexPath, arrayCount: payments.count)
     
     switch cellType {
     case .addPayment:
