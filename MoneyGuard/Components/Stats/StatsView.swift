@@ -39,7 +39,7 @@ class StatsView: UIView {
     
     statsButtonView.backgroundColor = colorTheme.activeColor
     statsTitleLabel.textColor = colorTheme.textColor
-    statsHeaderLineView.backgroundColor = colorTheme.textColor
+    statsHeaderLineView.backgroundColor = colorTheme.activeColor
   }
   
   @objc func buttonPressed() {

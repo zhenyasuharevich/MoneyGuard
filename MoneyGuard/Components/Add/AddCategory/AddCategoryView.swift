@@ -57,6 +57,15 @@ class AddCategoryView: UIView {
     
     let newCategory = Category(identifier: UUID().uuidString, name: text, amountSpent: Double(0))
     delegate?.addCategory(newCategory: newCategory)
+    setupInitialState()
+  }
+  
+  private func setupInitialState() {
+    categoryNameTextField.text = ""
+    
+    addCategoryButton.isEnabled = false
+    addCategoryButton.backgroundColor = .none
+    endEditing(true)
   }
   
 }

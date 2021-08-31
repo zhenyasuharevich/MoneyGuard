@@ -89,7 +89,7 @@ class AddPaymentView: UIView {
 
     addPaymentButton.backgroundColor = .clear
     
-    changeButtonsSelection(oldType: .other, newType: .other)
+    setupInitialState()
   }
   
   private func paymentTypePressed(type: PaymentType) {
@@ -151,12 +151,22 @@ class AddPaymentView: UIView {
     
     let newPayment = Payment(identifier: UUID().uuidString, name: paymentName, amount: startAmount, type: selectedPaymentType)
     delegate?.addPayment(newPayment: newPayment)
+    setupInitialState()
   }
   
   @objc func cashButtonPressed() { paymentTypePressed(type: .cash) }
   @objc func cardButtonPressed() { paymentTypePressed(type: .card) }
   @objc func onlineWalletButtonPressed() { paymentTypePressed(type: .onlineWallet) }
   @objc func otherButtonPressed() { paymentTypePressed(type: .other) }
+  
+  private func setupInitialState() {
+    paymentNameTextField.text = ""
+    startAmountTextField.text = "\(Double(0.0))"
+    changeButtonsSelection(oldType: .other, newType: .other)
+    
+    isCreateEnable = false
+    endEditing(true)
+  }
 }
 
 extension AddPaymentView: UITextFieldDelegate {
