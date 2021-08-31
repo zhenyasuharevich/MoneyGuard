@@ -39,7 +39,6 @@ class StatsView: UIView {
     
     statsButtonView.backgroundColor = colorTheme.activeColor
     statsTitleLabel.textColor = colorTheme.textColor
-    statsButtonLabel.textColor = colorTheme.textColor
     statsHeaderLineView.backgroundColor = colorTheme.textColor
   }
   
@@ -58,7 +57,6 @@ extension StatsView {
     addSubview(statsHeaderView)
     statsHeaderView.addSubview(statsTitleLabel)
     statsHeaderView.addSubview(statsButtonView)
-    
     statsButtonView.addSubview(statsButtonLabel)
     statsButtonView.addSubview(statsButtonImageView)
     statsButtonView.addSubview(statsMainButton)
@@ -94,7 +92,7 @@ extension StatsView {
       make.centerY.equalToSuperview()
       make.leading.equalToSuperview().offset(12)
     }
-    
+    statsButtonLabel.textColor = .white
     statsButtonLabel.text = "ALL"
     statsButtonLabel.textAlignment = .left
     statsButtonLabel.font = .systemFont(ofSize: 24, weight: .semibold)

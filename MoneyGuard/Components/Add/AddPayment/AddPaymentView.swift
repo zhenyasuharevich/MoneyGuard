@@ -103,16 +103,23 @@ class AddPaymentView: UIView {
   }
   
   private func deselectButtons() {
+    guard let colorTheme = self.currentColorTheme else { print(#line,#function,"Error: Don't found color theme"); return }
     cardTypeButton.backgroundColor = .clear
     cashTypeButton.backgroundColor = .clear
     onlineWalletTypeButton.backgroundColor = .clear
     otherTypeButton.backgroundColor = .clear
+    
+    cardTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    cashTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    onlineWalletTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
+    otherTypeButton.setTitleColor(colorTheme.textColor, for: .normal)
   }
   
   private func selectButton(with type: PaymentType) {
     guard let colorTheme = self.currentColorTheme else { print(#line,#function,"Error: Don't found color theme"); return }
     let newSelectedButton = getButtonFor(type: type)
     newSelectedButton.backgroundColor = colorTheme.activeColor
+    newSelectedButton.setTitleColor(.white, for: .normal)
     selectedPaymentType = type
   }
   
