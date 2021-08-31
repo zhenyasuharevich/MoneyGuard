@@ -27,45 +27,6 @@ class BaseController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupColorThemeSubscriber()
-    loadData()
-  }
-  
-  private func loadData() {
-    let dispatchGroup = DispatchGroup()
-    
-    dispatchGroup.enter()
-    dataService.getAll(of: Payment.self, completion: BlockObject<[Payment], Void>({ payments in
-      print("Payments loaded")
-      print("Payments count: \(payments.count)")
-      for payment in payments {
-        print("Name: \(payment.name), amount: \(payment.amount)")
-      }
-      dispatchGroup.leave()
-    }))
-    
-    dispatchGroup.enter()
-    dataService.getAll(of: Category.self, completion: BlockObject<[Category], Void>({ categories in
-      print("Categories loaded")
-      print("Categories count: \(categories.count)")
-      for category in categories {
-        print("Name: \(category.name), amountSpent: \(category.amountSpent)")
-      }
-      dispatchGroup.leave()
-    }))
-    
-    dispatchGroup.enter()
-    dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
-      print("Transactions loaded")
-      print("Transactions count: \(transactions.count)")
-      for transaction in transactions {
-        print("Date: \(transaction.date), type: \(transaction.type)")
-      }
-      dispatchGroup.leave()
-    }))
-    
-    dispatchGroup.notify(queue: .main) {
-      print("Data loading finished")
-    }
   }
   
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {

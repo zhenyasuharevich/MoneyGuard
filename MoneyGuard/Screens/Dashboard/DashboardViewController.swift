@@ -32,14 +32,14 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
-  let mocCategories: [Category] = [Category(identifier: UUID().uuidString, name: "Transport", amountSpent: 2134),
-                                   Category(identifier: UUID().uuidString, name: "Workong activity", amountSpent: 213),
-                                   Category(identifier: UUID().uuidString, name: "Food", amountSpent: 196000),
-                                   Category(identifier: UUID().uuidString, name: "Test 1", amountSpent: 1234),
-                                   Category(identifier: UUID().uuidString, name: "Test 2", amountSpent: 346246),
-                                   Category(identifier: UUID().uuidString, name: "Test 3", amountSpent: 5245),
-                                   Category(identifier: UUID().uuidString, name: "Test 4", amountSpent: 65),
-                                   Category(identifier: UUID().uuidString, name: "Test 5", amountSpent: 987)]
+  var categories: [Category] = []//Category(identifier: UUID().uuidString, name: "Transport", amountSpent: 2134),
+//                                   Category(identifier: UUID().uuidString, name: "Workong activity", amountSpent: 213),
+//                                   Category(identifier: UUID().uuidString, name: "Food", amountSpent: 196000),
+//                                   Category(identifier: UUID().uuidString, name: "Test 1", amountSpent: 1234),
+//                                   Category(identifier: UUID().uuidString, name: "Test 2", amountSpent: 346246),
+//                                   Category(identifier: UUID().uuidString, name: "Test 3", amountSpent: 5245),
+//                                   Category(identifier: UUID().uuidString, name: "Test 4", amountSpent: 65),
+//                                   Category(identifier: UUID().uuidString, name: "Test 5", amountSpent: 987)]
   
   private var state: DashboardState {
     didSet {
@@ -86,8 +86,8 @@ final class DashboardViewController: BaseController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupSubviews()
-    
-    categoriesView.setData(categories: self.mocCategories)
+    loadData()
+    categoriesView.setData(categories: self.categories)
   }
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
@@ -98,12 +98,58 @@ final class DashboardViewController: BaseController {
     paymentsView.setupColorTheme(colorTheme, theme)
     lastTransactions.setupColorTheme(colorTheme, theme)
     
-    addCategoryView.setupColorTheme(colorTheme, theme) // EDIT
+    addCategoryView.setupColorTheme(colorTheme, theme)
     addPaymentView.setupColorTheme(colorTheme, theme)
     
     transactionButton.backgroundColor = colorTheme.activeColor
     addTransactionButton.backgroundColor = colorTheme.activeColor
     sendTransactionButton.backgroundColor = colorTheme.activeColor
+  }
+  
+  private func loadData() {
+    let dispatchGroup = DispatchGroup()
+    
+    dispatchGroup.enter()
+    dataService.getAll(of: Payment.self, completion: BlockObject<[Payment], Void>({ payments in
+//      print("Payments loaded")
+//      print("Payments count: \(payments.count)")
+//      for payment in payments {
+//        print("Name: \(payment.name), amount: \(payment.amount)")
+//      }
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.getAll(of: Category.self, completion: BlockObject<[Category], Void>({ categories in
+//      print("Categories loaded")
+//      print("Categories count: \(categories.count)")
+//      for category in categories {
+//        print("Name: \(category.name), amountSpent: \(category.amountSpent)")
+//      }
+      self.categories = categories
+      
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
+//      print("Transactions loaded")
+//      print("Transactions count: \(transactions.count)")
+//      for transaction in transactions {
+//        print("Date: \(transaction.date), type: \(transaction.type)")
+//      }
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.notify(queue: .main) {
+      self.reloadData()
+    }
+  }
+  
+  private func reloadData() {
+    DispatchQueue.main.async {
+      self.categoriesView.setData(categories: self.categories)
+    }
   }
   
   @objc private func transactionButtonPressed() {
@@ -316,8 +362,16 @@ extension DashboardViewController: AddPaymentViewDelegate {
 
 extension DashboardViewController: AddCategoryViewDelegate {
   func addCategory(newCategory: Category) {
-    print("Add category. Name: \(newCategory.name), amountSpent: \(newCategory.amountSpent)")
-    self.state = .normal
+    self.categories.append(newCategory)
+    
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.categoriesView.setData(categories: self.categories)
+      }
+      self.state = .normal
+    }
+    
+    dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
   }
 }
 
