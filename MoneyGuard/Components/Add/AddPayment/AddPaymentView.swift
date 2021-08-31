@@ -66,12 +66,14 @@ class AddPaymentView: UIView {
     otherTypeButton.backgroundColor = colorTheme.cellBackgroundColor
     otherTypeButton.layer.borderColor = colorTheme.textColor.cgColor
     otherButtonTitleLabel.textColor = colorTheme.textColor
-    addPaymentButton.backgroundColor = colorTheme.activeColor
+    addPaymentButton.backgroundColor = .none
     addPaymentButtonTitle.textColor = colorTheme.textColor
   }
   
   @objc func buttonTapped(){
     print("Adding new payment...")
+    
+    
   }
   
   @objc func cashButtonIsChosen() {
@@ -79,8 +81,22 @@ class AddPaymentView: UIView {
     cardTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
+    
     buttonIsSelected = true
+    //
+    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
+      addPaymentButton.isEnabled = false
+  
+      addPaymentButton.backgroundColor = .none
+    }
+    else {
+      addPaymentButton.isEnabled = true
+      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
+    }
+    //
     print("button is chosen...")
+    
+    
   }
   
   @objc func cardButtonIsChosen() {
@@ -89,6 +105,17 @@ class AddPaymentView: UIView {
     onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     buttonIsSelected = true
+    
+    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
+      addPaymentButton.isEnabled = false
+  
+      addPaymentButton.backgroundColor = .none
+    }
+    else {
+      addPaymentButton.isEnabled = true
+      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
+    }
+    
     print("button is chosen...")
   }
   
@@ -98,6 +125,16 @@ class AddPaymentView: UIView {
     onlineWalletTypeButton.backgroundColor = currentColorTheme?.activeColor
     otherTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     buttonIsSelected = true
+    
+    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
+      addPaymentButton.isEnabled = false
+  
+      addPaymentButton.backgroundColor = .none
+    }
+    else {
+      addPaymentButton.isEnabled = true
+      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
+    }
     print("button is chosen...")
   }
   
@@ -107,6 +144,16 @@ class AddPaymentView: UIView {
     onlineWalletTypeButton.backgroundColor = currentColorTheme?.cellBackgroundColor
     otherTypeButton.backgroundColor = currentColorTheme?.activeColor
     buttonIsSelected = true
+    
+    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
+      addPaymentButton.isEnabled = false
+  
+      addPaymentButton.backgroundColor = .none
+    }
+    else {
+      addPaymentButton.isEnabled = true
+      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
+    }
     print("button is chosen...")
   }
 }
@@ -124,21 +171,15 @@ extension AddPaymentView: UITextFieldDelegate {
     return true
   }
 
-  func textFieldDidEndEditing(_ textField: UITextField) { // func to hide button, when textfield is empty
+  func textFieldDidChangeSelection(_ textField: UITextField) { // func to hide button, when textfield is empty
     if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isHidden = true
-    }
-    else {
-      addPaymentButton.isHidden = false
-    }
-  }
+      addPaymentButton.isEnabled = false
   
-  private func textFieldWillEndEditing(_ textField: UITextField) { // func to hide button, when textfield is empty
-    if addPaymentNameTextField.text == "" || startAmountTextField.text == "" || buttonIsSelected == false {
-      addPaymentButton.isHidden = true
+      addPaymentButton.backgroundColor = .none
     }
     else {
-      addPaymentButton.isHidden = false
+      addPaymentButton.isEnabled = true
+      addPaymentButton.backgroundColor = currentColorTheme?.activeColor
     }
   }
 
@@ -215,11 +256,11 @@ extension AddPaymentView {
       make.height.equalTo(36)
     }
     
+    startAmountTextField.keyboardType = .decimalPad
     startAmountTextField.layer.cornerRadius = 8
     startAmountTextField.layer.opacity = 0.6
     startAmountTextField.textAlignment = .center
     startAmountTextField.placeholder = "0"
-    startAmountTextField.keyboardType = .numberPad
     startAmountTextField.hideKeyboardWhenDoneButtonTapped()
 
     typeOfPaymentsLabel.snp.makeConstraints { make in
@@ -310,13 +351,16 @@ extension AddPaymentView {
 
     addPaymentButton.snp.makeConstraints { make in
       make.top.equalTo(mainAddPaymentView.snp.bottom).offset(16)
-      make.trailing.leading.equalToSuperview()
+      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview().offset(16)
       make.height.equalTo(40)
     }
 
     addPaymentButton.layer.cornerRadius = 20
+    addPaymentButton.layer.borderWidth = 1
+    addPaymentButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
     addPaymentButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    addPaymentButton.isHidden = true
+    addPaymentButton.isEnabled = false
 
     addPaymentButtonTitle.snp.makeConstraints { make in
       make.centerY.equalToSuperview()
