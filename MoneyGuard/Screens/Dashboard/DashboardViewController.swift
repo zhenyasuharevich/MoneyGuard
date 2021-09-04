@@ -27,6 +27,8 @@ final class DashboardViewController: BaseController {
   private let addCategoryView = AddCategoryView()
   private let addPaymentView = AddPaymentView()
   
+  private let addTransactionView = AddTransactionView()
+  
   private let transactionButton = UIButton()
   private let addTransactionButton = UIButton()
   private let sendTransactionButton = UIButton()
@@ -81,9 +83,8 @@ final class DashboardViewController: BaseController {
     super.viewDidLoad()
     setupSubviews()
     loadData()
-    categoriesView.setData(categories: self.categories)
-    paymentsView.setData(payments: self.payments)
   }
+  
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
   
@@ -99,6 +100,8 @@ final class DashboardViewController: BaseController {
     transactionButton.backgroundColor = colorTheme.activeColor
     addTransactionButton.backgroundColor = colorTheme.activeColor
     sendTransactionButton.backgroundColor = colorTheme.activeColor
+    
+    addTransactionView.setupColorTheme(colorTheme, theme)
   }
   
   private func loadData() {
@@ -156,8 +159,6 @@ extension DashboardViewController {
   private func setupSubviews() {
     let scrollContentView = UIView()
     
-    let helperView = UIView() // Remove when all elements will be connected
-    
     //Under overlayView
     view.addSubview(mainScrollView)
     view.addSubview(topBarView)
@@ -177,7 +178,7 @@ extension DashboardViewController {
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(categoriesView)
     
-    scrollContentView.addSubview(helperView)
+    scrollContentView.addSubview(addTransactionView) // Remove after finished configuring
     
     topBarView.delegate = self
     paymentsView.delegate = self
@@ -292,6 +293,13 @@ extension DashboardViewController {
       make.top.equalTo(categoriesView.snp.bottom).offset(DashboardConstants.LastTransactionsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
+//      make.bottom.equalTo(scrollContentView.snp.bottom).offset(-92) //UNCOMMENT!!!!
+    }
+    
+    addTransactionView.snp.makeConstraints { make in
+      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
+      make.trailing.leading.equalToSuperview()
+      make.height.equalTo(340)
       make.bottom.equalTo(scrollContentView.snp.bottom).offset(-92)
     }
   }

@@ -19,6 +19,7 @@
 		72282AAE26CFFDEE0094780B /* UserDefaultsServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AAC26CFFDED0094780B /* UserDefaultsServiceLocator.swift */; };
 		72282AAF26CFFDEE0094780B /* UserDefaultsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AAD26CFFDED0094780B /* UserDefaultsProtocol.swift */; };
 		72282AB126D000CD0094780B /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72282AB026D000CD0094780B /* BaseController.swift */; };
+		7232F76F26E386F80015D79A /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7232F76E26E386F80015D79A /* AddTransactionView.swift */; };
 		723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B15DA26CD7A990093FD77 /* PaymentCell.swift */; };
 		723B15DD26CD7A9A0093FD77 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B15DB26CD7A990093FD77 /* PaymentsView.swift */; };
 		723B15DF26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723B15DE26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift */; };
@@ -58,6 +59,7 @@
 		72282AAC26CFFDED0094780B /* UserDefaultsServiceLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsServiceLocator.swift; sourceTree = "<group>"; };
 		72282AAD26CFFDED0094780B /* UserDefaultsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsProtocol.swift; sourceTree = "<group>"; };
 		72282AB026D000CD0094780B /* BaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
+		7232F76E26E386F80015D79A /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		723B15DA26CD7A990093FD77 /* PaymentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCell.swift; sourceTree = "<group>"; };
 		723B15DB26CD7A990093FD77 /* PaymentsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
 		723B15DE26CD7ADB0093FD77 /* UICollectionViewCell+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionViewCell+Extension.swift"; sourceTree = "<group>"; };
@@ -172,6 +174,14 @@
 				72282AB026D000CD0094780B /* BaseController.swift */,
 			);
 			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		7232F76D26E385E00015D79A /* AddTransaction */ = {
+			isa = PBXGroup;
+			children = (
+				7232F76E26E386F80015D79A /* AddTransactionView.swift */,
+			);
+			path = AddTransaction;
 			sourceTree = "<group>";
 		};
 		723B15D126CD71860093FD77 /* Services */ = {
@@ -291,6 +301,7 @@
 		72E9708F26DE46ED0008F675 /* Add */ = {
 			isa = PBXGroup;
 			children = (
+				7232F76D26E385E00015D79A /* AddTransaction */,
 				72E9709026DE46ED0008F675 /* AddCategory */,
 				72E9709226DE46ED0008F675 /* SupportFileTextField.swift */,
 				72E9709326DE46ED0008F675 /* AddPayment */,
@@ -437,6 +448,7 @@
 				72282AAE26CFFDEE0094780B /* UserDefaultsServiceLocator.swift in Sources */,
 				7279634126B04810003B1E86 /* SceneDelegate.swift in Sources */,
 				72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */,
+				7232F76F26E386F80015D79A /* AddTransactionView.swift in Sources */,
 				72282AAF26CFFDEE0094780B /* UserDefaultsProtocol.swift in Sources */,
 				723B15DD26CD7A9A0093FD77 /* PaymentsView.swift in Sources */,
 			);
