@@ -11,6 +11,8 @@ protocol AddTransactionViewDelegate: AnyObject {
   func addTransactionSubmit()
 }
 
+
+
 final class AddTransactionView: UIView {
   
   private let mainActiveView = UIView()
@@ -36,7 +38,15 @@ final class AddTransactionView: UIView {
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
+  private var transactionType: TransactionType {
+    didSet {
+      configureStackView(for: transactionType)
+      transactionTypeLabel.text = getTitle()
+    }
+  }
+  
   override init(frame: CGRect) {
+    self.transactionType = .unowned
     super.init(frame: frame)
     setupSubviews()
   }
@@ -75,6 +85,29 @@ final class AddTransactionView: UIView {
   
   @objc private func submitButtonPressed() {
     print("add transaction Submit pressed")
+    switch transactionType {
+    case .getMoney:
+      self.transactionType = .sendMoney
+    case .sendMoney:
+      self.transactionType = .unowned
+    case .unowned:
+      self.transactionType = .getMoney
+    }
+  }
+  
+  func setTransactionType(_ transactionType: TransactionType) {
+    self.transactionType = transactionType
+  }
+  
+  func getTitle() -> String {
+    switch transactionType {
+    case .getMoney:
+      return "Transfer money to available payment"
+    case .sendMoney:
+      return "Spend money for category"
+    case .unowned:
+      return "Error: unknowned transaction type"
+    }
   }
   
 }
@@ -91,6 +124,14 @@ extension AddTransactionView {
     mainActiveView.addSubview(notesLabel)
     mainActiveView.addSubview(notesTextView)
     mainActiveView.addSubview(separatorView)
+    
+    choosePaymentView.addSubview(choosePaymentLabel)
+    choosePaymentView.addSubview(choosePaymentButton)
+    choosePaymentView.backgroundColor = .clear
+    
+    chooseCategoryView.addSubview(chooseCategoryLabel)
+    chooseCategoryView.addSubview(chooseCategoryButton)
+    chooseCategoryView.backgroundColor = .clear
     
     mainActiveView.snp.makeConstraints { make in
       make.top.equalToSuperview()
@@ -120,9 +161,9 @@ extension AddTransactionView {
       make.trailing.equalToSuperview().offset(-8)
       make.height.equalTo(24)
     }
-    transactionTypeLabel.text = "Transfer money to available payment"
     transactionTypeLabel.font = .systemFont(ofSize: 18, weight: .medium)
     transactionTypeLabel.textAlignment = .center
+    transactionTypeLabel.text = getTitle()
     
     separatorView.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(16)
@@ -178,21 +219,6 @@ extension AddTransactionView {
     notesLabel.text = "Notes: "
     notesLabel.font = .systemFont(ofSize: 16, weight: .medium)
     
-    configureStackView()
-  }
-  
-  private func configureStackView() {
-    choosePaymentView.addSubview(choosePaymentLabel)
-    choosePaymentView.addSubview(choosePaymentButton)
-    choosePaymentView.backgroundColor = .clear
-    
-    chooseCategoryView.addSubview(chooseCategoryLabel)
-    chooseCategoryView.addSubview(chooseCategoryButton)
-    chooseCategoryView.backgroundColor = .clear
-    
-    chooseStackView.addArrangedSubview(choosePaymentView)
-    chooseStackView.addArrangedSubview(chooseCategoryView)
-    
     choosePaymentLabel.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
       make.top.equalToSuperview().offset(8)
@@ -222,11 +248,30 @@ extension AddTransactionView {
     
     chooseCategoryButton.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
-      make.top.equalTo(choosePaymentLabel.snp.bottom).offset(8)
+      make.top.equalTo(chooseCategoryLabel.snp.bottom).offset(8)
       make.bottom.equalToSuperview()
     }
     chooseCategoryButton.setTitle("Choose Category", for: .normal)
     chooseCategoryButton.layer.cornerRadius = 8
     chooseCategoryButton.clipsToBounds = true
+    
+    configureStackView(for: self.transactionType)
+  }
+  
+  private func configureStackView(for transactionType: TransactionType) {
+    for subview in chooseStackView.arrangedSubviews {
+      chooseStackView.removeArrangedSubview(subview)
+      subview.removeFromSuperview()
+    }
+    
+    switch transactionType {
+    case .getMoney:
+      chooseStackView.addArrangedSubview(choosePaymentView)
+    case .sendMoney:
+      chooseStackView.addArrangedSubview(choosePaymentView)
+      chooseStackView.addArrangedSubview(chooseCategoryView)
+    case .unowned:
+      return
+    }
   }
 }
