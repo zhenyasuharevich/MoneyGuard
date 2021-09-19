@@ -408,12 +408,16 @@ extension DashboardViewController: AddTransactionViewDelegate {
   
   func addTransactionChoosePaymentPressed() {
     print("Payment")
-    present(UIViewController(), animated: true, completion: nil)
+    let viewController = UIViewController()
+    viewController.view.backgroundColor = .red
+    present(viewController, animated: true, completion: nil)
   }
   
   func addTransactionChooseCategoryPressed() {
     print("Category")
-    present(UIViewController(), animated: true, completion: nil)
+    let viewController = UIViewController()
+    viewController.view.backgroundColor = .red
+    present(viewController, animated: true, completion: nil)
   }
 }
 
