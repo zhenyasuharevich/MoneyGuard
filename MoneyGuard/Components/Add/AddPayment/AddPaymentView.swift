@@ -159,7 +159,7 @@ class AddPaymentView: UIView {
   @objc func onlineWalletButtonPressed() { paymentTypePressed(type: .onlineWallet) }
   @objc func otherButtonPressed() { paymentTypePressed(type: .other) }
   
-  private func setupInitialState() {
+  func setupInitialState() {
     paymentNameTextField.text = ""
     startAmountTextField.text = "\(Double(0.0))"
     changeButtonsSelection(oldType: .other, newType: .other)

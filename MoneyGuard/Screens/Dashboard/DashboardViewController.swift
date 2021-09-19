@@ -13,6 +13,8 @@ enum DashboardState {
   case transactionButtonPressed
   case addPayment
   case addCategory
+  case sendTransaction
+  case getTransaction
 }
 
 final class DashboardViewController: BaseController {
@@ -47,6 +49,11 @@ final class DashboardViewController: BaseController {
         overlayView.isHidden = true
         addPaymentView.isHidden = true
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
+        
+        addCategoryView.setupInitialState()
+        addPaymentView.setupInitialState()
+        addTransactionView.setupInitialState()
       case .transactionButtonPressed:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -54,6 +61,7 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = false
         addPaymentView.isHidden = true
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
       case .addPayment:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -61,6 +69,7 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = true
         addPaymentView.isHidden = false
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
       case .addCategory:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -68,6 +77,23 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = true
         addPaymentView.isHidden = true
         addCategoryView.isHidden = false
+        addTransactionView.isHidden = true
+      case .sendTransaction:
+        transactionButton.setTitle("X", for: .normal)
+        overlayView.isHidden = false
+        addTransactionButton.isHidden = true
+        sendTransactionButton.isHidden = true
+        addPaymentView.isHidden = true
+        addCategoryView.isHidden = true
+        addTransactionView.isHidden = false
+      case .getTransaction:
+        transactionButton.setTitle("X", for: .normal)
+        overlayView.isHidden = false
+        addTransactionButton.isHidden = true
+        sendTransactionButton.isHidden = true
+        addPaymentView.isHidden = true
+        addCategoryView.isHidden = true
+        addTransactionView.isHidden = false
       }
     }
   }
@@ -146,11 +172,13 @@ final class DashboardViewController: BaseController {
   }
   
   @objc private func addTransactionButtonPressed() {
-    print("Add transaction")
+    addTransactionView.setTransactionType(.getMoney)
+    self.state = .getTransaction
   }
   
   @objc private func sendTransactionButtonPressed() {
-    print("Send transaction")
+    addTransactionView.setTransactionType(.sendMoney)
+    self.state = .sendTransaction
   }
   
 }
@@ -170,6 +198,7 @@ extension DashboardViewController {
     view.addSubview(sendTransactionButton)
     view.addSubview(addPaymentView)
     view.addSubview(addCategoryView)
+    view.addSubview(addTransactionView)
     
     mainScrollView.addSubview(scrollContentView)
 
@@ -178,12 +207,11 @@ extension DashboardViewController {
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(categoriesView)
     
-    scrollContentView.addSubview(addTransactionView) // Remove after finished configuring
-    
     topBarView.delegate = self
     paymentsView.delegate = self
     categoriesView.delegate = self
     lastTransactions.delegate = self
+    addTransactionView.delegate = self
     
     transactionButton.addTarget(self, action: #selector(transactionButtonPressed), for: .touchUpInside)
     addTransactionButton.addTarget(self, action: #selector(addTransactionButtonPressed), for: .touchUpInside)
@@ -260,6 +288,14 @@ extension DashboardViewController {
     addPaymentView.delegate = self
     addPaymentView.isHidden = true
     
+    addTransactionView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(42)
+      make.leading.equalToSuperview().offset(16)
+      make.trailing.equalToSuperview().offset(-16)
+      make.height.equalTo(340)
+    }
+    addTransactionView.isHidden = true
+    
     mainScrollView.snp.makeConstraints { make in
       make.top.equalTo(topBarView.snp.bottom)
       make.left.right.bottom.equalToSuperview()
@@ -293,13 +329,6 @@ extension DashboardViewController {
       make.top.equalTo(categoriesView.snp.bottom).offset(DashboardConstants.LastTransactionsComponent.topOffset)
       make.trailing.leading.equalToSuperview()
       make.height.equalTo(DashboardConstants.LastTransactionsComponent.height)
-//      make.bottom.equalTo(scrollContentView.snp.bottom).offset(-92) //UNCOMMENT!!!!
-    }
-    
-    addTransactionView.snp.makeConstraints { make in
-      make.top.equalTo(lastTransactions.snp.bottom).offset(20)
-      make.trailing.leading.equalToSuperview()
-      make.height.equalTo(340)
       make.bottom.equalTo(scrollContentView.snp.bottom).offset(-92)
     }
   }
@@ -369,6 +398,22 @@ extension DashboardViewController: AddCategoryViewDelegate {
     }
     
     dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
+  }
+}
+
+extension DashboardViewController: AddTransactionViewDelegate {
+  func addTransactionSubmit() {
+    print("Submit")
+  }
+  
+  func addTransactionChoosePaymentPressed() {
+    print("Payment")
+    present(UIViewController(), animated: true, completion: nil)
+  }
+  
+  func addTransactionChooseCategoryPressed() {
+    print("Category")
+    present(UIViewController(), animated: true, completion: nil)
   }
 }
 

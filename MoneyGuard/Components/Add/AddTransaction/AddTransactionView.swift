@@ -9,9 +9,9 @@ import UIKit
 
 protocol AddTransactionViewDelegate: AnyObject {
   func addTransactionSubmit()
+  func addTransactionChoosePaymentPressed()
+  func addTransactionChooseCategoryPressed()
 }
-
-
 
 final class AddTransactionView: UIView {
   
@@ -38,6 +38,22 @@ final class AddTransactionView: UIView {
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
+  weak var delegate: AddTransactionViewDelegate?
+  
+  private var selectedPayment: Payment? = nil {
+    didSet {
+      updatePaymentButton()
+      enableSubmitButtonIfPossible()
+    }
+  }
+  
+  private var selectedCategory: Category? = nil {
+    didSet {
+      updateCategoryButton()
+      enableSubmitButtonIfPossible()
+    }
+  }
+  
   private var transactionType: TransactionType {
     didSet {
       configureStackView(for: transactionType)
@@ -45,7 +61,22 @@ final class AddTransactionView: UIView {
     }
   }
   
+  private var isSubmitEnable: Bool {
+    didSet {
+      guard let colorTheme = self.currentColorTheme else { print(#line,#function,"Error: Don't found color theme"); return }
+      
+      if isSubmitEnable {
+        submitButton.backgroundColor = colorTheme.activeColor
+        submitButton.isEnabled = true
+      } else {
+        submitButton.isEnabled = false
+        submitButton.backgroundColor = .clear
+      }
+    }
+  }
+  
   override init(frame: CGRect) {
+    self.isSubmitEnable = false
     self.transactionType = .unowned
     super.init(frame: frame)
     setupSubviews()
@@ -58,7 +89,7 @@ final class AddTransactionView: UIView {
     self.currentTheme = theme
     
     mainActiveView.backgroundColor = colorTheme.cellBackgroundColor
-    submitButton.backgroundColor = colorTheme.activeColor //.none
+    submitButton.backgroundColor = .clear
     
     transactionTypeLabel.textColor = colorTheme.textColor
     
@@ -83,18 +114,6 @@ final class AddTransactionView: UIView {
     separatorView.backgroundColor = colorTheme.activeColor
   }
   
-  @objc private func submitButtonPressed() {
-    print("add transaction Submit pressed")
-    switch transactionType {
-    case .getMoney:
-      self.transactionType = .sendMoney
-    case .sendMoney:
-      self.transactionType = .unowned
-    case .unowned:
-      self.transactionType = .getMoney
-    }
-  }
-  
   func setTransactionType(_ transactionType: TransactionType) {
     self.transactionType = transactionType
   }
@@ -110,6 +129,77 @@ final class AddTransactionView: UIView {
     }
   }
   
+  
+  func setupInitialState() {
+    self.amountValueTextField.text = "\(Double(0.0))"
+    self.notesTextView.text = ""
+    self.transactionType = .unowned
+    self.selectedPayment = nil
+    self.selectedCategory = nil
+  }
+  
+  private func updatePaymentButton() {
+    guard let _selectedPayment = self.selectedPayment else {
+      choosePaymentButton.setTitle("Choose Payment", for: .normal)
+      return
+    }
+    choosePaymentButton.setTitle(_selectedPayment.name, for: .normal)
+  }
+  
+  private func updateCategoryButton() {
+    guard let _selectedCategory = self.selectedCategory else {
+      chooseCategoryButton.setTitle("Choose Category", for: .normal)
+      return
+    }
+    chooseCategoryButton.setTitle(_selectedCategory.name, for: .normal)
+  }
+  
+  private func enableSubmitButtonIfPossible() {
+    switch transactionType {
+    case .getMoney:
+      guard let payment = self.selectedPayment,
+            let amountString = amountValueTextField.text,
+            !amountString.isEmpty,
+            let amountValue = Double(amountString) else {
+        isSubmitEnable = false
+        return
+      }
+      isSubmitEnable = true
+    case .sendMoney:
+      guard let category = self.selectedCategory,
+            let payment = self.selectedPayment,
+            let amountString = amountValueTextField.text,
+            !amountString.isEmpty,
+            let amountValue = Double(amountString) else {
+        isSubmitEnable = false
+        return
+      }
+      isSubmitEnable = true
+    default:
+      isSubmitEnable = false
+    }
+  }
+  
+  @objc private func choosePaymentButtonPressed() {
+    delegate?.addTransactionChoosePaymentPressed()
+  }
+  
+  @objc private func chooseCategoryButtonPressed() {
+    delegate?.addTransactionChooseCategoryPressed()
+  }
+  
+  @objc private func submitButtonPressed() {
+//    print("add transaction Submit pressed")
+//    switch transactionType {
+//    case .getMoney:
+//      self.transactionType = .sendMoney
+//    case .sendMoney:
+//      self.transactionType = .unowned
+//    case .unowned:
+//      self.transactionType = .getMoney
+//    }
+    delegate?.addTransactionSubmit()
+  }
 }
 
 extension AddTransactionView {
@@ -153,7 +243,7 @@ extension AddTransactionView {
     submitButton.layer.borderWidth = 1
     submitButton.layer.borderColor = CGColor(red: 255, green: 255, blue: 255, alpha: 1)
     submitButton.addTarget(self, action: #selector(submitButtonPressed), for: .touchUpInside)
-//    submitButton.isEnabled = false
+    submitButton.isEnabled = false
     
     transactionTypeLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
@@ -196,6 +286,7 @@ extension AddTransactionView {
       make.leading.equalTo(amountLabel.snp.trailing).offset(16)
       make.height.equalTo(32)
     }
+    amountValueTextField.text = "\(Double(0.0))"
     amountValueTextField.textAlignment = .center
     amountValueTextField.layer.cornerRadius = 8
     amountValueTextField.hideKeyboardWhenDoneButtonTapped()
@@ -236,6 +327,7 @@ extension AddTransactionView {
     choosePaymentButton.setTitle("Choose Payment", for: .normal)
     choosePaymentButton.layer.cornerRadius = 8
     choosePaymentButton.clipsToBounds = true
+    choosePaymentButton.addTarget(self, action: #selector(choosePaymentButtonPressed), for: .touchUpInside)
     
     chooseCategoryLabel.snp.makeConstraints { make in
       make.leading.trailing.equalToSuperview()
@@ -254,6 +346,7 @@ extension AddTransactionView {
     chooseCategoryButton.setTitle("Choose Category", for: .normal)
     chooseCategoryButton.layer.cornerRadius = 8
     chooseCategoryButton.clipsToBounds = true
+    chooseCategoryButton.addTarget(self, action: #selector(chooseCategoryButtonPressed), for: .touchUpInside)
     
     configureStackView(for: self.transactionType)
   }
