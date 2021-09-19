@@ -41,6 +41,9 @@
 		72E9709626DE46EE0008F675 /* SupportFileTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709226DE46ED0008F675 /* SupportFileTextField.swift */; };
 		72E9709726DE46EE0008F675 /* AddPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709426DE46ED0008F675 /* AddPaymentView.swift */; };
 		72E9709C26DE4A5A0008F675 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709A26DE4A5A0008F675 /* StatsView.swift */; };
+		BE2340BC26F78EEF00DC7787 /* CategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2340BB26F78EEF00DC7787 /* CategoriesViewController.swift */; };
+		BE6C4C1926F7C25600FA526E /* MainCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6C4C1826F7C25600FA526E /* MainCategoriesView.swift */; };
+		BE6C4C1B26F7D3DD00FA526E /* MainCategoriesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6C4C1A26F7D3DD00FA526E /* MainCategoriesCell.swift */; };
 		BEB04E0226D04FE000A550E6 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB04E0126D04FE000A550E6 /* TopBarView.swift */; };
 		BEB3C02426B0538E00F744A3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BEB3C02326B0538E00F744A3 /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -80,6 +83,9 @@
 		72E9709226DE46ED0008F675 /* SupportFileTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportFileTextField.swift; sourceTree = "<group>"; };
 		72E9709426DE46ED0008F675 /* AddPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentView.swift; sourceTree = "<group>"; };
 		72E9709A26DE4A5A0008F675 /* StatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		BE2340BB26F78EEF00DC7787 /* CategoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewController.swift; sourceTree = "<group>"; };
+		BE6C4C1826F7C25600FA526E /* MainCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCategoriesView.swift; sourceTree = "<group>"; };
+		BE6C4C1A26F7D3DD00FA526E /* MainCategoriesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCategoriesCell.swift; sourceTree = "<group>"; };
 		BEB04E0126D04FE000A550E6 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				72282AB226D0055E0094780B /* Dashboard */,
+				BE2340BD26F78EF600DC7787 /* CategoriesViewController */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -320,6 +327,16 @@
 				72E9709A26DE4A5A0008F675 /* StatsView.swift */,
 			);
 			path = Stats;
+			sourceTree = "<group>";
+		};
+		BE2340BD26F78EF600DC7787 /* CategoriesViewController */ = {
+			isa = PBXGroup;
+			children = (
+				BE2340BB26F78EEF00DC7787 /* CategoriesViewController.swift */,
+				BE6C4C1826F7C25600FA526E /* MainCategoriesView.swift */,
+				BE6C4C1A26F7D3DD00FA526E /* MainCategoriesCell.swift */,
+			);
+			path = CategoriesViewController;
 			sourceTree = "<group>";
 		};
 		BEB04E0026D04F8200A550E6 /* TopBar */ = {
@@ -434,10 +451,13 @@
 				723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */,
 				72A0A66D26D3FC570008902A /* StPayment.swift in Sources */,
 				72A0A66926D3F8F30008902A /* RealmService.swift in Sources */,
+				BE6C4C1926F7C25600FA526E /* MainCategoriesView.swift in Sources */,
 				72282AAE26CFFDEE0094780B /* UserDefaultsServiceLocator.swift in Sources */,
+				BE6C4C1B26F7D3DD00FA526E /* MainCategoriesCell.swift in Sources */,
 				7279634126B04810003B1E86 /* SceneDelegate.swift in Sources */,
 				72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */,
 				72282AAF26CFFDEE0094780B /* UserDefaultsProtocol.swift in Sources */,
+				BE2340BC26F78EEF00DC7787 /* CategoriesViewController.swift in Sources */,
 				723B15DD26CD7A9A0093FD77 /* PaymentsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
