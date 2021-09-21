@@ -286,6 +286,7 @@ extension AddTransactionView {
       make.leading.equalTo(amountLabel.snp.trailing).offset(16)
       make.height.equalTo(32)
     }
+    amountValueTextField.keyboardType = .decimalPad
     amountValueTextField.text = "\(Double(0.0))"
     amountValueTextField.textAlignment = .center
     amountValueTextField.layer.cornerRadius = 8

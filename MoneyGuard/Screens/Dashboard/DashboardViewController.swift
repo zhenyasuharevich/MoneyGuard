@@ -36,6 +36,8 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
+  private let settingsScreen = SettingsController()
+  
   var categories: [Category] = []
   var payments: [Payment] = []
   
@@ -107,6 +109,10 @@ final class DashboardViewController: BaseController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    settingsScreen.delegate = self
+    settingsScreen.modalPresentationStyle = .fullScreen
+    
     setupSubviews()
     loadData()
   }
@@ -128,6 +134,7 @@ final class DashboardViewController: BaseController {
     sendTransactionButton.backgroundColor = colorTheme.activeColor
     
     addTransactionView.setupColorTheme(colorTheme, theme)
+    settingsScreen.setupColorTheme(colorTheme, theme)
   }
   
   private func loadData() {
@@ -336,34 +343,21 @@ extension DashboardViewController {
 }
 
 extension DashboardViewController: TopBarViewDelegate {
-  func settingsButtonPressed() {
-    switch colorSchemeManager.currentTheme {
-    case .light:
-      colorSchemeManager.currentTheme = .dark
-    case .dark:
-      colorSchemeManager.currentTheme = .system
-    case .system:
-      colorSchemeManager.currentTheme = .light
-    }
-  }
+  func settingsButtonPressed() { present(settingsScreen, animated: true, completion: nil) }
 }
 
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
   func showMorePaymentsPressed() { print(#line,#function,"Title pressed") }
   
-  func addPaymentPressed(for indexPath: IndexPath) {
-    self.state = .addPayment
-  }
+  func addPaymentPressed(for indexPath: IndexPath) { self.state = .addPayment }
 }
 
 extension DashboardViewController: CategoriesViewDelegate {
   func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
   func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
   
-  func addCategoryPressed(for indexPath: IndexPath) {
-    self.state = .addCategory
-  }
+  func addCategoryPressed(for indexPath: IndexPath) { self.state = .addCategory }
 }
 
 extension DashboardViewController: LastTransactionsViewDelegate {
@@ -419,6 +413,11 @@ extension DashboardViewController: AddTransactionViewDelegate {
     viewController.view.backgroundColor = .red
     present(viewController, animated: true, completion: nil)
   }
+}
+
+extension DashboardViewController: SettingsControllerDelegate {
+  func settingsClearAllData() { print(#line,#function,"Clear all data") }
+  func settingsChangeTheme(_ newTheme: ThemeType) { colorSchemeManager.currentTheme = newTheme }
 }
 
 struct DashboardConstants {

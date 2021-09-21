@@ -70,7 +70,7 @@ extension TopBarView {
       make.leading.equalToSuperview().offset(28)
       make.centerY.equalTo(topBarSettingButton).offset(0)
     }
-    
+    topBarLogotype.font = .systemFont(ofSize: 20, weight: .medium)
     topBarLogotype.text = "MoneyGuard"
   }
   
