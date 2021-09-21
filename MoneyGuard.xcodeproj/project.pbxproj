@@ -37,6 +37,7 @@
 		72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66A26D3FC470008902A /* StTransaction.swift */; };
 		72A0A66D26D3FC570008902A /* StPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66C26D3FC570008902A /* StPayment.swift */; };
 		72A0A66F26D3FC620008902A /* StCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72A0A66E26D3FC620008902A /* StCategory.swift */; };
+		72E3C3B026FA03230034F3D4 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E3C3AF26FA03230034F3D4 /* SettingsController.swift */; };
 		72E9708E26DE30260008F675 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9708D26DE30260008F675 /* Int+Extension.swift */; };
 		72E9709526DE46ED0008F675 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709126DE46ED0008F675 /* AddCategoryView.swift */; };
 		72E9709626DE46EE0008F675 /* SupportFileTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709226DE46ED0008F675 /* SupportFileTextField.swift */; };
@@ -77,6 +78,7 @@
 		72A0A66A26D3FC470008902A /* StTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StTransaction.swift; sourceTree = "<group>"; };
 		72A0A66C26D3FC570008902A /* StPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StPayment.swift; sourceTree = "<group>"; };
 		72A0A66E26D3FC620008902A /* StCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StCategory.swift; sourceTree = "<group>"; };
+		72E3C3AF26FA03230034F3D4 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		72E9708D26DE30260008F675 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
 		72E9709126DE46ED0008F675 /* AddCategoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 		72E9709226DE46ED0008F675 /* SupportFileTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportFileTextField.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 		7279635326B05EFF003B1E86 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				72E3C3AE26FA02D60034F3D4 /* Settings */,
 				72282AB226D0055E0094780B /* Dashboard */,
 			);
 			path = Screens;
@@ -296,6 +299,14 @@
 			children = (
 			);
 			path = UIElements;
+			sourceTree = "<group>";
+		};
+		72E3C3AE26FA02D60034F3D4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				72E3C3AF26FA03230034F3D4 /* SettingsController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		72E9708F26DE46ED0008F675 /* Add */ = {
@@ -446,6 +457,7 @@
 				72A0A66D26D3FC570008902A /* StPayment.swift in Sources */,
 				72A0A66926D3F8F30008902A /* RealmService.swift in Sources */,
 				72282AAE26CFFDEE0094780B /* UserDefaultsServiceLocator.swift in Sources */,
+				72E3C3B026FA03230034F3D4 /* SettingsController.swift in Sources */,
 				7279634126B04810003B1E86 /* SceneDelegate.swift in Sources */,
 				72A0A66B26D3FC470008902A /* StTransaction.swift in Sources */,
 				7232F76F26E386F80015D79A /* AddTransactionView.swift in Sources */,
