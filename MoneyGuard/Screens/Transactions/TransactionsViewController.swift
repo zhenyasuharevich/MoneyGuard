@@ -18,6 +18,20 @@ class TransactionsViewController: UIViewController {
   private let returnButton = UIButton()
   private let screenNameLabel = UILabel()
   
+  lazy var collectionView : UICollectionView = {
+     let layout = UICollectionViewFlowLayout()
+     layout.scrollDirection = .vertical
+     
+     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+     cv.register(TransactionsScreenCell.self, forCellWithReuseIdentifier: TransactionsScreenCell.reuseIdentifier)
+     cv.translatesAutoresizingMaskIntoConstraints = false
+     cv.dataSource = self
+     cv.delegate = self
+     cv.showsVerticalScrollIndicator = false
+     cv.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 16)
+    return cv
+   }()
+  
   weak var delegate: TransactionsViewControllerDelegate?
   
   private var currentTheme: ThemeType?
@@ -37,6 +51,7 @@ class TransactionsViewController: UIViewController {
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
     
+    collectionView.reloadData()
   }
   
   @objc private func returnButtonPressed() {
@@ -45,7 +60,41 @@ class TransactionsViewController: UIViewController {
   
 }
 
+extension TransactionsViewController : UICollectionViewDelegate {
+  
+}
 
+extension TransactionsViewController : UICollectionViewDataSource {
+  
+  func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
+  
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 10 }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TransactionsScreenCell.reuseIdentifier, for: indexPath) as? TransactionsScreenCell else {
+      print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell()
+    }
+    
+    if let colorTheme = self.currentColorTheme,
+       let theme = self.currentTheme {
+      cell.setupColorTheme(colorTheme, theme)
+    }
+    
+    return cell
+  }
+  
+}
+
+extension TransactionsViewController : UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    let widthCell = collectionView.frame.width - 32
+    return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/7)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 8 }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 8 }
+}
 
 extension TransactionsViewController {
   private func setupSubviews() {
@@ -53,6 +102,7 @@ extension TransactionsViewController {
     view.addSubview(topBar)
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
+    view.addSubview(collectionView)
     
     //view.backgroundColor = .clear
     
@@ -83,6 +133,13 @@ extension TransactionsViewController {
     
     screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
     screenNameLabel.text = "All transactions"
+    
+    collectionView.snp.makeConstraints { make in
+      make.leading.trailing.bottom.equalToSuperview()
+      make.top.equalTo(topBar.snp.bottom)
+    }
+    
+    collectionView.backgroundColor = .clear
     
   }
 }
