@@ -32,6 +32,8 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
+  private let categoriesScreen = CategoriesViewController()
+  
   var categories: [Category] = []
   var payments: [Payment] = []
   
@@ -83,6 +85,8 @@ final class DashboardViewController: BaseController {
     loadData()
     categoriesView.setData(categories: self.categories)
     paymentsView.setData(payments: self.payments)
+    
+    categoriesScreen.modalPresentationStyle = .fullScreen
   }
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
@@ -99,6 +103,8 @@ final class DashboardViewController: BaseController {
     transactionButton.backgroundColor = colorTheme.activeColor
     addTransactionButton.backgroundColor = colorTheme.activeColor
     sendTransactionButton.backgroundColor = colorTheme.activeColor
+    
+    categoriesScreen.setupColorTheme(colorTheme, theme)
   }
   
   private func loadData() {
@@ -322,7 +328,9 @@ extension DashboardViewController: PaymentsViewDelegate {
 
 extension DashboardViewController: CategoriesViewDelegate {
   func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
-  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
+  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed")
+    present(categoriesScreen, animated: true, completion: nil)
+  }
   
   func addCategoryPressed(for indexPath: IndexPath) {
     self.state = .addCategory
