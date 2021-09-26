@@ -15,6 +15,7 @@ protocol CategoriesViewControllerDelegate: AnyObject {
 enum CategoriesViewControllerState {
   case normal
   case transactionButtonPressed
+  case addCategory
 }
 
 final class CategoriesViewController: UIViewController {
@@ -22,7 +23,10 @@ final class CategoriesViewController: UIViewController {
   private let topBar = UIView()
   private let returnButton = UIButton()
   private let screenNameLabel = UILabel()
-
+  
+  private let addCategoryView = AddCategoryView()
+  private let overlayView = UIView()
+  
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .vertical
@@ -36,6 +40,8 @@ final class CategoriesViewController: UIViewController {
     return cv
   }()
   
+  weak var delegate: CategoriesViewControllerDelegate?
+
   var categories: [Category] = []
   
   private var currentColorTheme: ColorThemeProtocol?
@@ -45,9 +51,13 @@ final class CategoriesViewController: UIViewController {
     didSet {
       switch state {
       case .normal:
-        view.backgroundColor = .red
+        addCategoryView.isHidden = true
+        overlayView.isHidden = true
       case .transactionButtonPressed:
-        view.backgroundColor = .yellow
+        view.backgroundColor = .yellow // ???
+      case .addCategory:
+        addCategoryView.isHidden = false
+        overlayView.isHidden = false
       }
     }
   }
@@ -57,9 +67,7 @@ final class CategoriesViewController: UIViewController {
       super.init(nibName: nil, bundle: nil)
     }
   
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -75,7 +83,7 @@ final class CategoriesViewController: UIViewController {
     view.backgroundColor = colorTheme.backgroundColor
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
-    
+    addCategoryView.setupColorTheme(colorTheme, theme)
     collectionView.reloadData()
   }
   
@@ -83,27 +91,13 @@ final class CategoriesViewController: UIViewController {
     self.dismiss(animated: true, completion: nil)
   }
   
-  @objc private func editButtonPressed() {
-    func setEditing(_ editing: Bool, animated: Bool) {
-      super.setEditing(editing, animated:animated)
-      self.collectionView.isEditing = editing
-    }
-  }
-  
 }
 
 extension CategoriesViewController : UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//    if categories.count < 5 {
-//      return categories.count + 1
-//    } else {
-//      return 6
-//    }
-//    categories.count
-    14
+    categories.count + 1
+    //14
   }
-  
-
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoriesScreenCell.reuseIdentifier, for: indexPath) as? CategoriesScreenCell else { print(#line,#function,"Error: Can't get CategoriesCell");
@@ -117,13 +111,13 @@ extension CategoriesViewController : UICollectionViewDataSource {
       cell.setupColorTheme(colorTheme, theme)
     }
     
-//    switch cellType {
-//    case .category:
-//      let category = categories[indexPath.row]
-//      cell.setData(category: category)
-//    case .addCategory:
-//      break
-//    }
+    switch cellType {
+    case .category:
+      let category = categories[indexPath.row]
+      cell.setData(category: category)
+    case .addCategory:
+      break
+    }
     
     return cell
   }
@@ -133,18 +127,17 @@ extension CategoriesViewController : UICollectionViewDataSource {
 }
 
 extension CategoriesViewController : UICollectionViewDelegate {
-//  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//    let cellType = MainCategoriesCellType.getCellType(for: indexPath, arrayCount: categories.count)
-//
-//    switch cellType {
-//    case .addCategory:
-//      delegate?.addCategoryPressed(for: indexPath)
-//    case .category:
-//      delegate?.categoryPressed(for: indexPath)
-//    }
-//  }
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let cellType = CategoriesScreenCellType.getCellType(for: indexPath, arrayCount: categories.count)
 
- 
+    switch cellType {
+    case .addCategory:
+      delegate?.addCategoryPressed(for: indexPath)
+    case .category:
+      delegate?.categoryPressed(for: indexPath)
+    }
+  }
+
 }
 
 extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
@@ -165,6 +158,8 @@ extension CategoriesViewController {
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
+    view.addSubview(addCategoryView)
+    view.addSubview(overlayView)
     
     topBar.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview()
@@ -192,11 +187,28 @@ extension CategoriesViewController {
     }
     
     screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
-    screenNameLabel.text = "All transactions"
+    screenNameLabel.text = "All categories"
+    
+    addCategoryView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(30)
+      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview().offset(16)
+      make.height.equalTo(188)
+    }
+    
+//    addCategoryView.delegate = self
+    addCategoryView.isHidden = true
+    
+    overlayView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
+    overlayView.isHidden = true
+    overlayView.backgroundColor = .black
+    overlayView.alpha = 0.7
     
     collectionView.snp.makeConstraints { make in
-      make.leading.equalToSuperview().offset(16)
-      make.trailing.equalToSuperview().offset(-16)
+      make.leading.equalToSuperview()
+      make.trailing.equalToSuperview()
       make.bottom.equalToSuperview()
       make.top.equalTo(topBar.snp.bottom)
     }
@@ -206,5 +218,18 @@ extension CategoriesViewController {
   
 }
 
-
+//extension CategoriesViewController: AddCategoryViewDelegate {
+//  func addCategory(newCategory: Category) {
+//    self.categories.append(newCategory)
+//
+//    let comletionBlock = EmptyBlock { _ in
+//      DispatchQueue.main.async {
+//        self.categoriesView.setData(categories: self.categories)
+//      }
+//      self.state = .normal
+//    }
+//
+//    dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
+//  }
+//}
 
