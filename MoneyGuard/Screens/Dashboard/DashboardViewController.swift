@@ -37,6 +37,7 @@ final class DashboardViewController: BaseController {
   private let overlayView = UIView()
   
   private let settingsScreen = SettingsController()
+  private let paymentsScreen = PaymentsScreenViewController()
   
   var categories: [Category] = []
   var payments: [Payment] = []
@@ -113,6 +114,8 @@ final class DashboardViewController: BaseController {
     settingsScreen.delegate = self
     settingsScreen.modalPresentationStyle = .fullScreen
     
+    paymentsScreen.modalPresentationStyle = .fullScreen
+    
     setupSubviews()
     loadData()
   }
@@ -135,6 +138,7 @@ final class DashboardViewController: BaseController {
     
     addTransactionView.setupColorTheme(colorTheme, theme)
     settingsScreen.setupColorTheme(colorTheme, theme)
+    paymentsScreen.setupColorTheme(colorTheme, theme)
   }
   
   private func loadData() {
@@ -348,7 +352,9 @@ extension DashboardViewController: TopBarViewDelegate {
 
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
-  func showMorePaymentsPressed() { print(#line,#function,"Title pressed") }
+  func showMorePaymentsPressed() {
+    present(paymentsScreen, animated: true, completion: nil)
+    print(#line,#function,"Title pressed") }
   
   func addPaymentPressed(for indexPath: IndexPath) { self.state = .addPayment }
 }
