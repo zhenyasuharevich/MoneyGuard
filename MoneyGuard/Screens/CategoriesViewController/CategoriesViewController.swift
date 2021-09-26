@@ -28,7 +28,7 @@ final class CategoriesViewController: UIViewController {
     layout.scrollDirection = .vertical
     
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    cv.register(MainCategoriesCell.self, forCellWithReuseIdentifier: MainCategoriesCell.reuseIdentifier)
+    cv.register(CategoriesScreenCell.self, forCellWithReuseIdentifier: CategoriesScreenCell.reuseIdentifier)
     cv.dataSource = self
     cv.delegate = self
     cv.showsVerticalScrollIndicator = false
@@ -106,10 +106,10 @@ extension CategoriesViewController : UICollectionViewDataSource {
 
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCategoriesCell.reuseIdentifier, for: indexPath) as? MainCategoriesCell else { print(#line,#function,"Error: Can't get CategoriesCell");
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoriesScreenCell.reuseIdentifier, for: indexPath) as? CategoriesScreenCell else { print(#line,#function,"Error: Can't get CategoriesCell");
       return UICollectionViewCell() }
     
-    let cellType = MainCategoriesCellType.getCellType(for: indexPath, arrayCount: categories.count)
+    let cellType = CategoriesScreenCellType.getCellType(for: indexPath, arrayCount: categories.count)
     cell.setState(state: cellType)
     
     if let colorTheme = self.currentColorTheme,
