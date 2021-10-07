@@ -96,6 +96,7 @@ final class PaymentsScreenViewController: UIViewController {
   @objc private func returnButtonPressed() {
     self.dismiss(animated: true, completion: nil)
   }
+
 }
 
 extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
@@ -113,14 +114,30 @@ extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
 
 extension PaymentsScreenViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = PaymentCellType.getCellType(for: indexPath, arrayCount: payments.count)
+    let cellType = PaymentScreenCellType.getCellType(for: indexPath, arrayCount: payments.count)
     
     switch cellType {
     case .addPayment:
       delegate?.addPaymentPressed(for: indexPath)
     case .payment:
       delegate?.paymentPressed(for: indexPath)
-    }
+      }
+    
+//    let deleteCell = PaymentsScreenCell.deleteButtonPressed
+    
+    
+//    ///////
+//    let cellTypeForRemove = selectedCellToDeleting.getCellTypeForRemoving(for: indexPath, arrayCount: payments.count)
+//
+//    switch cellTypeForRemove {
+//    case .selectedToDeleting:
+//      self.payments.remove(at: indexPath.row)
+//      collectionView.deleteItems(at: [indexPath])
+//
+//    case .notSelected:
+//      print("NO!")
+//    }
+//    ////////
   }
 }
 
@@ -135,7 +152,7 @@ extension PaymentsScreenViewController : UICollectionViewDataSource {
       print(#line,#function,"Error: Can't get PaymentsScreenCell");
       return UICollectionViewCell() }
     
-    let cellType = PaymentCellType.getCellType(for: indexPath, arrayCount: payments.count)
+    let cellType = PaymentScreenCellType.getCellType(for: indexPath, arrayCount: payments.count)
     cell.setState(state: cellType)
     
     switch cellType {
@@ -151,11 +168,14 @@ extension PaymentsScreenViewController : UICollectionViewDataSource {
       cell.setupColorTheme(colorTheme, theme)
     }
     
+    cell.delegate = self
+    cell.indexPath = indexPath
+    
     return cell
-    }
+  }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
-
+  
 }
 
 extension PaymentsScreenViewController {
@@ -223,6 +243,14 @@ extension PaymentsScreenViewController {
   }
 }
 
+extension PaymentsScreenViewController: CellDelegate {
+  func deleteButtonPressed(for indexPath: IndexPath) {
+    payments.remove(at: indexPath.row)
+    collectionView.deleteItems(at: [indexPath])
+    collectionView.reloadData()
+  }
+  
+}
 
 
 

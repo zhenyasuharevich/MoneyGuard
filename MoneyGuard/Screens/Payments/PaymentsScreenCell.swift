@@ -6,12 +6,17 @@
 //
 
 import UIKit
+import SwiftUI
+
+protocol CellDelegate: AnyObject {
+  func deleteButtonPressed(for indexPath: IndexPath)
+}
 
 enum PaymentScreenCellType: Int {
   case addPayment = 0
   case payment = 1
   
-  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> PaymentCellType {
+  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> PaymentScreenCellType {
     if indexPath.row == arrayCount && indexPath.section == 0 {
       return .addPayment
     }
@@ -33,7 +38,11 @@ final class PaymentsScreenCell: UICollectionViewCell {
   private let typeValueLabel = UILabel()
   private let separatorView = UIView()
   
-  private var state: PaymentCellType = .payment {
+  weak var delegate: CellDelegate?
+  
+  var indexPath: IndexPath?
+  
+  private var state: PaymentScreenCellType = .payment {
     didSet {
       switch state {
       case .addPayment:
@@ -44,6 +53,7 @@ final class PaymentsScreenCell: UICollectionViewCell {
         typeLabel.isHidden = true
         typeValueLabel.isHidden = true
         separatorView.isHidden = true
+       
       case .payment:
         addPaymentLabel.isHidden = true
         paymentNameLabel.isHidden = false
@@ -52,6 +62,7 @@ final class PaymentsScreenCell: UICollectionViewCell {
         typeLabel.isHidden = false
         typeValueLabel.isHidden = false
         separatorView.isHidden = false
+       
         
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = .left
@@ -69,9 +80,11 @@ final class PaymentsScreenCell: UICollectionViewCell {
   
   override func prepareForReuse() {
     self.state = .payment
+    self.indexPath = nil
+    self.delegate = nil
   }
   
-  func setState(state: PaymentCellType) {
+  func setState(state: PaymentScreenCellType) {
     self.state = state
   }
   
@@ -112,8 +125,12 @@ final class PaymentsScreenCell: UICollectionViewCell {
     }
   }
   
-  @objc func deleteButtonPressed() {
-    print("deleteButtonPressed")
+  @objc func deleteButtonPressed(for indexPath: IndexPath) {
+    guard let indexPath = self.indexPath else {
+      return
+    }
+
+    delegate?.deleteButtonPressed(for: indexPath)
   }
   
 }
@@ -226,22 +243,25 @@ extension PaymentsScreenCell {
     typeValueLabel.font = .systemFont(ofSize: 16, weight: .medium)
   }
   
-private func animateLeft() {
+  private func animateLeft() {
     UIView.animate(withDuration: 5) {
       self.cellView.snp.updateConstraints { (make) in
         make.trailing.equalToSuperview().offset(-36)
       }
     }
+    
     self.layoutIfNeeded()
   }
   
-private func animateRight() {
+  private func animateRight() {
     UIView.animate(withDuration: 5) {
       self.cellView.snp.updateConstraints { (make) in
         make.trailing.equalToSuperview()
       }
     }
+    
     self.layoutIfNeeded()
   }
   
 }
+
