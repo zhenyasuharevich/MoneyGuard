@@ -39,8 +39,8 @@ final class PaymentsScreenCell: UICollectionViewCell {
   private let separatorView = UIView()
   
   weak var delegate: CellDelegate?
-  
   var indexPath: IndexPath?
+  private var isAnimating: Bool = false
   
   private var state: PaymentScreenCellType = .payment {
     didSet {
@@ -62,26 +62,27 @@ final class PaymentsScreenCell: UICollectionViewCell {
         typeLabel.isHidden = false
         typeValueLabel.isHidden = false
         separatorView.isHidden = false
-       
-        
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeLeft.direction = .left
-        self.addGestureRecognizer(swipeLeft)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeRight.direction = .right
-        self.addGestureRecognizer(swipeRight)
       }
     }
   }
   
-  override init(frame: CGRect) { super.init(frame: frame); setupSubviews() }
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupSubviews()
+    setupGestures()
+  }
+  
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
   override func prepareForReuse() {
     self.state = .payment
     self.indexPath = nil
     self.delegate = nil
+    self.isAnimating = false
+    
+    self.cellView.snp.updateConstraints { (make) in
+      make.trailing.equalToSuperview()
+    }
   }
   
   func setState(state: PaymentScreenCellType) {
@@ -114,10 +115,8 @@ final class PaymentsScreenCell: UICollectionViewCell {
     if let swipeGesture = gesture as? UISwipeGestureRecognizer {
       switch swipeGesture.direction {
       case .right:
-        print("Swiped right")
         animateRight()
       case .left:
-        print("Swiped left")
         animateLeft()
       default:
         break
@@ -125,12 +124,49 @@ final class PaymentsScreenCell: UICollectionViewCell {
     }
   }
   
-  @objc func deleteButtonPressed(for indexPath: IndexPath) {
-    guard let indexPath = self.indexPath else {
-      return
-    }
+  @objc func deleteButtonPressed() {
+    guard let indexPath = self.indexPath,
+          let delegate = self.delegate else { return }
 
-    delegate?.deleteButtonPressed(for: indexPath)
+    delegate.deleteButtonPressed(for: indexPath)
+  }
+  
+  private func animateLeft() {
+    guard !(self.state == .addPayment) else { print(#line,#function,"Can't animate cell with type \(self.state)");return }
+    guard !self.isAnimating else { return }
+    
+    self.isAnimating = true
+    
+    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+      self.cellView.snp.updateConstraints { (make) in
+        make.trailing.equalToSuperview().offset(-36)
+      }
+      self.layoutIfNeeded()
+    } completion: { completed in
+      if completed {
+        print("Swiped left")
+        self.isAnimating = false
+      }
+    }
+  }
+  
+  private func animateRight() {
+    guard !(self.state == .addPayment) else { print(#line,#function,"Can't animate cell with type \(self.state)");return }
+    guard !self.isAnimating else { return }
+    
+    self.isAnimating = true
+    
+    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+      self.cellView.snp.updateConstraints { (make) in
+        make.trailing.equalToSuperview()
+      }
+      self.layoutIfNeeded()
+    } completion: { completed in
+      if completed {
+        print("Swiped right")
+        self.isAnimating = false
+      }
+    }
   }
   
 }
@@ -159,14 +195,12 @@ extension PaymentsScreenCell {
     deleteView.layer.cornerRadius = 20
     
     deleteButton.snp.makeConstraints { make in
-      make.centerY.equalToSuperview()
-      make.trailing.equalToSuperview()
-      make.height.equalToSuperview()
+      make.trailing.equalToSuperview().offset(0)
+      make.top.bottom.equalToSuperview()
       make.width.equalTo(36)
     }
     deleteButton.backgroundColor = .clear
     deleteButton.setTitle("x", for: .normal)
-    deleteButton.addTarget(self, action: #selector(deleteButtonPressed), for: .touchUpInside)
     deleteButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
     
     cellView.snp.makeConstraints { make in
@@ -243,25 +277,17 @@ extension PaymentsScreenCell {
     typeValueLabel.font = .systemFont(ofSize: 16, weight: .medium)
   }
   
-  private func animateLeft() {
-    UIView.animate(withDuration: 5) {
-      self.cellView.snp.updateConstraints { (make) in
-        make.trailing.equalToSuperview().offset(-36)
-      }
-    }
+  private func setupGestures() {
+    let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+    swipeLeft.direction = .left
+    self.addGestureRecognizer(swipeLeft)
     
-    self.layoutIfNeeded()
-  }
-  
-  private func animateRight() {
-    UIView.animate(withDuration: 5) {
-      self.cellView.snp.updateConstraints { (make) in
-        make.trailing.equalToSuperview()
-      }
-    }
+    let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+    swipeRight.direction = .right
+    self.addGestureRecognizer(swipeRight)
     
-    self.layoutIfNeeded()
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(deleteButtonPressed))
+    self.deleteButton.addGestureRecognizer(tapGesture)
   }
   
 }
-

@@ -43,11 +43,11 @@ final class PaymentsScreenViewController: UIViewController {
   weak var delegate: PaymentsScreenViewControllerDelegate?
   
   private var payments = [
-    Payment(identifier: PaymentsScreenCell.reuseIdentifier, name: "BNB", amount: 150, type: .card),
-    Payment(identifier: PaymentsScreenCell.reuseIdentifier, name: "PEKAO", amount: 600, type: .cash),
-    Payment(identifier: PaymentsScreenCell.reuseIdentifier, name: "MILLENIUM", amount: 50, type: .onlineWallet),
-    Payment(identifier: PaymentsScreenCell.reuseIdentifier, name: "REVOLUT", amount: 200, type: .other),
-    Payment(identifier: PaymentsScreenCell.reuseIdentifier, name: "mBANK", amount: 200, type: .card)
+    Payment(identifier: UUID().uuidString, name: "BNB", amount: 150, type: .card),
+    Payment(identifier: UUID().uuidString, name: "PEKAO", amount: 600, type: .cash),
+    Payment(identifier: UUID().uuidString, name: "MILLENIUM", amount: 50, type: .onlineWallet),
+    Payment(identifier: UUID().uuidString, name: "REVOLUT", amount: 200, type: .other),
+    Payment(identifier: UUID().uuidString, name: "mBANK", amount: 200, type: .card)
 
   ]
   
@@ -245,9 +245,31 @@ extension PaymentsScreenViewController {
 
 extension PaymentsScreenViewController: CellDelegate {
   func deleteButtonPressed(for indexPath: IndexPath) {
-    payments.remove(at: indexPath.row)
-    collectionView.deleteItems(at: [indexPath])
-    collectionView.reloadData()
+    let alert = UIAlertController(title: "Are you sure you want to delete this payment?", message: nil, preferredStyle: .alert)
+    
+    let okAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.payments.remove(at: indexPath.row)
+      
+      self.collectionView.performBatchUpdates {
+        self.collectionView.deleteItems(at: [indexPath])
+      } completion: { completed in
+        if completed {
+          self.collectionView.reloadData()
+        }
+      }
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .destructive) { [weak self] _ in
+      guard let self = self else { return }
+      self.collectionView.reloadItems(at: [indexPath])
+    }
+    
+    alert.addAction(okAction)
+    alert.addAction(cancelAction)
+    
+    present(alert, animated: true, completion: nil)
   }
   
 }
