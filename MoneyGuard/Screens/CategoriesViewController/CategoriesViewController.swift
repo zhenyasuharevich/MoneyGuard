@@ -42,7 +42,13 @@ final class CategoriesViewController: UIViewController {
   
   weak var delegate: CategoriesViewControllerDelegate?
 
-  var categories: [Category] = []
+  var categories = [
+    Category(identifier: UUID().uuidString, name: "TRANSPORT", amountSpent: 500),
+    Category(identifier: UUID().uuidString, name: "MEAL", amountSpent: 1000),
+    Category(identifier: UUID().uuidString, name: "HOUSE", amountSpent: 550),
+    Category(identifier: UUID().uuidString, name: "PLEASURE", amountSpent: 1000),
+    Category(identifier: UUID().uuidString, name: "TELEPHONE", amountSpent: 50)
+  ]
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
@@ -96,7 +102,6 @@ final class CategoriesViewController: UIViewController {
 extension CategoriesViewController : UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     categories.count + 1
-    //14
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -118,6 +123,9 @@ extension CategoriesViewController : UICollectionViewDataSource {
     case .addCategory:
       break
     }
+    
+    cell.delegate = self
+    cell.indexPath = indexPath
     
     return cell
   }
@@ -142,8 +150,9 @@ extension CategoriesViewController : UICollectionViewDelegate {
 
 extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let widthCell = collectionView.frame.width - 32
-    return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/5)
+    let widthCell = collectionView.frame.width / 2 - 16
+    let heightCell = (collectionView.frame.height - (5 * 4))/5
+    return CGSize(width: widthCell, height: heightCell)
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 16 }
@@ -207,8 +216,8 @@ extension CategoriesViewController {
     overlayView.alpha = 0.7
     
     collectionView.snp.makeConstraints { make in
-      make.leading.equalToSuperview()
-      make.trailing.equalToSuperview()
+      make.leading.equalToSuperview().offset(8)
+      make.trailing.equalToSuperview().offset(-8)
       make.bottom.equalToSuperview()
       make.top.equalTo(topBar.snp.bottom)
     }
@@ -217,6 +226,38 @@ extension CategoriesViewController {
   }
   
 }
+
+extension CategoriesViewController: CategoriesCellDelegate {
+  func deleteButtonPressed(for indexPath: IndexPath) {
+    let alert = UIAlertController(title: "Are you sure you want to delete this category?", message: nil, preferredStyle: .alert)
+    
+    let okAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.categories.remove(at: indexPath.row)
+      
+      self.collectionView.performBatchUpdates {
+        self.collectionView.deleteItems(at: [indexPath])
+      } completion: { completed in
+        if completed {
+          self.collectionView.reloadData()
+        }
+      }
+    }
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .destructive) { [weak self] _ in
+      guard let self = self else { return }
+      self.collectionView.reloadItems(at: [indexPath])
+    }
+    
+    
+    alert.addAction(okAction)
+    alert.addAction(cancelAction)
+    
+    present(alert, animated: true, completion: nil)
+  }
+}
+
 
 //extension CategoriesViewController: AddCategoryViewDelegate {
 //  func addCategory(newCategory: Category) {
@@ -232,4 +273,5 @@ extension CategoriesViewController {
 //    dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
 //  }
 //}
+
 
