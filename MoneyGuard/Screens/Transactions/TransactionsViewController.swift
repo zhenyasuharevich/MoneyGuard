@@ -88,7 +88,7 @@ extension TransactionsViewController : UICollectionViewDataSource {
 extension TransactionsViewController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let widthCell = collectionView.frame.width - 32
-    return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/7)
+    return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/3.5)
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 8 }
