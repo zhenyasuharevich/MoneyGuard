@@ -48,7 +48,6 @@ final class PaymentsScreenViewController: UIViewController {
     Payment(identifier: UUID().uuidString, name: "MILLENIUM", amount: 50, type: .onlineWallet),
     Payment(identifier: UUID().uuidString, name: "REVOLUT", amount: 200, type: .other),
     Payment(identifier: UUID().uuidString, name: "mBANK", amount: 200, type: .card)
-
   ]
   
   private var currentTheme: ThemeType?
@@ -122,23 +121,8 @@ extension PaymentsScreenViewController : UICollectionViewDelegate {
     case .payment:
       delegate?.paymentPressed(for: indexPath)
       }
-    
-//    let deleteCell = PaymentsScreenCell.deleteButtonPressed
-    
-    
-//    ///////
-//    let cellTypeForRemove = selectedCellToDeleting.getCellTypeForRemoving(for: indexPath, arrayCount: payments.count)
-//
-//    switch cellTypeForRemove {
-//    case .selectedToDeleting:
-//      self.payments.remove(at: indexPath.row)
-//      collectionView.deleteItems(at: [indexPath])
-//
-//    case .notSelected:
-//      print("NO!")
-//    }
-//    ////////
   }
+  
 }
 
 extension PaymentsScreenViewController : UICollectionViewDataSource {
@@ -273,6 +257,3 @@ extension PaymentsScreenViewController: CellDelegate {
   }
   
 }
-
-
-
