@@ -15,8 +15,8 @@ enum CategoriesScreenCellType: Int {
   case addCategory = 0
   case category = 1
   
-  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> CategoriesScreenCellType {
-    if indexPath.row == arrayCount && indexPath.section == 0 {
+  static func getCellType(for indexPath: IndexPath) -> CategoriesScreenCellType {
+    if indexPath.section == 1 {
       return .addCategory
     }
     return .category
@@ -28,39 +28,14 @@ final class CategoriesScreenCell: UICollectionViewCell {
   private let cellView = UIView()
   private let deleteView = UIButton()
   private let deleteButton = UIButton()
-  private let addCategoryLabel = UILabel()
   private let categoryNameLabel = UILabel()
   private let amountSpentLabel = UILabel()
   private let separatorView = UIView()
   
   weak var delegate: CategoriesCellDelegate?
   var indexPath: IndexPath?
-  private var isAnimating: Bool = false
-  
-  private var state: CategoriesScreenCellType = .category {
-    didSet {
-      switch state {
-      case .addCategory:
-        addCategoryLabel.isHidden = false
-        categoryNameLabel.isHidden = true
-        amountSpentLabel.isHidden = true
-        separatorView.isHidden = true
-      case .category:
-        addCategoryLabel.isHidden = true
-        categoryNameLabel.isHidden = false
-        amountSpentLabel.isHidden = false
-        separatorView.isHidden = false
-        
-//        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-//        swipeLeft.direction = .left
-//        self.addGestureRecognizer(swipeLeft)
-//
-//        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-//        swipeRight.direction = .right
-//        self.addGestureRecognizer(swipeRight)
-      }
-    }
-  }
+  var screenContentType: CategoriesViewControllerContentType?
+  var isAnimating: Bool = false
   
   override init(frame: CGRect) {
     super.init(frame: .zero)
@@ -73,8 +48,9 @@ final class CategoriesScreenCell: UICollectionViewCell {
   }
   
   override func prepareForReuse() {
-    self.state = .category
+    
     self.indexPath = nil
+    self.screenContentType = nil
     self.delegate = nil
     self.isAnimating = false
     
@@ -83,24 +59,22 @@ final class CategoriesScreenCell: UICollectionViewCell {
     }
   }
   
-  func setState(state: CategoriesScreenCellType) {
-    self.state = state
-  }
-  
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     deleteView.backgroundColor = colorTheme.activeColor
     deleteButton.setTitleColor(colorTheme.cellBackgroundColor, for: .normal)
     cellView.backgroundColor = colorTheme.cellBackgroundColor
-    addCategoryLabel.textColor = colorTheme.textColor
     categoryNameLabel.textColor = colorTheme.textColor
     amountSpentLabel.textColor = colorTheme.textColor
     separatorView.backgroundColor = colorTheme.activeColor
     backgroundColor = colorTheme.cellBackgroundColor
   }
   
-  func setData(category: Category) {
+  func setupData(indexPath: IndexPath, category: Category, screenContentType: CategoriesViewControllerContentType) {
     categoryNameLabel.text = category.name
     amountSpentLabel.text = "\(category.amountSpent)"
+    
+    self.indexPath = indexPath
+    self.screenContentType = screenContentType
   }
   
   @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -124,7 +98,8 @@ final class CategoriesScreenCell: UICollectionViewCell {
   }
   
   private func animateLeft() {
-    guard !(self.state == .addCategory) else { print(#line,#function,"Can't animate cell with type \(self.state)"); return }
+    guard let contentType = self.screenContentType,
+          !(contentType == .scrollingListForChoose) else { return }
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
@@ -143,7 +118,8 @@ final class CategoriesScreenCell: UICollectionViewCell {
   }
   
   private func animateRight() {
-    guard !(self.state == .addCategory) else { print(#line,#function,"Can't animate cell with type \(self.state)");return }
+    guard let contentType = self.screenContentType,
+          !(contentType == .scrollingListForChoose) else { return }
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
@@ -171,7 +147,6 @@ extension CategoriesScreenCell {
     contentView.addSubview(deleteView)
     deleteView.addSubview(deleteButton)
     contentView.addSubview(cellView)
-    cellView.addSubview(addCategoryLabel)
     cellView.addSubview(categoryNameLabel)
     cellView.addSubview(amountSpentLabel)
     cellView.addSubview(separatorView)
@@ -200,14 +175,6 @@ extension CategoriesScreenCell {
     
     cellView.layer.cornerRadius = 20
     cellView.layer.masksToBounds = false
-    
-    addCategoryLabel.snp.makeConstraints { make in
-      make.leading.trailing.bottom.top.equalToSuperview()
-    }
-    addCategoryLabel.numberOfLines = 0
-    addCategoryLabel.textAlignment = .center
-    addCategoryLabel.text = "+"
-    addCategoryLabel.font = .systemFont(ofSize: 20, weight: .semibold)
     
     categoryNameLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(4)

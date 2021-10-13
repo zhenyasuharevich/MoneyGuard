@@ -32,7 +32,7 @@ final class DashboardViewController: BaseController {
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
-  private let categoriesScreen = CategoriesViewController()
+  private let categoriesScreen = CategoriesViewController(contentType: .listWithInteractiveCell)
   
   var categories: [Category] = []
   var payments: [Payment] = []

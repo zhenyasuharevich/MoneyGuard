@@ -12,10 +12,9 @@ protocol CategoriesViewControllerDelegate: AnyObject {
   func addCategoryPressed(for indexPath: IndexPath)
 }
 
-enum CategoriesViewControllerState {
-  case normal
-  case transactionButtonPressed
-  case addCategory
+enum CategoriesViewControllerContentType {
+  case scrollingListForChoose
+  case listWithInteractiveCell
 }
 
 final class CategoriesViewController: UIViewController {
@@ -24,7 +23,7 @@ final class CategoriesViewController: UIViewController {
   private let returnButton = UIButton()
   private let screenNameLabel = UILabel()
   
-  private let addCategoryView = AddCategoryView()
+//  private let addCategoryView = AddCategoryView()
   private let overlayView = UIView()
   
   lazy var collectionView : UICollectionView = {
@@ -33,10 +32,14 @@ final class CategoriesViewController: UIViewController {
     
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
     cv.register(CategoriesScreenCell.self, forCellWithReuseIdentifier: CategoriesScreenCell.reuseIdentifier)
+    cv.register(AddCategoryCell.self, forCellWithReuseIdentifier: AddCategoryCell.reuseIdentifier)
     cv.dataSource = self
     cv.delegate = self
     cv.showsVerticalScrollIndicator = false
-    cv.contentInset = UIEdgeInsets(top: 16, left: 8, bottom: 0, right: 8)
+    cv.contentInset = UIEdgeInsets(top: 16,
+                                   left: 8,
+                                   bottom: UIScreen.main.bounds.height - DashboardConstants.TopBar.height - 188,
+                                   right: 8)
     return cv
   }()
   
@@ -47,29 +50,24 @@ final class CategoriesViewController: UIViewController {
     Category(identifier: UUID().uuidString, name: "MEAL", amountSpent: 1000),
     Category(identifier: UUID().uuidString, name: "HOUSE", amountSpent: 550),
     Category(identifier: UUID().uuidString, name: "PLEASURE", amountSpent: 1000),
-    Category(identifier: UUID().uuidString, name: "TELEPHONE", amountSpent: 50)
+    Category(identifier: UUID().uuidString, name: "TELEPHONE", amountSpent: 50),
+    Category(identifier: UUID().uuidString, name: "AAAAAA", amountSpent: 50),
+    Category(identifier: UUID().uuidString, name: "BBBBB", amountSpent: 50),
+    Category(identifier: UUID().uuidString, name: "CCCCC", amountSpent: 510),
+    Category(identifier: UUID().uuidString, name: "DDDDD", amountSpent: 2510),
+    Category(identifier: UUID().uuidString, name: "EEEEE", amountSpent: 10),
+    Category(identifier: UUID().uuidString, name: "FFFFF", amountSpent: 60),
+    Category(identifier: UUID().uuidString, name: "GGGG", amountSpent: 90),
+    Category(identifier: UUID().uuidString, name: "HHHHH", amountSpent: 52)
   ]
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
-  private var state: CategoriesViewControllerState {
-    didSet {
-      switch state {
-      case .normal:
-        addCategoryView.isHidden = true
-        overlayView.isHidden = true
-      case .transactionButtonPressed:
-        view.backgroundColor = .yellow // ???
-      case .addCategory:
-        addCategoryView.isHidden = false
-        overlayView.isHidden = false
-      }
-    }
-  }
+  private var contentType: CategoriesViewControllerContentType
 
-  init() {
-      self.state = .normal
+  init(contentType: CategoriesViewControllerContentType) {
+      self.contentType = contentType
       super.init(nibName: nil, bundle: nil)
     }
   
@@ -89,7 +87,7 @@ final class CategoriesViewController: UIViewController {
     view.backgroundColor = colorTheme.backgroundColor
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
-    addCategoryView.setupColorTheme(colorTheme, theme)
+//    addCategoryView.setupColorTheme(colorTheme, theme)
     collectionView.reloadData()
   }
   
@@ -101,58 +99,75 @@ final class CategoriesViewController: UIViewController {
 
 extension CategoriesViewController : UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    categories.count + 1
+    if section == 0 {
+      return categories.count
+    } else if section == 1 {
+      return 1
+    }
+    
+    return 0
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoriesScreenCell.reuseIdentifier, for: indexPath) as? CategoriesScreenCell else { print(#line,#function,"Error: Can't get CategoriesCell");
-      return UICollectionViewCell() }
-    
-    let cellType = CategoriesScreenCellType.getCellType(for: indexPath, arrayCount: categories.count)
-    cell.setState(state: cellType)
-    
-    if let colorTheme = self.currentColorTheme,
-       let theme = self.currentTheme {
-      cell.setupColorTheme(colorTheme, theme)
-    }
-    
+    let cellType = CategoriesScreenCellType.getCellType(for: indexPath)
     switch cellType {
     case .category:
+      
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoriesScreenCell.reuseIdentifier, for: indexPath) as? CategoriesScreenCell else { print(#line,#function,"Error: Can't get CategoriesCell");
+        return UICollectionViewCell() }
+      
       let category = categories[indexPath.row]
-      cell.setData(category: category)
+      cell.setupData(indexPath: indexPath, category: category, screenContentType: self.contentType)
+      cell.delegate = self
+      
+      if let colorTheme = self.currentColorTheme,
+         let theme = self.currentTheme {
+        cell.setupColorTheme(colorTheme, theme)
+      }
+      
+      return cell
+      
     case .addCategory:
-      break
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddCategoryCell.reuseIdentifier, for: indexPath) as? AddCategoryCell else { print(#line,#function,"Error: Can't get CategoriesCell");
+        return UICollectionViewCell() }
+      print("Add category cell")
+      if let colorTheme = self.currentColorTheme,
+         let theme = self.currentTheme {
+        cell.setupColorTheme(colorTheme, theme)
+      }
+      
+      return cell
     }
-    
-    cell.delegate = self
-    cell.indexPath = indexPath
-    
-    return cell
   }
   
-  func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    guard contentType == .listWithInteractiveCell else { return  1}
+    return 2
+  }
    
 }
 
 extension CategoriesViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = CategoriesScreenCellType.getCellType(for: indexPath, arrayCount: categories.count)
-
-    switch cellType {
-    case .addCategory:
-      delegate?.addCategoryPressed(for: indexPath)
-    case .category:
-      delegate?.categoryPressed(for: indexPath)
-    }
+    guard !(self.contentType == .listWithInteractiveCell) else { return }
+    print("Select item at indexPath.row: \(indexPath.row)")
   }
 
 }
 
 extension CategoriesViewController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let widthCell = collectionView.frame.width / 2 - 16
-    let heightCell = (collectionView.frame.height - (5 * 4))/5
-    return CGSize(width: widthCell, height: heightCell)
+    let cellType = CategoriesScreenCellType.getCellType(for: indexPath)
+    switch cellType {
+    case .addCategory:
+      let widthCell = collectionView.frame.width - 16
+      let height: CGFloat = 188
+      return CGSize(width: widthCell, height: height)
+    case .category:
+      let widthCell = collectionView.frame.width / 2 - 16
+      let heightCell = (collectionView.frame.height - (5 * 4))/5
+      return CGSize(width: widthCell, height: heightCell)
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 16 }
@@ -167,7 +182,7 @@ extension CategoriesViewController {
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
-    view.addSubview(addCategoryView)
+//    view.addSubview(addCategoryView)
     view.addSubview(overlayView)
     
     topBar.snp.makeConstraints { make in
@@ -198,15 +213,15 @@ extension CategoriesViewController {
     screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
     screenNameLabel.text = "All categories"
     
-    addCategoryView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(30)
-      make.trailing.equalToSuperview().offset(-16)
-      make.leading.equalToSuperview().offset(16)
-      make.height.equalTo(188)
-    }
+//    addCategoryView.snp.makeConstraints { make in
+//      make.top.equalToSuperview().offset(30)
+//      make.trailing.equalToSuperview().offset(-16)
+//      make.leading.equalToSuperview().offset(16)
+//      make.height.equalTo(188)
+//    }
     
 //    addCategoryView.delegate = self
-    addCategoryView.isHidden = true
+//    addCategoryView.isHidden = true
     
     overlayView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
