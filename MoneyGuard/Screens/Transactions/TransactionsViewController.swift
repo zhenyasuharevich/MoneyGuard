@@ -32,7 +32,20 @@ class TransactionsViewController: UIViewController {
     return cv
    }()
   
+
+  
   weak var delegate: TransactionsViewControllerDelegate?
+  
+  private var transactions = [
+    Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Alior", categoryName: "Trenning", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PKO", categoryName: "Transport", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Cash", categoryName: "Pleasure", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "MamaDala", categoryName: "Meal", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PEKAO", categoryName: "Flat", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
+    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem")
+  ]
   
   private var currentTheme: ThemeType?
   private var currentColorTheme: ColorThemeProtocol?
@@ -61,18 +74,32 @@ class TransactionsViewController: UIViewController {
 }
 
 extension TransactionsViewController : UICollectionViewDelegate {
-  
+
 }
 
 extension TransactionsViewController : UICollectionViewDataSource {
   
   func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
   
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 10 }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { transactions.count }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TransactionsScreenCell.reuseIdentifier, for: indexPath) as? TransactionsScreenCell else {
       print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell()
+    }
+    
+//    let  celltype = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: transactions.count)
+    
+    let transaction = transactions[indexPath.row]
+    cell.setData(transaction: transaction)
+    
+    
+    if transaction.type == .sendMoney {
+      cell.signLabel.text = "-"
+      cell.imageViewTransaction.backgroundColor = .red
+    } else {
+      cell.signLabel.text = "+"
+      cell.imageViewTransaction.backgroundColor = .green
     }
     
     if let colorTheme = self.currentColorTheme,

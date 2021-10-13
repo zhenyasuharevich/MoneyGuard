@@ -9,7 +9,7 @@ import UIKit
 
 final class TransactionsScreenCell: UICollectionViewCell {
   
-  private let imageViewTransaction = UIImageView()
+  let imageViewTransaction = UIImageView()
   private let dataLabel = UILabel()
   private let fromLabel = UILabel()
   private let paymentView = UIView()
@@ -18,8 +18,9 @@ final class TransactionsScreenCell: UICollectionViewCell {
   private let categoryView = UIView()
   private let categoryNameLabel = UILabel()
   private let separatorView = UIView()
-  private let signLabel = UILabel()
+  var signLabel = UILabel()
   private let transactionAmountLabel = UILabel()
+  private let amountLabel = UILabel()
     
   override init(frame: CGRect) {
     super.init(frame: frame);
@@ -33,7 +34,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     backgroundColor = colorTheme.cellBackgroundColor
     
-    imageViewTransaction.backgroundColor = .red
+    //imageViewTransaction.backgroundColor = .red
     dataLabel.textColor = colorTheme.textColor
     transactionAmountLabel.textColor = colorTheme.textColor
     paymentNameLabel.textColor = colorTheme.textColor
@@ -43,6 +44,18 @@ final class TransactionsScreenCell: UICollectionViewCell {
     categoryNameLabel.textColor = colorTheme.textColor
     signLabel.textColor = colorTheme.textColor
     separatorView.backgroundColor = colorTheme.activeColor
+  }
+  
+  func setData(transaction: Transaction) {
+    
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd.MM.yyyy"
+
+    self.signLabel.text = "\(transaction.type)"
+    self.dataLabel.text = formatter.string(from: transaction.date) //formatter.string(from: transaction.date)
+    self.paymentNameLabel.text = transaction.paymentName
+    //self.description = description
+    self.categoryNameLabel.text = transaction.categoryName
   }
   
 }
@@ -63,14 +76,15 @@ extension TransactionsScreenCell {
     categoryView.addSubview(categoryNameLabel)
 
     contentView.addSubview(separatorView)
+    contentView.addSubview(amountLabel)
     contentView.addSubview(transactionAmountLabel)
     contentView.addSubview(signLabel)
     
     imageViewTransaction.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(16)
       make.leading.equalToSuperview().offset(16)
-      make.height.equalTo(20)
-      make.width.equalTo(20)
+      make.height.equalTo(16)
+      make.width.equalTo(16)
     }
     
     dataLabel.snp.makeConstraints{ make in
@@ -136,6 +150,17 @@ extension TransactionsScreenCell {
       make.trailing.equalToSuperview().offset(-16)
       make.height.equalTo(1)
     }
+    
+    amountLabel.snp.makeConstraints{ make in
+      make.top.equalTo(separatorView.snp.bottom).offset(8)
+      make.trailing.equalTo(signLabel.snp.leading).offset(-16)
+      make.leading.equalToSuperview().offset(16)
+      make.height.equalTo(20)
+    }
+    
+    amountLabel.textAlignment = .left
+    amountLabel.font = .systemFont(ofSize: 16, weight: .regular)
+    amountLabel.text = "Amount: "
 
     transactionAmountLabel.snp.makeConstraints{ make in
       make.top.equalTo(separatorView.snp.bottom).offset(8)

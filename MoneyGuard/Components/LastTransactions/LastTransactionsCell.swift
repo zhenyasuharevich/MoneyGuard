@@ -11,7 +11,7 @@ enum LastTransactionsCellType: Int {
   case transactions = 0
   case otherTransactions = 1
     
-  static func getCellType(for indexPath: IndexPath) -> LastTransactionsCellType {
+  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> LastTransactionsCellType {
     if indexPath.row == 5 && indexPath.section == 0 {
       return .otherTransactions
     }
