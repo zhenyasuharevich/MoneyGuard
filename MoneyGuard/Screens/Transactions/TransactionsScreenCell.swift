@@ -21,6 +21,12 @@ final class TransactionsScreenCell: UICollectionViewCell {
   var signLabel = UILabel()
   private let transactionAmountLabel = UILabel()
   private let amountLabel = UILabel()
+  
+  lazy var formatter : DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd.MM.yyyy"
+    return formatter
+  }()
     
   override init(frame: CGRect) {
     super.init(frame: frame);
@@ -48,8 +54,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
   
   func setData(transaction: Transaction) {
     
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd.MM.yyyy"
+    
 
     self.signLabel.text = "\(transaction.type)"
     self.dataLabel.text = formatter.string(from: transaction.date) //formatter.string(from: transaction.date)
