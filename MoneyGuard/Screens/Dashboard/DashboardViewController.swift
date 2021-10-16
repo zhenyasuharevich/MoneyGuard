@@ -37,7 +37,7 @@ final class DashboardViewController: BaseController {
   private let overlayView = UIView()
   
   private let settingsScreen = SettingsController()
-  private let paymentsScreen = PaymentsScreenViewController()
+  private let paymentsScreen = PaymentsScreenViewController(contentType: .listWithInteractiveCell)
   
   var categories: [Category] = []
   var payments: [Payment] = []

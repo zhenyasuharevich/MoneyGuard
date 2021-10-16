@@ -6,16 +6,16 @@
 //
 
 import UIKit
+import SwiftUI
 
 protocol PaymentsScreenViewControllerDelegate: AnyObject {
   func paymentPressed(for indexPath: IndexPath)
   func addPaymentPressed(for indexPath: IndexPath)
 }
 
-enum PaymentsViewControllerState {
-  case normal
-  case transactionButtonPressed
-  case addPayment
+enum PaymentsViewControllerContentType {
+  case scrollingListForChoose
+  case listWithInteractiveCell
 }
 
 final class PaymentsScreenViewController: UIViewController {
@@ -33,10 +33,14 @@ final class PaymentsScreenViewController: UIViewController {
     
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
     cv.register(PaymentsScreenCell.self, forCellWithReuseIdentifier: PaymentsScreenCell.reuseIdentifier)
+    cv.register(AddPaymentCell.self, forCellWithReuseIdentifier: AddPaymentCell.reuseIdentifier)
     cv.delegate = self
     cv.dataSource = self
     cv.showsVerticalScrollIndicator = false
-    cv.contentInset = UIEdgeInsets(top: 16, left: 8, bottom: 0, right: 8)
+    cv.contentInset = UIEdgeInsets(top: 16,
+                                   left: 8,
+                                   bottom: 48,
+                                   right: 8)
     return cv
   }()
   
@@ -53,23 +57,10 @@ final class PaymentsScreenViewController: UIViewController {
   private var currentTheme: ThemeType?
   private var currentColorTheme: ColorThemeProtocol?
   
-  private var state: PaymentsViewControllerState {
-    didSet {
-      switch state {
-      case .normal:
-        addPaymentView.isHidden = true
-        overlayView.isHidden = true
-      case .transactionButtonPressed:
-        view.backgroundColor = .yellow // ???
-      case .addPayment:
-        addPaymentView.isHidden = false
-        overlayView.isHidden = false
-      }
-    }
-  }
+  private var contentType: PaymentsViewControllerContentType
   
-  init() {
-    self.state = .normal
+  init(contentType: PaymentsViewControllerContentType) {
+    self.contentType = contentType
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -101,9 +92,14 @@ final class PaymentsScreenViewController: UIViewController {
 extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-      let widthCell = collectionView.frame.width - 32
+    let widthCell = collectionView.frame.width - 32
+    
+    if indexPath.section == 1 {
+      return CGSize(width: widthCell, height: collectionView.frame.height)
+    } else {
       return CGSize(width: widthCell, height: (collectionView.frame.height - (5 * 4))/5)
     }
+  }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 8 }
   
@@ -113,14 +109,8 @@ extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
 
 extension PaymentsScreenViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = PaymentScreenCellType.getCellType(for: indexPath, arrayCount: payments.count)
-    
-    switch cellType {
-    case .addPayment:
-      delegate?.addPaymentPressed(for: indexPath)
-    case .payment:
-      delegate?.paymentPressed(for: indexPath)
-      }
+    guard !(self.contentType == .listWithInteractiveCell) else { return }
+    print("Select item at indexPath.row: \(indexPath.row)")
   }
   
 }
@@ -128,37 +118,54 @@ extension PaymentsScreenViewController : UICollectionViewDelegate {
 extension PaymentsScreenViewController : UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    payments.count + 1
+    
+    if section == 0 {
+      return payments.count
+    } else if section == 1 {
+      
+      return 1
+    }
+    
+    return 0
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaymentsScreenCell.reuseIdentifier, for: indexPath) as? PaymentsScreenCell else {
-      print(#line,#function,"Error: Can't get PaymentsScreenCell");
-      return UICollectionViewCell() }
-    
-    let cellType = PaymentScreenCellType.getCellType(for: indexPath, arrayCount: payments.count)
-    cell.setState(state: cellType)
-    
+    let cellType = PaymentScreenCellType.getCellType(for: indexPath)
     switch cellType {
     case .payment:
+      
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaymentsScreenCell.reuseIdentifier, for: indexPath) as? PaymentsScreenCell else { print(#line,#function,"Error: Can't get PaymentsScreenCell");
+        return UICollectionViewCell() }
+      
       let payment = payments[indexPath.row]
-      cell.setData(payment: payment)
+      cell.setupData(indexPath: indexPath, payment: payment, screenContentType: self.contentType)
+      cell.delegate = self
+      
+      if let colorTheme = self.currentColorTheme,
+         let theme = self.currentTheme {
+        cell.setupColorTheme(colorTheme, theme)
+      }
+      return cell
+      
     case .addPayment:
-      break
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddPaymentCell.reuseIdentifier, for: indexPath) as? AddPaymentCell else { print(#line,#function,"Error: Can't get PaymentsCell");
+        return UICollectionViewCell() }
+      print("Add payment cell")
+      
+      if let colorTheme = self.currentColorTheme,
+         let theme = self.currentTheme {
+        cell.setupColorTheme(colorTheme, theme)
+      }
+      
+      return cell
     }
-    
-    if let colorTheme = self.currentColorTheme,
-       let theme = self.currentTheme {
-      cell.setupColorTheme(colorTheme, theme)
-    }
-    
-    cell.delegate = self
-    cell.indexPath = indexPath
-    
-    return cell
+
   }
   
-  func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    guard contentType == .listWithInteractiveCell else { return 1}
+    return 2
+  }
   
 }
 
@@ -170,7 +177,7 @@ extension PaymentsScreenViewController {
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
-    view.addSubview(addPaymentView)
+//    view.addSubview(addPaymentView)
     view.addSubview(overlayView)
     
     topBar.snp.makeConstraints { make in
@@ -198,15 +205,15 @@ extension PaymentsScreenViewController {
     screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
     screenNameLabel.text = "All payments"
     
-    addPaymentView.snp.makeConstraints { make in
-      make.top.equalToSuperview().offset(30)
-      make.trailing.equalToSuperview().offset(-16)
-      make.leading.equalToSuperview().offset(16)
-      make.height.equalTo(188)
-    }
+//    addPaymentView.snp.makeConstraints { make in
+//      make.top.equalToSuperview().offset(30)
+//      make.trailing.equalToSuperview().offset(-16)
+//      make.leading.equalToSuperview().offset(16)
+//      make.height.equalTo(188)
+//    }
     
-    //    addPaymentView.delegate = self
-    addPaymentView.isHidden = true
+//    //    addPaymentView.delegate = self
+//    addPaymentView.isHidden = true
     
     overlayView.snp.makeConstraints { make in
       make.edges.equalToSuperview()

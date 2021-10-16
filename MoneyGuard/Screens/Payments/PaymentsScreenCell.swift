@@ -16,8 +16,8 @@ enum PaymentScreenCellType: Int {
   case addPayment = 0
   case payment = 1
   
-  static func getCellType(for indexPath: IndexPath, arrayCount: Int) -> PaymentScreenCellType {
-    if indexPath.row == arrayCount && indexPath.section == 0 {
+  static func getCellType(for indexPath: IndexPath) -> PaymentScreenCellType {
+    if indexPath.section == 1 {
       return .addPayment
     }
     return .payment
@@ -40,31 +40,32 @@ final class PaymentsScreenCell: UICollectionViewCell {
   
   weak var delegate: CellDelegate?
   var indexPath: IndexPath?
+  var screenContentType: PaymentsViewControllerContentType?
   private var isAnimating: Bool = false
   
-  private var state: PaymentScreenCellType = .payment {
-    didSet {
-      switch state {
-      case .addPayment:
-        addPaymentLabel.isHidden = false
-        paymentNameLabel.isHidden = true
-        amountLabel.isHidden = true
-        amountValueLabel.isHidden = true
-        typeLabel.isHidden = true
-        typeValueLabel.isHidden = true
-        separatorView.isHidden = true
-       
-      case .payment:
-        addPaymentLabel.isHidden = true
-        paymentNameLabel.isHidden = false
-        amountLabel.isHidden = false
-        amountValueLabel.isHidden = false
-        typeLabel.isHidden = false
-        typeValueLabel.isHidden = false
-        separatorView.isHidden = false
-      }
-    }
-  }
+//  private var state: PaymentScreenCellType = .payment {
+//    didSet {
+//      switch state {
+//      case .addPayment:
+//        addPaymentLabel.isHidden = false
+//        paymentNameLabel.isHidden = true
+//        amountLabel.isHidden = true
+//        amountValueLabel.isHidden = true
+//        typeLabel.isHidden = true
+//        typeValueLabel.isHidden = true
+//        separatorView.isHidden = true
+//
+//      case .payment:
+//        addPaymentLabel.isHidden = true
+//        paymentNameLabel.isHidden = false
+//        amountLabel.isHidden = false
+//        amountValueLabel.isHidden = false
+//        typeLabel.isHidden = false
+//        typeValueLabel.isHidden = false
+//        separatorView.isHidden = false
+//      }
+//    }
+//  }
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -75,18 +76,15 @@ final class PaymentsScreenCell: UICollectionViewCell {
   required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   
   override func prepareForReuse() {
-    self.state = .payment
+    
     self.indexPath = nil
+    self.screenContentType = nil
     self.delegate = nil
     self.isAnimating = false
     
     self.cellView.snp.updateConstraints { (make) in
       make.trailing.equalToSuperview()
     }
-  }
-  
-  func setState(state: PaymentScreenCellType) {
-    self.state = state
   }
   
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
@@ -105,10 +103,13 @@ final class PaymentsScreenCell: UICollectionViewCell {
     separatorView.backgroundColor = colorTheme.activeColor
   }
   
-  func setData(payment: Payment) {
+  func setupData(indexPath: IndexPath, payment: Payment, screenContentType: PaymentsViewControllerContentType) {
     self.paymentNameLabel.text = payment.name
     self.amountValueLabel.text = "\(payment.amount)"
     self.typeValueLabel.text = payment.type.rawValue
+    
+    self.indexPath = indexPath
+    self.screenContentType = screenContentType
   }
   
   @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -127,12 +128,13 @@ final class PaymentsScreenCell: UICollectionViewCell {
   @objc func deleteButtonPressed() {
     guard let indexPath = self.indexPath,
           let delegate = self.delegate else { return }
-
+    
     delegate.deleteButtonPressed(for: indexPath)
   }
   
   private func animateLeft() {
-    guard !(self.state == .addPayment) else { print(#line,#function,"Can't animate cell with type \(self.state)");return }
+    guard let contentType = self.screenContentType,
+          !(contentType == .scrollingListForChoose) else { return }
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
@@ -151,7 +153,8 @@ final class PaymentsScreenCell: UICollectionViewCell {
   }
   
   private func animateRight() {
-    guard !(self.state == .addPayment) else { print(#line,#function,"Can't animate cell with type \(self.state)");return }
+    guard let contentType = self.screenContentType,
+          !(contentType == .scrollingListForChoose) else { return }
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
@@ -210,14 +213,14 @@ extension PaymentsScreenCell {
     cellView.layer.cornerRadius = 20
     cellView.layer.masksToBounds = false
     
-    addPaymentLabel.numberOfLines = 0
-    addPaymentLabel.textAlignment = .center
-    addPaymentLabel.text = "+"
-    addPaymentLabel.font = .systemFont(ofSize: 36, weight: .semibold)
-    
-    addPaymentLabel.snp.makeConstraints { make in
-      make.leading.trailing.bottom.top.equalToSuperview()
-    }
+//    addPaymentLabel.numberOfLines = 0
+//    addPaymentLabel.textAlignment = .center
+//    addPaymentLabel.text = "+"
+//    addPaymentLabel.font = .systemFont(ofSize: 36, weight: .semibold)
+//
+//    addPaymentLabel.snp.makeConstraints { make in
+//      make.leading.trailing.bottom.top.equalToSuperview()
+//    }
     
     paymentNameLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(4)
