@@ -88,17 +88,21 @@ extension TransactionsViewController : UICollectionViewDataSource {
       print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell()
     }
     
-//    let  celltype = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: transactions.count)
-    
     let transaction = transactions[indexPath.row]
     cell.setData(transaction: transaction)
     
     
     if transaction.type == .sendMoney {
       cell.signLabel.text = "-"
+      cell.fromLabel.text = "From:"
+      cell.categoryNameLabel.isHidden = false
+      cell.toLabel.isHidden = false
       cell.imageViewTransaction.backgroundColor = .red
     } else {
       cell.signLabel.text = "+"
+      cell.fromLabel.text = "To:"
+      cell.categoryNameLabel.isHidden = true
+      cell.toLabel.isHidden = true
       cell.imageViewTransaction.backgroundColor = .green
     }
     
@@ -130,8 +134,6 @@ extension TransactionsViewController {
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
-    
-    //view.backgroundColor = .clear
     
     topBar.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview()
@@ -167,6 +169,6 @@ extension TransactionsViewController {
     }
     
     collectionView.backgroundColor = .clear
-    
   }
+  
 }

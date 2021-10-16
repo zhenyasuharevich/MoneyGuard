@@ -11,12 +11,12 @@ final class TransactionsScreenCell: UICollectionViewCell {
   
   let imageViewTransaction = UIImageView()
   private let dataLabel = UILabel()
-  private let fromLabel = UILabel()
+  var fromLabel = UILabel()
   private let paymentView = UIView()
-  private let paymentNameLabel = UILabel()
-  private let toLabel = UILabel()
+  let paymentNameLabel = UILabel()
+  let toLabel = UILabel()
   private let categoryView = UIView()
-  private let categoryNameLabel = UILabel()
+  let categoryNameLabel = UILabel()
   private let separatorView = UIView()
   var signLabel = UILabel()
   private let transactionAmountLabel = UILabel()
@@ -29,7 +29,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
   }()
     
   override init(frame: CGRect) {
-    super.init(frame: frame);
+    super.init(frame: frame)
     setupSubviews()
   }
   
@@ -40,7 +40,6 @@ final class TransactionsScreenCell: UICollectionViewCell {
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     backgroundColor = colorTheme.cellBackgroundColor
     
-    //imageViewTransaction.backgroundColor = .red
     dataLabel.textColor = colorTheme.textColor
     transactionAmountLabel.textColor = colorTheme.textColor
     paymentNameLabel.textColor = colorTheme.textColor
@@ -53,13 +52,9 @@ final class TransactionsScreenCell: UICollectionViewCell {
   }
   
   func setData(transaction: Transaction) {
-    
-    
-
     self.signLabel.text = "\(transaction.type)"
-    self.dataLabel.text = formatter.string(from: transaction.date) //formatter.string(from: transaction.date)
+    self.dataLabel.text = formatter.string(from: transaction.date)
     self.paymentNameLabel.text = transaction.paymentName
-    //self.description = description
     self.categoryNameLabel.text = transaction.categoryName
   }
   
@@ -186,5 +181,5 @@ extension TransactionsScreenCell {
     signLabel.textAlignment = .right
     signLabel.font = .systemFont(ofSize: 20, weight: .regular)
   }
-  
+
 }
