@@ -9,8 +9,8 @@ import UIKit
 import SwiftUI
 
 protocol PaymentsScreenViewControllerDelegate: AnyObject {
-  func paymentPressed(for indexPath: IndexPath)
-  func addPaymentPressed(for indexPath: IndexPath)
+  func removePayment(for indexPath: IndexPath)
+  func addNewPayment(payment: Payment)
 }
 
 enum PaymentsViewControllerContentType {
@@ -23,8 +23,6 @@ final class PaymentsScreenViewController: UIViewController {
   private let topBar = UIView()
   private let returnButton = UIButton()
   private let screenNameLabel = UILabel()
-  
-  private let addPaymentView = AddPaymentView()
   private let overlayView = UIView()
   
   lazy var collectionView : UICollectionView = {
@@ -46,13 +44,7 @@ final class PaymentsScreenViewController: UIViewController {
   
   weak var delegate: PaymentsScreenViewControllerDelegate?
   
-  private var payments = [
-    Payment(identifier: UUID().uuidString, name: "BNB", amount: 150, type: .card),
-    Payment(identifier: UUID().uuidString, name: "PEKAO", amount: 600, type: .cash),
-    Payment(identifier: UUID().uuidString, name: "MILLENIUM", amount: 50, type: .onlineWallet),
-    Payment(identifier: UUID().uuidString, name: "REVOLUT", amount: 200, type: .other),
-    Payment(identifier: UUID().uuidString, name: "mBANK", amount: 200, type: .card)
-  ]
+  private var payments: [Payment] = []
   
   private var currentTheme: ThemeType?
   private var currentColorTheme: ColorThemeProtocol?
@@ -79,12 +71,18 @@ final class PaymentsScreenViewController: UIViewController {
     view.backgroundColor = colorTheme.backgroundColor
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
-    addPaymentView.setupColorTheme(colorTheme, theme)
     collectionView.reloadData()
   }
   
   @objc private func returnButtonPressed() {
     self.dismiss(animated: true, completion: nil)
+  }
+  
+  func setData(payment: [Payment]) {
+    self.payments = payment
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+    }
   }
 
 }
@@ -156,6 +154,7 @@ extension PaymentsScreenViewController : UICollectionViewDataSource {
          let theme = self.currentTheme {
         cell.setupColorTheme(colorTheme, theme)
       }
+      cell.delegate = self
       
       return cell
     }
@@ -248,6 +247,7 @@ extension PaymentsScreenViewController: CellDelegate {
       } completion: { completed in
         if completed {
           self.collectionView.reloadData()
+          self.delegate?.removePayment(for: indexPath)
         }
       }
     }
@@ -263,4 +263,11 @@ extension PaymentsScreenViewController: CellDelegate {
     present(alert, animated: true, completion: nil)
   }
   
+}
+
+extension PaymentsScreenViewController: AddPaymentViewDelegate {
+  func addPayment(newPayment: Payment) {
+    guard let delegate = self.delegate else { return }
+    delegate.addNewPayment(payment: newPayment)
+  }
 }

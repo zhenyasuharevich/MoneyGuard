@@ -115,6 +115,7 @@ final class DashboardViewController: BaseController {
     settingsScreen.modalPresentationStyle = .fullScreen
     
     paymentsScreen.modalPresentationStyle = .fullScreen
+    paymentsScreen.delegate = self
     
     setupSubviews()
     loadData()
@@ -353,6 +354,7 @@ extension DashboardViewController: TopBarViewDelegate {
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
   func showMorePaymentsPressed() {
+    paymentsScreen.setData(payment: self.payments)
     present(paymentsScreen, animated: true, completion: nil)
     print(#line,#function,"Title pressed") }
   
@@ -407,10 +409,14 @@ extension DashboardViewController: AddTransactionViewDelegate {
   }
   
   func addTransactionChoosePaymentPressed() {
-    print("Payment")
-    let viewController = UIViewController()
-    viewController.view.backgroundColor = .red
-    present(viewController, animated: true, completion: nil)
+    let paymentsController = PaymentsScreenViewController(contentType: .scrollingListForChoose)
+    
+    if let colorTheme = self.colorTheme,
+       let theme = self.theme {
+      paymentsController.setupColorTheme(colorTheme, theme)
+    }
+    
+    present(paymentsController, animated: true, completion: nil)
   }
   
   func addTransactionChooseCategoryPressed() {
@@ -424,6 +430,35 @@ extension DashboardViewController: AddTransactionViewDelegate {
 extension DashboardViewController: SettingsControllerDelegate {
   func settingsClearAllData() { print(#line,#function,"Clear all data") }
   func settingsChangeTheme(_ newTheme: ThemeType) { colorSchemeManager.currentTheme = newTheme }
+}
+
+extension DashboardViewController: PaymentsScreenViewControllerDelegate {
+  func removePayment(for indexPath: IndexPath) {
+    let payment = payments.remove(at: indexPath.row)
+    dataService.remove(object: payment, completion: EmptyBlock({[weak self] _ in
+      guard let self = self else { return }
+      print("Item was removed at: \(indexPath.row)")
+      DispatchQueue.main.async {
+        self.paymentsView.setData(payments: self.payments)
+      }
+    }))
+  }
+  
+  func addNewPayment(payment: Payment) {
+    print(#line,#function,"Add new payment from payment screen")
+    self.payments.append(payment)
+
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.paymentsView.setData(payments: self.payments)
+        self.paymentsScreen.setData(payment: self.payments)
+      }
+    }
+
+    dataService.addOrUpdate(object: payment, completion: comletionBlock)
+  }
+  
+  
 }
 
 struct DashboardConstants {

@@ -43,30 +43,6 @@ final class PaymentsScreenCell: UICollectionViewCell {
   var screenContentType: PaymentsViewControllerContentType?
   private var isAnimating: Bool = false
   
-//  private var state: PaymentScreenCellType = .payment {
-//    didSet {
-//      switch state {
-//      case .addPayment:
-//        addPaymentLabel.isHidden = false
-//        paymentNameLabel.isHidden = true
-//        amountLabel.isHidden = true
-//        amountValueLabel.isHidden = true
-//        typeLabel.isHidden = true
-//        typeValueLabel.isHidden = true
-//        separatorView.isHidden = true
-//
-//      case .payment:
-//        addPaymentLabel.isHidden = true
-//        paymentNameLabel.isHidden = false
-//        amountLabel.isHidden = false
-//        amountValueLabel.isHidden = false
-//        typeLabel.isHidden = false
-//        typeValueLabel.isHidden = false
-//        separatorView.isHidden = false
-//      }
-//    }
-//  }
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupSubviews()
@@ -146,7 +122,6 @@ final class PaymentsScreenCell: UICollectionViewCell {
       self.layoutIfNeeded()
     } completion: { completed in
       if completed {
-        print("Swiped left")
         self.isAnimating = false
       }
     }
@@ -166,7 +141,6 @@ final class PaymentsScreenCell: UICollectionViewCell {
       self.layoutIfNeeded()
     } completion: { completed in
       if completed {
-        print("Swiped right")
         self.isAnimating = false
       }
     }
