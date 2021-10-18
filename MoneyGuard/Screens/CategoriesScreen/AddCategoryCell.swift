@@ -11,6 +11,8 @@ final class AddCategoryCell: UICollectionViewCell {
   
   private let addCategoryView = AddCategoryView()
   
+  weak var delegate: AddCategoryViewDelegate?
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupSubviews()
@@ -31,5 +33,13 @@ extension AddCategoryCell {
     addCategoryView.snp.makeConstraints { make in
       make.leading.trailing.top.bottom.equalToSuperview()
     }
+    addCategoryView.delegate = self
+  }
+}
+
+extension AddCategoryCell: AddCategoryViewDelegate {
+  func addCategory(newCategory: Category) {
+    guard let delegate = delegate else { return }
+    delegate.addCategory(newCategory: newCategory)
   }
 }

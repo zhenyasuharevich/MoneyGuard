@@ -8,8 +8,8 @@
 import UIKit
 
 protocol CategoriesViewControllerDelegate: AnyObject {
-  func categoryPressed(for indexPath: IndexPath)
-  func addCategoryPressed(for indexPath: IndexPath)
+  func categoriesScreenRemoveCategory(for indexPath: IndexPath)
+  func categoriesScreenAddNewCategoryPressed(category: Category)
 }
 
 enum CategoriesViewControllerContentType {
@@ -23,8 +23,7 @@ final class CategoriesViewController: UIViewController {
   private let returnButton = UIButton()
   private let screenNameLabel = UILabel()
   
-//  private let addCategoryView = AddCategoryView()
-  private let overlayView = UIView()
+  var selectCategoryCompletion: ((Category) -> Void)?
   
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
@@ -45,21 +44,7 @@ final class CategoriesViewController: UIViewController {
   
   weak var delegate: CategoriesViewControllerDelegate?
 
-  var categories = [
-    Category(identifier: UUID().uuidString, name: "TRANSPORT", amountSpent: 500),
-    Category(identifier: UUID().uuidString, name: "MEAL", amountSpent: 1000),
-    Category(identifier: UUID().uuidString, name: "HOUSE", amountSpent: 550),
-    Category(identifier: UUID().uuidString, name: "PLEASURE", amountSpent: 1000),
-    Category(identifier: UUID().uuidString, name: "TELEPHONE", amountSpent: 50),
-    Category(identifier: UUID().uuidString, name: "AAAAAA", amountSpent: 50),
-    Category(identifier: UUID().uuidString, name: "BBBBB", amountSpent: 50),
-    Category(identifier: UUID().uuidString, name: "CCCCC", amountSpent: 510),
-    Category(identifier: UUID().uuidString, name: "DDDDD", amountSpent: 2510),
-    Category(identifier: UUID().uuidString, name: "EEEEE", amountSpent: 10),
-    Category(identifier: UUID().uuidString, name: "FFFFF", amountSpent: 60),
-    Category(identifier: UUID().uuidString, name: "GGGG", amountSpent: 90),
-    Category(identifier: UUID().uuidString, name: "HHHHH", amountSpent: 52)
-  ]
+  private var categories: [Category] = []
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
@@ -93,6 +78,11 @@ final class CategoriesViewController: UIViewController {
   
   @objc private func returnButtonPressed() {
     self.dismiss(animated: true, completion: nil)
+  }
+  
+  func setData(categories: [Category]) {
+    self.categories = categories
+    collectionView.reloadData()
   }
   
 }
@@ -135,6 +125,7 @@ extension CategoriesViewController : UICollectionViewDataSource {
          let theme = self.currentTheme {
         cell.setupColorTheme(colorTheme, theme)
       }
+      cell.delegate = self
       
       return cell
     }
@@ -151,6 +142,11 @@ extension CategoriesViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard !(self.contentType == .listWithInteractiveCell) else { return }
     print("Select item at indexPath.row: \(indexPath.row)")
+    guard let completion = self.selectCategoryCompletion else { return }
+    let category = categories[indexPath.row]
+    self.dismiss(animated: true) {
+      completion(category)
+    }
   }
 
 }
@@ -182,8 +178,6 @@ extension CategoriesViewController {
     topBar.addSubview(returnButton)
     topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
-//    view.addSubview(addCategoryView)
-    view.addSubview(overlayView)
     
     topBar.snp.makeConstraints { make in
       make.top.leading.trailing.equalToSuperview()
@@ -213,23 +207,6 @@ extension CategoriesViewController {
     screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
     screenNameLabel.text = "All categories"
     
-//    addCategoryView.snp.makeConstraints { make in
-//      make.top.equalToSuperview().offset(30)
-//      make.trailing.equalToSuperview().offset(-16)
-//      make.leading.equalToSuperview().offset(16)
-//      make.height.equalTo(188)
-//    }
-    
-//    addCategoryView.delegate = self
-//    addCategoryView.isHidden = true
-    
-    overlayView.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
-    }
-    overlayView.isHidden = true
-    overlayView.backgroundColor = .black
-    overlayView.alpha = 0.7
-    
     collectionView.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(8)
       make.trailing.equalToSuperview().offset(-8)
@@ -256,6 +233,7 @@ extension CategoriesViewController: CategoriesCellDelegate {
       } completion: { completed in
         if completed {
           self.collectionView.reloadData()
+          self.delegate?.categoriesScreenRemoveCategory(for: indexPath)
         }
       }
     }
@@ -274,19 +252,11 @@ extension CategoriesViewController: CategoriesCellDelegate {
 }
 
 
-//extension CategoriesViewController: AddCategoryViewDelegate {
-//  func addCategory(newCategory: Category) {
-//    self.categories.append(newCategory)
-//
-//    let comletionBlock = EmptyBlock { _ in
-//      DispatchQueue.main.async {
-//        self.categoriesView.setData(categories: self.categories)
-//      }
-//      self.state = .normal
-//    }
-//
-//    dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
-//  }
-//}
+extension CategoriesViewController: AddCategoryViewDelegate {
+  func addCategory(newCategory: Category) {
+    guard let delegate = self.delegate else { return }
+    delegate.categoriesScreenAddNewCategoryPressed(category: newCategory)
+  }
+}
 
 

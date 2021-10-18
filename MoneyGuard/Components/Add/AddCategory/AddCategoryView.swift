@@ -60,7 +60,7 @@ class AddCategoryView: UIView {
     setupInitialState()
   }
   
-  private func setupInitialState() {
+  func setupInitialState() {
     categoryNameTextField.text = ""
     
     addCategoryButton.isEnabled = false
