@@ -25,6 +25,8 @@ final class PaymentsScreenViewController: UIViewController {
   private let screenNameLabel = UILabel()
   private let overlayView = UIView()
   
+  var selectPaymentCompletion: ((Payment) -> Void)?
+  
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .vertical
@@ -108,7 +110,13 @@ extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
 extension PaymentsScreenViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard !(self.contentType == .listWithInteractiveCell) else { return }
-    print("Select item at indexPath.row: \(indexPath.row)")
+    guard let completion = self.selectPaymentCompletion else { print(#line,#function,"Error: no select paymnet completion"); return }
+    let payment = payments[indexPath.row]
+    self.dismiss(animated: true) {
+      DispatchQueue.main.async {
+        completion(payment)
+      }
+    }
   }
   
 }

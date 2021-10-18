@@ -263,7 +263,7 @@ extension DashboardViewController {
     addTransactionButton.isHidden = true
     addTransactionButton.layer.cornerRadius = 20
     addTransactionButton.layer.borderWidth = 1
-    addTransactionButton.setTitle("Spend money", for: .normal)
+    addTransactionButton.setTitle("Add money", for: .normal)
     addTransactionButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
     addTransactionButton.titleLabel?.textColor = .white
     addTransactionButton.layer.borderColor = UIColor.white.cgColor
@@ -277,7 +277,7 @@ extension DashboardViewController {
     sendTransactionButton.isHidden = true
     sendTransactionButton.layer.cornerRadius = 20
     sendTransactionButton.layer.borderWidth = 1
-    sendTransactionButton.setTitle("Add money", for: .normal)
+    sendTransactionButton.setTitle("Spend money", for: .normal)
     sendTransactionButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
     sendTransactionButton.titleLabel?.textColor = .white
     sendTransactionButton.layer.borderColor = UIColor.white.cgColor
@@ -416,6 +416,13 @@ extension DashboardViewController: AddTransactionViewDelegate {
       paymentsController.setupColorTheme(colorTheme, theme)
     }
     
+    paymentsController.setData(payment: self.payments)
+    
+    paymentsController.selectPaymentCompletion = { [weak self] payment in
+      guard let self = self else { print("Error");return }
+      self.addTransactionView.setPayment(payment: payment)
+    }
+    
     present(paymentsController, animated: true, completion: nil)
   }
   
@@ -433,6 +440,7 @@ extension DashboardViewController: SettingsControllerDelegate {
 }
 
 extension DashboardViewController: PaymentsScreenViewControllerDelegate {
+  
   func removePayment(for indexPath: IndexPath) {
     let payment = payments.remove(at: indexPath.row)
     dataService.remove(object: payment, completion: EmptyBlock({[weak self] _ in
@@ -457,7 +465,6 @@ extension DashboardViewController: PaymentsScreenViewControllerDelegate {
 
     dataService.addOrUpdate(object: payment, completion: comletionBlock)
   }
-  
   
 }
 
