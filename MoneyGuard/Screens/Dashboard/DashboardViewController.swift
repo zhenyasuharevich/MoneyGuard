@@ -37,6 +37,7 @@ final class DashboardViewController: BaseController {
   private let overlayView = UIView()
   
   private let settingsScreen = SettingsController()
+  private let categoriesScreen = CategoriesViewController(contentType: .listWithInteractiveCell)
   private let paymentsScreen = PaymentsScreenViewController(contentType: .listWithInteractiveCell)
   
   var categories: [Category] = []
@@ -116,6 +117,9 @@ final class DashboardViewController: BaseController {
     
     paymentsScreen.modalPresentationStyle = .fullScreen
     paymentsScreen.delegate = self
+
+    categoriesScreen.modalPresentationStyle = .fullScreen
+    categoriesScreen.delegate = self
     
     setupSubviews()
     loadData()
@@ -137,6 +141,7 @@ final class DashboardViewController: BaseController {
     addTransactionButton.backgroundColor = colorTheme.activeColor
     sendTransactionButton.backgroundColor = colorTheme.activeColor
     
+    categoriesScreen.setupColorTheme(colorTheme, theme)
     addTransactionView.setupColorTheme(colorTheme, theme)
     settingsScreen.setupColorTheme(colorTheme, theme)
     paymentsScreen.setupColorTheme(colorTheme, theme)
@@ -353,17 +358,22 @@ extension DashboardViewController: TopBarViewDelegate {
 
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
+  
   func showMorePaymentsPressed() {
     paymentsScreen.setData(payment: self.payments)
     present(paymentsScreen, animated: true, completion: nil)
-    print(#line,#function,"Title pressed") }
+  }
   
   func addPaymentPressed(for indexPath: IndexPath) { self.state = .addPayment }
 }
 
 extension DashboardViewController: CategoriesViewDelegate {
   func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
-  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
+  
+  func showMoreCategoriesPressed() {
+    categoriesScreen.setData(categories: self.categories)
+    present(categoriesScreen, animated: true, completion: nil)
+  }
   
   func addCategoryPressed(for indexPath: IndexPath) { self.state = .addCategory }
 }
@@ -427,10 +437,21 @@ extension DashboardViewController: AddTransactionViewDelegate {
   }
   
   func addTransactionChooseCategoryPressed() {
-    print("Category")
-    let viewController = UIViewController()
-    viewController.view.backgroundColor = .red
-    present(viewController, animated: true, completion: nil)
+    let categoriesScreen = CategoriesViewController(contentType: .scrollingListForChoose)
+    
+    if let colorTheme = self.colorTheme,
+       let theme = self.theme {
+      categoriesScreen.setupColorTheme(colorTheme, theme)
+    }
+    
+    categoriesScreen.setData(categories: self.categories)
+    
+    categoriesScreen.selectCategoryCompletion = { [weak self] category in
+      guard let self = self else { print("Error");return }
+      self.addTransactionView.setCategory(category: category)
+    }
+    
+    present(categoriesScreen, animated: true, completion: nil)
   }
 }
 
@@ -445,7 +466,7 @@ extension DashboardViewController: PaymentsScreenViewControllerDelegate {
     let payment = payments.remove(at: indexPath.row)
     dataService.remove(object: payment, completion: EmptyBlock({[weak self] _ in
       guard let self = self else { return }
-      print("Item was removed at: \(indexPath.row)")
+      print("Payment: Item was removed at: \(indexPath.row)")
       DispatchQueue.main.async {
         self.paymentsView.setData(payments: self.payments)
       }
@@ -464,6 +485,35 @@ extension DashboardViewController: PaymentsScreenViewControllerDelegate {
     }
 
     dataService.addOrUpdate(object: payment, completion: comletionBlock)
+  }
+  
+}
+
+extension DashboardViewController: CategoriesViewControllerDelegate {
+  
+  func categoriesScreenRemoveCategory(for indexPath: IndexPath) {
+    let category = categories.remove(at: indexPath.row)
+    dataService.remove(object: category, completion: EmptyBlock({[weak self] _ in
+      guard let self = self else { return }
+      print("Category: Item was removed at: \(indexPath.row)")
+      DispatchQueue.main.async {
+        self.categoriesView.setData(categories: self.categories)
+      }
+    }))
+  }
+  
+  func categoriesScreenAddNewCategoryPressed(category: Category) {
+    print(#line,#function,"Add new category from payment screen")
+    self.categories.append(category)
+
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.categoriesView.setData(categories: self.categories)
+        self.categoriesScreen.setData(categories: self.categories)
+      }
+    }
+
+    dataService.addOrUpdate(object: category, completion: comletionBlock)
   }
   
 }
