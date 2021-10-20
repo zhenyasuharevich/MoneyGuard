@@ -200,6 +200,14 @@ final class AddTransactionView: UIView {
 //    }
     delegate?.addTransactionSubmit()
   }
+  
+  func setPayment(payment: Payment) {
+    self.selectedPayment = payment
+  }
+  
+  func setCategory(category: Category) {
+    self.selectedCategory = category
+  }
 }
 
 extension AddTransactionView {
