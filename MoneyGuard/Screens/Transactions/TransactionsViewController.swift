@@ -36,16 +36,7 @@ class TransactionsViewController: UIViewController {
   
   weak var delegate: TransactionsViewControllerDelegate?
   
-  private var transactions = [
-    Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Alior", categoryName: "Trenning", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PKO", categoryName: "Transport", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Cash", categoryName: "Pleasure", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "MamaDala", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PEKAO", categoryName: "Flat", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem")
-  ]
+  private var transactions: [Transaction] = []
   
   private var currentTheme: ThemeType?
   private var currentColorTheme: ColorThemeProtocol?
@@ -69,6 +60,11 @@ class TransactionsViewController: UIViewController {
   
   @objc private func returnButtonPressed() {
     self.dismiss(animated: true, completion: nil)
+  }
+  
+  func setData(transactions: [Transaction]) {
+    self.transactions = transactions
+    collectionView.reloadData()
   }
   
 }

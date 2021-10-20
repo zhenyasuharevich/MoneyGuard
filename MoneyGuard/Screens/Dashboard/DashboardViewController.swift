@@ -41,6 +41,7 @@ final class DashboardViewController: BaseController {
   
   var categories: [Category] = []
   var payments: [Payment] = []
+  var transactions: [Transaction] = []
   
   private var state: DashboardState {
     didSet {
@@ -158,6 +159,15 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
+      self.transactions = [Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Alior", categoryName: "Trenning", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PKO", categoryName: "Transport", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Cash", categoryName: "Pleasure", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "MamaDala", categoryName: "Meal", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PEKAO", categoryName: "Flat", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
+                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem")
+      ]
       dispatchGroup.leave()
     }))
     
@@ -366,7 +376,8 @@ extension DashboardViewController: CategoriesViewDelegate {
 
 extension DashboardViewController: LastTransactionsViewDelegate {
   func lastTransactionsPressed(for indexPath: IndexPath) { print("Transaction pressed at: \(indexPath.row)") }
-  func showMoreLastTransactionsPressed() { print("Show more transactions pressed")
+  func showMoreLastTransactionsPressed() {
+    transactionsScreen.setData(transactions: self.transactions)
     present(transactionsScreen, animated: true, completion: nil)
   }
 }
