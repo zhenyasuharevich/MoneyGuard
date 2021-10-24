@@ -19,7 +19,8 @@ final class TransactionsScreenCell: UICollectionViewCell {
   let categoryNameLabel = UILabel()
   private let separatorView = UIView()
   var signLabel = UILabel()
-  private let transactionAmountLabel = UILabel()
+  let transactionAmountLabel = UILabel()
+  
   private let amountLabel = UILabel()
   
   lazy var formatter : DateFormatter = {
@@ -49,6 +50,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
     categoryNameLabel.textColor = colorTheme.textColor
     signLabel.textColor = colorTheme.textColor
     separatorView.backgroundColor = colorTheme.activeColor
+    amountLabel.textColor = colorTheme.textColor
   }
   
   func setData(transaction: Transaction) {
@@ -56,6 +58,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
     self.dataLabel.text = formatter.string(from: transaction.date)
     self.paymentNameLabel.text = transaction.paymentName
     self.categoryNameLabel.text = transaction.categoryName
+    self.transactionAmountLabel.text = String(transaction.amount)
   }
   
 }

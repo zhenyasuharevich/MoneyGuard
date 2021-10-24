@@ -55,6 +55,7 @@ class TransactionsViewController: UIViewController {
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
     
+    
     collectionView.reloadData()
   }
   
@@ -87,6 +88,7 @@ extension TransactionsViewController : UICollectionViewDataSource {
     let transaction = transactions[indexPath.row]
     cell.setData(transaction: transaction)
     
+    //cell.amountLabel.text = String(transaction.amount)
     
     if transaction.type == .sendMoney {
       cell.signLabel.text = "-"
