@@ -20,16 +20,7 @@ final class LastTransactionsView: UIView {
   
   weak var delegate: LastTransactionsViewDelegate?
   
-  private var transactions = [
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-    Transaction(identifier: UUID().uuidString, type: .getMoney, date: .distantPast, paymentName: "Millenium", categoryName: "Meal", description: "Testujem")
-  ]
+  private var transactions: [Transaction] = []
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
@@ -67,6 +58,11 @@ final class LastTransactionsView: UIView {
   }
   
   @objc func titlePressed(_ sender: UIButton ) { delegate?.showMoreLastTransactionsPressed() }
+  
+  func setData(transactions: [Transaction]) {
+    self.transactions = transactions
+    collectionView.reloadData()
+  }
   
 }
 

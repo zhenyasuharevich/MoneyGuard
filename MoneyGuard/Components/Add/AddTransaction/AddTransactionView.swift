@@ -8,9 +8,11 @@
 import UIKit
 
 protocol AddTransactionViewDelegate: AnyObject {
-  func addTransactionSubmit()
+  func addTransactionWithGetMoneyType(transaction: Transaction, payment: Payment)
+  func addTransactionWithSendMoneyType(transaction: Transaction, payment: Payment, category: Category)
   func addTransactionChoosePaymentPressed()
   func addTransactionChooseCategoryPressed()
+  func addTransactionShowErrorAlert(title: String, message: String)
 }
 
 final class AddTransactionView: UIView {
@@ -154,13 +156,14 @@ final class AddTransactionView: UIView {
     chooseCategoryButton.setTitle(_selectedCategory.name, for: .normal)
   }
   
-  private func enableSubmitButtonIfPossible() {
+  @objc private func enableSubmitButtonIfPossible() {
     switch transactionType {
     case .getMoney:
       guard let payment = self.selectedPayment,
             let amountString = amountValueTextField.text,
             !amountString.isEmpty,
-            let amountValue = Double(amountString) else {
+            let amountValue = Double(amountString),
+            amountValue > 0 else {
         isSubmitEnable = false
         return
       }
@@ -170,7 +173,8 @@ final class AddTransactionView: UIView {
             let payment = self.selectedPayment,
             let amountString = amountValueTextField.text,
             !amountString.isEmpty,
-            let amountValue = Double(amountString) else {
+            let amountValue = Double(amountString),
+            amountValue > 0 else {
         isSubmitEnable = false
         return
       }
@@ -189,16 +193,38 @@ final class AddTransactionView: UIView {
   }
   
   @objc private func submitButtonPressed() {
-//    print("add transaction Submit pressed")
-//    switch transactionType {
-//    case .getMoney:
-//      self.transactionType = .sendMoney
-//    case .sendMoney:
-//      self.transactionType = .unowned
-//    case .unowned:
-//      self.transactionType = .getMoney
-//    }
-    delegate?.addTransactionSubmit()
+    
+    guard let payment = self.selectedPayment,
+          let amountString = amountValueTextField.text,
+          !amountString.isEmpty,
+          let amountValue = Double(amountString),
+          amountValue > 0 else { print(#line,#function,"Error: Not enough info to create transaction"); return }
+    
+    switch transactionType {
+    case .sendMoney:
+      guard let category = self.selectedCategory else { print(#line,#function,"Error: Can't get category to create transaction with .sendMoney type"); return }
+      let transaction = Transaction(identifier: UUID().uuidString, amount: amountValue, type: .sendMoney, date: Date(), paymentName: payment.name, categoryName: category.name, description: self.notesTextView.text)
+      
+      if payment.amount < transaction.amount {
+        delegate?.addTransactionShowErrorAlert(title: "Insufficient funds", message: "You haven't enough money on payment: \(payment.name) to add transaction. Enter another value to add transaction.")
+      } else {
+        payment.amount -= transaction.amount
+        category.amountSpent += transaction.amount
+        delegate?.addTransactionWithSendMoneyType(transaction: transaction, payment: payment, category: category)
+      }
+      
+    case .getMoney:
+      let transaction = Transaction(identifier: UUID().uuidString, amount: amountValue, type: .getMoney, date: Date(), paymentName: payment.name, categoryName: nil, description: self.notesTextView.text)
+      
+      payment.amount += transaction.amount
+      
+      delegate?.addTransactionWithGetMoneyType(transaction: transaction, payment: payment)
+    case .unowned:
+      delegate?.addTransactionShowErrorAlert(title: "Error", message: "Unowned transaction type. Please try againg...")
+    }
+    
+    
+//    delegate?.addTransactionSubmit()
   }
   
   func setPayment(payment: Payment) {
@@ -299,6 +325,7 @@ extension AddTransactionView {
     amountValueTextField.textAlignment = .center
     amountValueTextField.layer.cornerRadius = 8
     amountValueTextField.hideKeyboardWhenDoneButtonTapped()
+    amountValueTextField.addTarget(self, action: #selector(enableSubmitButtonIfPossible), for: .editingChanged)
     
     notesTextView.snp.makeConstraints { make in
       make.top.equalTo(amountValueTextField.snp.bottom).offset(8)

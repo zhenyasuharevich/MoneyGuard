@@ -169,15 +169,7 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
-      self.transactions = [Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Alior", categoryName: "Trenning", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PKO", categoryName: "Transport", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .sendMoney, date: Date(), paymentName: "Cash", categoryName: "Pleasure", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "MamaDala", categoryName: "Meal", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "PEKAO", categoryName: "Flat", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem"),
-                           Transaction(identifier: UUID().uuidString, type: .getMoney, date: Date(), paymentName: "Millenium", categoryName: "Meal", description: "Testujem")
-      ]
+      self.transactions = transactions
       dispatchGroup.leave()
     }))
     
@@ -431,8 +423,65 @@ extension DashboardViewController: AddCategoryViewDelegate {
 }
 
 extension DashboardViewController: AddTransactionViewDelegate {
-  func addTransactionSubmit() {
-    print("Submit")
+  func addTransactionWithGetMoneyType(transaction: Transaction, payment: Payment) {
+    let dispatchGroup = DispatchGroup()
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: transaction, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: payment, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.notify(queue: .main) {
+      self.transactions.append(transaction)
+      self.transactions.sort { $0.date > $1.date }
+      
+      self.lastTransactions.setData(transactions: self.transactions)
+      self.paymentsView.setData(payments: self.payments)
+      
+      self.state = .normal
+    }
+  }
+  
+  func addTransactionWithSendMoneyType(transaction: Transaction, payment: Payment, category: Category) {
+    let dispatchGroup = DispatchGroup()
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: transaction, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: payment, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: category, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.notify(queue: .main) {
+      self.transactions.append(transaction)
+      self.transactions.sort { $0.date > $1.date }
+      
+      self.lastTransactions.setData(transactions: self.transactions)
+      self.paymentsView.setData(payments: self.payments)
+      self.categoriesView.setData(categories: self.categories)
+      
+      self.state = .normal
+    }
+  }
+  
+  func addTransactionShowErrorAlert(title: String, message: String) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alert.addAction(okAction)
+    present(alert, animated: true, completion: nil)
   }
   
   func addTransactionChoosePaymentPressed() {
