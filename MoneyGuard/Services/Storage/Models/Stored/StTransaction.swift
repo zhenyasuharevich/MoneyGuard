@@ -9,6 +9,7 @@ import Foundation
 
 class StTransaction: Object {
   @objc dynamic var identifier: String = ""
+  @objc dynamic var amount: Double = 0
   @objc dynamic var date: Date = Date()
   @objc dynamic var transactionDescription: String?
   @objc dynamic var type: String = ""
@@ -35,6 +36,7 @@ extension StTransaction: StorableProtocol {
     let transactionType = TransactionType(rawValue: self.type) ?? .unowned
     
     return Transaction(identifier: self.identifier,
+                       amount: self.amount,
                        type: transactionType,
                        date: self.date,
                        paymentName: self.paymentName,

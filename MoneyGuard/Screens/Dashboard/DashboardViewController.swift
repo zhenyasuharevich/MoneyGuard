@@ -13,6 +13,8 @@ enum DashboardState {
   case transactionButtonPressed
   case addPayment
   case addCategory
+  case sendTransaction
+  case getTransaction
 }
 
 final class DashboardViewController: BaseController {
@@ -27,13 +29,21 @@ final class DashboardViewController: BaseController {
   private let addCategoryView = AddCategoryView()
   private let addPaymentView = AddPaymentView()
   
+  private let addTransactionView = AddTransactionView()
+  
   private let transactionButton = UIButton()
   private let addTransactionButton = UIButton()
   private let sendTransactionButton = UIButton()
   private let overlayView = UIView()
   
+  private let settingsScreen = SettingsController()
+  private let transactionsScreen = TransactionsViewController()
+  private let categoriesScreen = CategoriesViewController(contentType: .listWithInteractiveCell)
+  private let paymentsScreen = PaymentsScreenViewController(contentType: .listWithInteractiveCell)
+
   var categories: [Category] = []
   var payments: [Payment] = []
+  var transactions: [Transaction] = []
   
   private var state: DashboardState {
     didSet {
@@ -45,6 +55,11 @@ final class DashboardViewController: BaseController {
         overlayView.isHidden = true
         addPaymentView.isHidden = true
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
+        
+        addCategoryView.setupInitialState()
+        addPaymentView.setupInitialState()
+        addTransactionView.setupInitialState()
       case .transactionButtonPressed:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -52,6 +67,7 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = false
         addPaymentView.isHidden = true
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
       case .addPayment:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -59,6 +75,7 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = true
         addPaymentView.isHidden = false
         addCategoryView.isHidden = true
+        addTransactionView.isHidden = true
       case .addCategory:
         transactionButton.setTitle("X", for: .normal)
         overlayView.isHidden = false
@@ -66,6 +83,23 @@ final class DashboardViewController: BaseController {
         sendTransactionButton.isHidden = true
         addPaymentView.isHidden = true
         addCategoryView.isHidden = false
+        addTransactionView.isHidden = true
+      case .sendTransaction:
+        transactionButton.setTitle("X", for: .normal)
+        overlayView.isHidden = false
+        addTransactionButton.isHidden = true
+        sendTransactionButton.isHidden = true
+        addPaymentView.isHidden = true
+        addCategoryView.isHidden = true
+        addTransactionView.isHidden = false
+      case .getTransaction:
+        transactionButton.setTitle("X", for: .normal)
+        overlayView.isHidden = false
+        addTransactionButton.isHidden = true
+        sendTransactionButton.isHidden = true
+        addPaymentView.isHidden = true
+        addCategoryView.isHidden = true
+        addTransactionView.isHidden = false
       }
     }
   }
@@ -79,11 +113,22 @@ final class DashboardViewController: BaseController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    settingsScreen.delegate = self
+    settingsScreen.modalPresentationStyle = .fullScreen
+    
+    transactionsScreen.modalPresentationStyle = .fullScreen
+
+    paymentsScreen.modalPresentationStyle = .fullScreen
+    paymentsScreen.delegate = self
+
+    categoriesScreen.modalPresentationStyle = .fullScreen
+    categoriesScreen.delegate = self
+    
     setupSubviews()
     loadData()
-    categoriesView.setData(categories: self.categories)
-    paymentsView.setData(payments: self.payments)
   }
+  
   override func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     super.setupColorTheme(colorTheme, theme)
   
@@ -99,6 +144,12 @@ final class DashboardViewController: BaseController {
     transactionButton.backgroundColor = colorTheme.activeColor
     addTransactionButton.backgroundColor = colorTheme.activeColor
     sendTransactionButton.backgroundColor = colorTheme.activeColor
+    
+    categoriesScreen.setupColorTheme(colorTheme, theme)
+    addTransactionView.setupColorTheme(colorTheme, theme)
+    settingsScreen.setupColorTheme(colorTheme, theme)
+    transactionsScreen.setupColorTheme(colorTheme, theme)
+    paymentsScreen.setupColorTheme(colorTheme, theme)
   }
   
   private func loadData() {
@@ -118,6 +169,7 @@ final class DashboardViewController: BaseController {
     
     dispatchGroup.enter()
     dataService.getAll(of: Transaction.self, completion: BlockObject<[Transaction], Void>({ transactions in
+      self.transactions = transactions
       dispatchGroup.leave()
     }))
     
@@ -143,11 +195,13 @@ final class DashboardViewController: BaseController {
   }
   
   @objc private func addTransactionButtonPressed() {
-    print("Add transaction")
+    addTransactionView.setTransactionType(.getMoney)
+    self.state = .getTransaction
   }
   
   @objc private func sendTransactionButtonPressed() {
-    print("Send transaction")
+    addTransactionView.setTransactionType(.sendMoney)
+    self.state = .sendTransaction
   }
   
 }
@@ -155,8 +209,6 @@ final class DashboardViewController: BaseController {
 extension DashboardViewController {
   private func setupSubviews() {
     let scrollContentView = UIView()
-    
-    let helperView = UIView() // Remove when all elements will be connected
     
     //Under overlayView
     view.addSubview(mainScrollView)
@@ -169,6 +221,7 @@ extension DashboardViewController {
     view.addSubview(sendTransactionButton)
     view.addSubview(addPaymentView)
     view.addSubview(addCategoryView)
+    view.addSubview(addTransactionView)
     
     mainScrollView.addSubview(scrollContentView)
 
@@ -177,12 +230,11 @@ extension DashboardViewController {
     scrollContentView.addSubview(lastTransactions)
     scrollContentView.addSubview(categoriesView)
     
-    scrollContentView.addSubview(helperView)
-    
     topBarView.delegate = self
     paymentsView.delegate = self
     categoriesView.delegate = self
     lastTransactions.delegate = self
+    addTransactionView.delegate = self
     
     transactionButton.addTarget(self, action: #selector(transactionButtonPressed), for: .touchUpInside)
     addTransactionButton.addTarget(self, action: #selector(addTransactionButtonPressed), for: .touchUpInside)
@@ -222,7 +274,7 @@ extension DashboardViewController {
     addTransactionButton.isHidden = true
     addTransactionButton.layer.cornerRadius = 20
     addTransactionButton.layer.borderWidth = 1
-    addTransactionButton.setTitle("Spend money", for: .normal)
+    addTransactionButton.setTitle("Add money", for: .normal)
     addTransactionButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
     addTransactionButton.titleLabel?.textColor = .white
     addTransactionButton.layer.borderColor = UIColor.white.cgColor
@@ -236,7 +288,7 @@ extension DashboardViewController {
     sendTransactionButton.isHidden = true
     sendTransactionButton.layer.cornerRadius = 20
     sendTransactionButton.layer.borderWidth = 1
-    sendTransactionButton.setTitle("Add money", for: .normal)
+    sendTransactionButton.setTitle("Spend money", for: .normal)
     sendTransactionButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
     sendTransactionButton.titleLabel?.textColor = .white
     sendTransactionButton.layer.borderColor = UIColor.white.cgColor
@@ -258,6 +310,14 @@ extension DashboardViewController {
     }
     addPaymentView.delegate = self
     addPaymentView.isHidden = true
+    
+    addTransactionView.snp.makeConstraints { make in
+      make.top.equalToSuperview().offset(42)
+      make.leading.equalToSuperview().offset(16)
+      make.trailing.equalToSuperview().offset(-16)
+      make.height.equalTo(340)
+    }
+    addTransactionView.isHidden = true
     
     mainScrollView.snp.makeConstraints { make in
       make.top.equalTo(topBarView.snp.bottom)
@@ -299,39 +359,37 @@ extension DashboardViewController {
 }
 
 extension DashboardViewController: TopBarViewDelegate {
-  func settingsButtonPressed() {
-    switch colorSchemeManager.currentTheme {
-    case .light:
-      colorSchemeManager.currentTheme = .dark
-    case .dark:
-      colorSchemeManager.currentTheme = .system
-    case .system:
-      colorSchemeManager.currentTheme = .light
-    }
-  }
+  func settingsButtonPressed() { present(settingsScreen, animated: true, completion: nil) }
 }
 
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
-  func showMorePaymentsPressed() { print(#line,#function,"Title pressed") }
   
-  func addPaymentPressed(for indexPath: IndexPath) {
-    self.state = .addPayment
+  func showMorePaymentsPressed() {
+    paymentsScreen.setData(payment: self.payments)
+    present(paymentsScreen, animated: true, completion: nil)
   }
+  
+  func addPaymentPressed(for indexPath: IndexPath) { self.state = .addPayment }
 }
 
 extension DashboardViewController: CategoriesViewDelegate {
   func categoryPressed(for indexPath: IndexPath) { print(#line, #function, "Category pressed with indexPath: \(indexPath)") }
-  func showMoreCategoriesPressed() { print(#line,#function,"Title pressed") }
   
-  func addCategoryPressed(for indexPath: IndexPath) {
-    self.state = .addCategory
+  func showMoreCategoriesPressed() {
+    categoriesScreen.setData(categories: self.categories)
+    present(categoriesScreen, animated: true, completion: nil)
   }
+  
+  func addCategoryPressed(for indexPath: IndexPath) { self.state = .addCategory }
 }
 
 extension DashboardViewController: LastTransactionsViewDelegate {
   func lastTransactionsPressed(for indexPath: IndexPath) { print("Transaction pressed at: \(indexPath.row)") }
-  func showMoreLastTransactionsPressed() { print("Show more transactions pressed") }
+  func showMoreLastTransactionsPressed() {
+    transactionsScreen.setData(transactions: self.transactions)
+    present(transactionsScreen, animated: true, completion: nil)
+  }
 }
 
 extension DashboardViewController: AddPaymentViewDelegate {
@@ -362,6 +420,168 @@ extension DashboardViewController: AddCategoryViewDelegate {
     
     dataService.addOrUpdate(object: newCategory, completion: comletionBlock)
   }
+}
+
+extension DashboardViewController: AddTransactionViewDelegate {
+  func addTransactionWithGetMoneyType(transaction: Transaction, payment: Payment) {
+    let dispatchGroup = DispatchGroup()
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: transaction, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: payment, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.notify(queue: .main) {
+      self.transactions.append(transaction)
+      self.transactions.sort { $0.date > $1.date }
+      
+      self.lastTransactions.setData(transactions: self.transactions)
+      self.paymentsView.setData(payments: self.payments)
+      
+      self.state = .normal
+    }
+  }
+  
+  func addTransactionWithSendMoneyType(transaction: Transaction, payment: Payment, category: Category) {
+    let dispatchGroup = DispatchGroup()
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: transaction, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: payment, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.enter()
+    dataService.addOrUpdate(object: category, callbackQueue: .main, completion: EmptyBlock({ _ in
+      dispatchGroup.leave()
+    }))
+    
+    dispatchGroup.notify(queue: .main) {
+      self.transactions.append(transaction)
+      self.transactions.sort { $0.date > $1.date }
+      
+      self.lastTransactions.setData(transactions: self.transactions)
+      self.paymentsView.setData(payments: self.payments)
+      self.categoriesView.setData(categories: self.categories)
+      
+      self.state = .normal
+    }
+  }
+  
+  func addTransactionShowErrorAlert(title: String, message: String) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alert.addAction(okAction)
+    present(alert, animated: true, completion: nil)
+  }
+  
+  func addTransactionChoosePaymentPressed() {
+    let paymentsController = PaymentsScreenViewController(contentType: .scrollingListForChoose)
+    
+    if let colorTheme = self.colorTheme,
+       let theme = self.theme {
+      paymentsController.setupColorTheme(colorTheme, theme)
+    }
+    
+    paymentsController.setData(payment: self.payments)
+    
+    paymentsController.selectPaymentCompletion = { [weak self] payment in
+      guard let self = self else { print("Error");return }
+      self.addTransactionView.setPayment(payment: payment)
+    }
+    
+    present(paymentsController, animated: true, completion: nil)
+  }
+  
+  func addTransactionChooseCategoryPressed() {
+    let categoriesScreen = CategoriesViewController(contentType: .scrollingListForChoose)
+    
+    if let colorTheme = self.colorTheme,
+       let theme = self.theme {
+      categoriesScreen.setupColorTheme(colorTheme, theme)
+    }
+    
+    categoriesScreen.setData(categories: self.categories)
+    
+    categoriesScreen.selectCategoryCompletion = { [weak self] category in
+      guard let self = self else { print("Error");return }
+      self.addTransactionView.setCategory(category: category)
+    }
+    
+    present(categoriesScreen, animated: true, completion: nil)
+  }
+}
+
+extension DashboardViewController: SettingsControllerDelegate {
+  func settingsClearAllData() { print(#line,#function,"Clear all data") }
+  func settingsChangeTheme(_ newTheme: ThemeType) { colorSchemeManager.currentTheme = newTheme }
+}
+
+extension DashboardViewController: PaymentsScreenViewControllerDelegate {
+  
+  func removePayment(for indexPath: IndexPath) {
+    let payment = payments.remove(at: indexPath.row)
+    dataService.remove(object: payment, completion: EmptyBlock({[weak self] _ in
+      guard let self = self else { return }
+      print("Payment: Item was removed at: \(indexPath.row)")
+      DispatchQueue.main.async {
+        self.paymentsView.setData(payments: self.payments)
+      }
+    }))
+  }
+  
+  func addNewPayment(payment: Payment) {
+    print(#line,#function,"Add new payment from payment screen")
+    self.payments.append(payment)
+
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.paymentsView.setData(payments: self.payments)
+        self.paymentsScreen.setData(payment: self.payments)
+      }
+    }
+
+    dataService.addOrUpdate(object: payment, completion: comletionBlock)
+  }
+  
+}
+
+extension DashboardViewController: CategoriesViewControllerDelegate {
+  
+  func categoriesScreenRemoveCategory(for indexPath: IndexPath) {
+    let category = categories.remove(at: indexPath.row)
+    dataService.remove(object: category, completion: EmptyBlock({[weak self] _ in
+      guard let self = self else { return }
+      print("Category: Item was removed at: \(indexPath.row)")
+      DispatchQueue.main.async {
+        self.categoriesView.setData(categories: self.categories)
+      }
+    }))
+  }
+  
+  func categoriesScreenAddNewCategoryPressed(category: Category) {
+    print(#line,#function,"Add new category from payment screen")
+    self.categories.append(category)
+
+    let comletionBlock = EmptyBlock { _ in
+      DispatchQueue.main.async {
+        self.categoriesView.setData(categories: self.categories)
+        self.categoriesScreen.setData(categories: self.categories)
+      }
+    }
+
+    dataService.addOrUpdate(object: category, completion: comletionBlock)
+  }
+  
 }
 
 struct DashboardConstants {

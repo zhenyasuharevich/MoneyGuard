@@ -15,14 +15,16 @@ enum TransactionType: String {
 
 class Transaction {
   let identifier: String
+  let amount: Double
   let type: TransactionType
   let date: Date
   let description: String?
   let paymentName: String
   let categoryName: String? 
   
-  init(identifier: String, type: TransactionType, date: Date, paymentName: String, categoryName: String?, description: String? = nil) {
+  init(identifier: String, amount: Double, type: TransactionType, date: Date, paymentName: String, categoryName: String?, description: String? = nil) {
     self.identifier = identifier
+    self.amount = amount
     self.type = type
     self.date = date
     self.paymentName = paymentName

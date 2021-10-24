@@ -17,7 +17,7 @@ enum PaymentType: String {
 class Payment {
   let identifier: String
   let name: String
-  let amount: Double
+  var amount: Double
   let type: PaymentType
   
   init(identifier: String, name: String, amount: Double, type: PaymentType) {

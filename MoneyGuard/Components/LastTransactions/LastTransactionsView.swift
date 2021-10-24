@@ -20,6 +20,8 @@ final class LastTransactionsView: UIView {
   
   weak var delegate: LastTransactionsViewDelegate?
   
+  private var transactions: [Transaction] = []
+  
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
   
@@ -57,6 +59,11 @@ final class LastTransactionsView: UIView {
   
   @objc func titlePressed(_ sender: UIButton ) { delegate?.showMoreLastTransactionsPressed() }
   
+  func setData(transactions: [Transaction]) {
+    self.transactions = transactions
+    collectionView.reloadData()
+  }
+  
 }
 
 extension LastTransactionsView : UICollectionViewDataSource {
@@ -67,7 +74,7 @@ extension LastTransactionsView : UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LastTransactionsCell.reuseIdentifier, for: indexPath) as? LastTransactionsCell else { print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell() }
-    let cellType = LastTransactionsCellType.getCellType(for: indexPath)
+    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: 10)
     
     if let colorTheme = self.currentColorTheme,
        let theme = self.currentTheme {
@@ -83,7 +90,7 @@ extension LastTransactionsView : UICollectionViewDataSource {
 
 extension LastTransactionsView: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = LastTransactionsCellType.getCellType(for: indexPath)
+    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: 10)
     
     switch cellType {
     case .otherTransactions:

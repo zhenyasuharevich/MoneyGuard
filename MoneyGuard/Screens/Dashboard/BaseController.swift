@@ -15,6 +15,9 @@ class BaseController: UIViewController {
   var colorSchemeManager: ColorSchemeManagerProtocol
   let dataService: RealmServiceProtocol
   
+  var colorTheme: ColorThemeProtocol?
+  var theme: ThemeType?
+  
   init(serviceLocator: ServiceLocator = ServiceLocator()) {
     self.colorSchemeManager = serviceLocator.colorThemeManager()
     self.dataService = serviceLocator.databaseService()
@@ -30,6 +33,8 @@ class BaseController: UIViewController {
   }
   
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
+    self.colorTheme = colorTheme
+    self.theme = theme
     view.backgroundColor = colorTheme.backgroundColor
   }
   
