@@ -30,9 +30,7 @@ class TransactionsViewController: UIViewController {
      cv.showsVerticalScrollIndicator = false
      cv.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 16)
     return cv
-   }()
-  
-
+   }() 
   
   weak var delegate: TransactionsViewControllerDelegate?
   

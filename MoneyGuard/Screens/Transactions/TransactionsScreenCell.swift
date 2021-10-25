@@ -58,7 +58,7 @@ final class TransactionsScreenCell: UICollectionViewCell {
     self.dataLabel.text = formatter.string(from: transaction.date)
     self.paymentNameLabel.text = transaction.paymentName
     self.categoryNameLabel.text = transaction.categoryName
-    self.transactionAmountLabel.text = String(transaction.amount)
+    self.transactionAmountLabel.text = "\(transaction.amount)"
   }
   
 }
