@@ -182,6 +182,7 @@ final class DashboardViewController: BaseController {
     DispatchQueue.main.async {
       self.categoriesView.setData(categories: self.categories)
       self.paymentsView.setData(payments: self.payments)
+      self.lastTransactions.setData(transactions: self.transactions)
     }
   }
   

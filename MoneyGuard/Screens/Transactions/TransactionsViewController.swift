@@ -30,9 +30,7 @@ class TransactionsViewController: UIViewController {
      cv.showsVerticalScrollIndicator = false
      cv.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 16)
     return cv
-   }()
-  
-
+   }() 
   
   weak var delegate: TransactionsViewControllerDelegate?
   
@@ -54,6 +52,7 @@ class TransactionsViewController: UIViewController {
     view.backgroundColor = colorTheme.backgroundColor
     returnButton.setTitleColor(colorTheme.textColor, for: .normal)
     screenNameLabel.textColor = colorTheme.textColor
+    
     
     collectionView.reloadData()
   }
@@ -87,6 +86,7 @@ extension TransactionsViewController : UICollectionViewDataSource {
     let transaction = transactions[indexPath.row]
     cell.setData(transaction: transaction)
     
+    //cell.amountLabel.text = String(transaction.amount)
     
     if transaction.type == .sendMoney {
       cell.signLabel.text = "-"
