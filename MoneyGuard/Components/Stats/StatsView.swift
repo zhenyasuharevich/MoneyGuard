@@ -8,6 +8,16 @@
 import UIKit
 import SnapKit
 
+enum Period: Int {
+  case week = 0
+  case month = 1
+  case year = 2
+  
+  static func allCasesRawValues() -> [String] {
+    return ["Week","Month","Year"]
+  }
+}
+
 class StatsView: UIView {
 
   private let statsHeaderView = UIView()
@@ -19,6 +29,8 @@ class StatsView: UIView {
   private let statsMainButton = UIButton()
   
   private let statsHeaderLineView = UIView()
+  
+  private let periodSegmentedControl =  UISegmentedControl(items: Period.allCasesRawValues())
   
   private var currentColorTheme: ColorThemeProtocol?
   private var currentTheme: ThemeType?
@@ -46,6 +58,10 @@ class StatsView: UIView {
     print("button tapped!")
   }
   
+  @objc private func periodControlValueChanged() {
+    print(periodSegmentedControl.selectedSegmentIndex)
+  }
+  
 }
 
 extension StatsView {
@@ -61,6 +77,7 @@ extension StatsView {
     statsButtonView.addSubview(statsButtonImageView)
     statsButtonView.addSubview(statsMainButton)
     addSubview(statsHeaderLineView)
+    addSubview(periodSegmentedControl)
     
     
     statsHeaderView.snp.makeConstraints{ make in
@@ -117,6 +134,15 @@ extension StatsView {
       make.trailing.equalToSuperview().offset(-20)
       make.height.equalTo(1)
     }
+    
+    periodSegmentedControl.snp.makeConstraints { make in
+      make.leading.equalToSuperview().offset(16)
+      make.trailing.equalToSuperview().offset(-16)
+      make.top.equalTo(statsHeaderView.snp.bottom).offset(16)
+      make.height.equalTo(52)
+    }
+    
+//    periodSegmentedControl.addTarget(self, action: #selector(periodControlValueChanged), for: .valueChanged)
     
   }
   
