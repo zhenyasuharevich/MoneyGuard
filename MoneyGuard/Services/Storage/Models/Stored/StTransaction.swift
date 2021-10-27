@@ -16,9 +16,10 @@ class StTransaction: Object {
   @objc dynamic var paymentName: String = ""
   @objc dynamic var categoryName: String?
   
-  convenience init(identifier: String, date: Date, description: String?, type: TransactionType, paymentName: String, categoryName: String?) {
+  convenience init(identifier: String, amount: Double, date: Date, description: String?, type: TransactionType, paymentName: String, categoryName: String?) {
     self.init()
     self.identifier = identifier
+    self.amount = amount
     self.date = date
     self.transactionDescription = description
     self.paymentName = paymentName
