@@ -14,9 +14,7 @@ protocol SettingsControllerDelegate: AnyObject {
 
 final class SettingsController: UIViewController {
   
-  private let topBar = UIView()
-  private let returnButton = UIButton()
-  private let screenNameLabel = UILabel()
+  private let topBar = TopBar(title: "Settings")
   
   private let colorThemeLabel = UILabel()
   private let lightThemeButton = UIButton()
@@ -37,10 +35,8 @@ final class SettingsController: UIViewController {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     
-    topBar.backgroundColor = colorTheme.formBackgroundColor
+    topBar.setupColorTheme(colorTheme, theme)
     view.backgroundColor = colorTheme.backgroundColor
-    returnButton.setTitleColor(colorTheme.textColor, for: .normal)
-    screenNameLabel.textColor = colorTheme.textColor
     colorThemeLabel.textColor = colorTheme.textColor
     
     deselectButtons(colorTheme: colorTheme)
@@ -75,10 +71,6 @@ final class SettingsController: UIViewController {
     button.setTitleColor(.white, for: .normal)
   }
   
-  @objc private func returnButtonPressed() {
-    self.dismiss(animated: true, completion: nil)
-  }
-  
   @objc private func buttonPressed(_ sender: UIButton) {
     if sender == self.lightThemeButton {
       delegate?.settingsChangeTheme(.light)
@@ -102,9 +94,6 @@ extension SettingsController {
     view.addSubview(buttonsStackView)
     view.addSubview(colorThemeLabel)
     
-    topBar.addSubview(returnButton)
-    topBar.addSubview(screenNameLabel)
-    
     topBar.snp.makeConstraints { make in
       make.leading.trailing.top.equalToSuperview()
       make.height.equalTo(DashboardConstants.TopBar.height)
@@ -112,23 +101,7 @@ extension SettingsController {
     topBar.layer.cornerRadius = 20
     topBar.layer.masksToBounds = true
     topBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    
-    returnButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-28)
-      make.leading.equalToSuperview().offset(28)
-      make.height.equalTo(24)
-      make.width.equalTo(24)
-    }
-    returnButton.setTitle("←", for: .normal)
-    returnButton.addTarget(self, action: #selector(returnButtonPressed), for: .touchUpInside)
-    returnButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
-    
-    screenNameLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(returnButton)
-      make.centerX.equalToSuperview()
-    }
-    screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
-    screenNameLabel.text = "Settings"
+    topBar.delegate = self
     
     colorThemeLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(16)
@@ -173,4 +146,10 @@ extension SettingsController {
     buttonsStackView.addArrangedSubview(systemThemeButton)
   }
   
+}
+
+extension SettingsController: TopBarDelegate {
+  func returnButtonPressed() {
+    dismiss(animated: true, completion: nil)
+  }
 }

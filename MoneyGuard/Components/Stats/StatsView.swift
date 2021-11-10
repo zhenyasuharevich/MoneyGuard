@@ -36,6 +36,7 @@ enum Period: Int {
 
 protocol StatsViewDelegate: AnyObject {
   func statsViewPeriodDidChange()
+  func statsViewShowDetailsController()
 }
 
 class StatsView: UIView {

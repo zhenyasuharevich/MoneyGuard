@@ -39,7 +39,7 @@ final class DashboardViewController: BaseController {
   private let settingsScreen = SettingsController()
   private let transactionsScreen = TransactionsViewController()
   private let categoriesScreen = CategoriesViewController(contentType: .listWithInteractiveCell)
-  private let paymentsScreen = PaymentsScreenViewController(contentType: .listWithInteractiveCell)
+  private let paymentsScreen = PaymentsViewController(contentType: .listWithInteractiveCell)
 
   var categories: [Category] = []
   var payments: [Payment] = []
@@ -397,6 +397,13 @@ extension DashboardViewController: TopBarViewDelegate {
 
 extension DashboardViewController: StatsViewDelegate {
   func statsViewPeriodDidChange() { setupStatsComponent() }
+  
+  func statsViewShowDetailsController() {
+    let statsController = StatsController()
+    
+    present(statsController, animated: true)
+  }
+  
 }
 
 extension DashboardViewController: PaymentsViewDelegate {
@@ -524,7 +531,7 @@ extension DashboardViewController: AddTransactionViewDelegate {
   }
   
   func addTransactionChoosePaymentPressed() {
-    let paymentsController = PaymentsScreenViewController(contentType: .scrollingListForChoose)
+    let paymentsController = PaymentsViewController(contentType: .scrollingListForChoose)
     
     if let colorTheme = self.colorTheme,
        let theme = self.theme {
@@ -565,7 +572,7 @@ extension DashboardViewController: SettingsControllerDelegate {
   func settingsChangeTheme(_ newTheme: ThemeType) { colorSchemeManager.currentTheme = newTheme }
 }
 
-extension DashboardViewController: PaymentsScreenViewControllerDelegate {
+extension DashboardViewController: PaymentsViewControllerDelegate {
   
   func removePayment(for indexPath: IndexPath) {
     let payment = payments.remove(at: indexPath.row)
