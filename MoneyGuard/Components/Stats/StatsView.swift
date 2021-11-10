@@ -89,7 +89,7 @@ class StatsView: UIView {
   }
   
   @objc func buttonPressed() {
-    print("button tapped!")
+    delegate?.statsViewShowDetailsController()
   }
   
   @objc private func periodControlValueChanged() {

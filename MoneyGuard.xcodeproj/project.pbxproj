@@ -283,7 +283,6 @@
 			children = (
 				7279635226B05ED6003B1E86 /* App */,
 				723B15D826CD7A990093FD77 /* Components */,
-				72B93DA526D7C101004396D7 /* UIElements */,
 				7279635526B05F2F003B1E86 /* Resources */,
 				7279635326B05EFF003B1E86 /* Screens */,
 				723B15D126CD71860093FD77 /* Services */,
@@ -331,13 +330,6 @@
 				72A0A65D26D3E2010008902A /* LastTransactionsCell.swift */,
 			);
 			path = LastTransactions;
-			sourceTree = "<group>";
-		};
-		72B93DA526D7C101004396D7 /* UIElements */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UIElements;
 			sourceTree = "<group>";
 		};
 		72E3C3AE26FA02D60034F3D4 /* SettingsScreen */ = {

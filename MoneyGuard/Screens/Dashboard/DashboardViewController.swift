@@ -401,6 +401,13 @@ extension DashboardViewController: StatsViewDelegate {
   func statsViewShowDetailsController() {
     let statsController = StatsController()
     
+    statsController.modalPresentationStyle = .fullScreen
+    
+    if let colorTheme = self.colorTheme,
+       let theme = self.theme {
+      statsController.setupColorTheme(colorTheme, theme)
+    }
+    
     present(statsController, animated: true)
   }
   
