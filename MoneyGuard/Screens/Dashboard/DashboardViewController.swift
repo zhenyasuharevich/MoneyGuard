@@ -183,6 +183,37 @@ final class DashboardViewController: BaseController {
       self.categoriesView.setData(categories: self.categories)
       self.paymentsView.setData(payments: self.payments)
       self.lastTransactions.setData(transactions: self.transactions)
+      self.setupStatsComponent()
+    }
+  }
+  
+  private func setupStatsComponent() {
+    if let currentSelectedPeriod = statsView.getPeriod() {
+      statsView.isUserInteractionEnabled = false
+      
+      let dateRange = currentSelectedPeriod.getDateRange()
+      
+      let sortedTransactions = transactions.filter { $0.date > dateRange.startDate && $0.date < dateRange.endDate }
+      
+      let incomeTransactions = sortedTransactions.filter { $0.type == .getMoney }
+      let spendTransactions = sortedTransactions.filter { $0.type == .sendMoney }
+      
+      var summaryIncome: Double = 0
+      var summarySpend: Double = 0
+      
+      for transaction in incomeTransactions {
+        summaryIncome += transaction.amount
+      }
+      
+      for transaction in spendTransactions {
+        summarySpend += transaction.amount
+      }
+      
+      statsView.setData(object: SummaryStatsModel(income: Int(summaryIncome),
+                                                  spend: Int(summarySpend)))
+      statsView.isUserInteractionEnabled = true
+    } else {
+      print(#line,#function, "Error: Can;t get selected period for stats view")
     }
   }
   
@@ -236,6 +267,7 @@ extension DashboardViewController {
     categoriesView.delegate = self
     lastTransactions.delegate = self
     addTransactionView.delegate = self
+    statsView.delegate = self
     
     transactionButton.addTarget(self, action: #selector(transactionButtonPressed), for: .touchUpInside)
     addTransactionButton.addTarget(self, action: #selector(addTransactionButtonPressed), for: .touchUpInside)
@@ -363,6 +395,10 @@ extension DashboardViewController: TopBarViewDelegate {
   func settingsButtonPressed() { present(settingsScreen, animated: true, completion: nil) }
 }
 
+extension DashboardViewController: StatsViewDelegate {
+  func statsViewPeriodDidChange() { setupStatsComponent() }
+}
+
 extension DashboardViewController: PaymentsViewDelegate {
   func paymentPressed(for indexPath: IndexPath) { print(#line, #function, "Payment pressed with indexPath: \(indexPath)") }
   
@@ -443,6 +479,7 @@ extension DashboardViewController: AddTransactionViewDelegate {
       
       self.lastTransactions.setData(transactions: self.transactions)
       self.paymentsView.setData(payments: self.payments)
+      self.setupStatsComponent()
       
       self.state = .normal
     }
@@ -473,6 +510,7 @@ extension DashboardViewController: AddTransactionViewDelegate {
       self.lastTransactions.setData(transactions: self.transactions)
       self.paymentsView.setData(payments: self.payments)
       self.categoriesView.setData(categories: self.categories)
+      self.setupStatsComponent()
       
       self.state = .normal
     }
@@ -592,7 +630,7 @@ struct DashboardConstants {
   }
   
   struct StatsComponent {
-    static var height: CGFloat = 400 //title with button 44 + 356
+    static var height: CGFloat = 220
   }
   
   struct PaymentsComponent {
