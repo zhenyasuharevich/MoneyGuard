@@ -51,7 +51,7 @@ struct StatsPresenter {
       }
     }
     
-    return categoriesDict.map { Category(identifier: UUID().uuidString, name: $0.key, amountSpent: $0.value) }
+    return categoriesDict.map { Category(identifier: UUID().uuidString, name: $0.key, amountSpent: $0.value) }.sorted { $0.amountSpent > $1.amountSpent }
   }
   
   func getPaymentsWithSpendAmount(for period: Period) -> [Payment] {
@@ -68,7 +68,7 @@ struct StatsPresenter {
       }
     }
     
-    return paymentsDict.map { Payment(identifier: UUID().uuidString, name: $0.key, amount: $0.value, type: .other) }
+    return paymentsDict.map { Payment(identifier: UUID().uuidString, name: $0.key, amount: $0.value, type: .other) }.sorted { $0.amount > $1.amount }
   }
   
   func getPaymentsWithGetAmount(for period: Period) -> [Payment] {
@@ -85,7 +85,7 @@ struct StatsPresenter {
       }
     }
     
-    return paymentsDict.map { Payment(identifier: UUID().uuidString, name: $0.key, amount: $0.value, type: .other) }
+    return paymentsDict.map { Payment(identifier: UUID().uuidString, name: $0.key, amount: $0.value, type: .other) }.sorted { $0.amount > $1.amount }
   }
 
 }
