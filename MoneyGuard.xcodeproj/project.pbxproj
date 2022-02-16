@@ -48,7 +48,7 @@
 		72E9709C26DE4A5A0008F675 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E9709A26DE4A5A0008F675 /* StatsView.swift */; };
 		BE06F395274E6BE600CE9040 /* AAInfographics in Frameworks */ = {isa = PBXBuildFile; productRef = BE06F394274E6BE600CE9040 /* AAInfographics */; };
 		BE06F398274E6C7E00CE9040 /* SummaryStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06F397274E6C7E00CE9040 /* SummaryStatView.swift */; };
-		BE06F39A274E738600CE9040 /* StatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06F399274E738600CE9040 /* StatsModel.swift */; };
+		BE06F39A274E738600CE9040 /* StatsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE06F399274E738600CE9040 /* StatsPresenter.swift */; };
 		BE1882302720520A006102EB /* TransactionsScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18822E2720520A006102EB /* TransactionsScreenCell.swift */; };
 		BE1882312720520A006102EB /* TransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE18822F2720520A006102EB /* TransactionsViewController.swift */; };
 		BE6A9ACA27BD2A8300614350 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6A9AC927BD2A8300614350 /* ChartData.swift */; };
@@ -106,7 +106,7 @@
 		72E9709426DE46ED0008F675 /* AddPaymentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentView.swift; sourceTree = "<group>"; };
 		72E9709A26DE4A5A0008F675 /* StatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		BE06F397274E6C7E00CE9040 /* SummaryStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryStatView.swift; sourceTree = "<group>"; };
-		BE06F399274E738600CE9040 /* StatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsModel.swift; sourceTree = "<group>"; };
+		BE06F399274E738600CE9040 /* StatsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPresenter.swift; sourceTree = "<group>"; };
 		BE18822E2720520A006102EB /* TransactionsScreenCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsScreenCell.swift; sourceTree = "<group>"; };
 		BE18822F2720520A006102EB /* TransactionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsViewController.swift; sourceTree = "<group>"; };
 		BE6A9AC927BD2A8300614350 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
@@ -402,7 +402,7 @@
 		BE6A9ACB27BD2A9000614350 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				BE06F399274E738600CE9040 /* StatsModel.swift */,
+				BE06F399274E738600CE9040 /* StatsPresenter.swift */,
 				BECA00B927BC2E2400CF76EA /* ChartStatsModel.swift */,
 			);
 			path = Models;
@@ -551,7 +551,7 @@
 				72282AA726CFFD310094780B /* ColorScheme.swift in Sources */,
 				7213401C271DE3A20045CBFE /* AddCategoryCell.swift in Sources */,
 				723B15DC26CD7A9A0093FD77 /* PaymentCell.swift in Sources */,
-				BE06F39A274E738600CE9040 /* StatsModel.swift in Sources */,
+				BE06F39A274E738600CE9040 /* StatsPresenter.swift in Sources */,
 				72A0A66D26D3FC570008902A /* StPayment.swift in Sources */,
 				72A0A66926D3F8F30008902A /* RealmService.swift in Sources */,
 				BE06F398274E6C7E00CE9040 /* SummaryStatView.swift in Sources */,

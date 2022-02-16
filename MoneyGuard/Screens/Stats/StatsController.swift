@@ -17,15 +17,14 @@ final class StatsController: UIViewController {
   private let topBar = TopBar(title: "Stats")
   private let summaryStatsView = SummaryStatView()
   private let barChart = AAChartView()
-  
   private let secondBarChart = AAChartView()
   
-  private var statsModel: StatsModel
+  private var statsModel: StatsPresenter
   
   init(transactions: [Transaction],
        categories: [Category],
        payments: [Payment]) {
-    self.statsModel = StatsModel(transactions: transactions, categories: categories, payments: payments)
+    self.statsModel = StatsPresenter(transactions: transactions, categories: categories, payments: payments)
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -35,6 +34,7 @@ final class StatsController: UIViewController {
     setupSubviews()
     if let period = summaryStatsView.getPeriod() {
       setupData(for: period)
+      statsModel.getCategoriesWithAmount(for: period)
     }
   }
   

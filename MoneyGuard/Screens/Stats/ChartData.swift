@@ -9,9 +9,9 @@ import Foundation
 
 class ChartData {
   
-  private var statsModel: StatsModel
+  private var statsModel: StatsPresenter
   
-  init(statsModel: StatsModel) {
+  init(statsModel: StatsPresenter) {
     self.statsModel = statsModel
   }
 
