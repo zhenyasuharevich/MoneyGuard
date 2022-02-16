@@ -399,7 +399,9 @@ extension DashboardViewController: StatsViewDelegate {
   func statsViewPeriodDidChange() { setupStatsComponent() }
   
   func statsViewShowDetailsController() {
-    let statsController = StatsController()
+    let statsController = StatsController(transactions: self.transactions,
+                                          categories: self.categories,
+                                          payments: self.payments)
     
     statsController.modalPresentationStyle = .fullScreen
     

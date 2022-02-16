@@ -140,4 +140,4 @@ extension TransactionsViewController {
   
 }
 
-extension TransactionsViewController: TopBarDelegate { func returnButtonPressed() { dismiss(animated: true) } }
+extension TransactionsViewController: TopBarDelegate { func returnButtonPressed() {  } }
