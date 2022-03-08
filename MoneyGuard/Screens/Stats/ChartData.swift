@@ -9,10 +9,10 @@ import Foundation
 
 class ChartData {
   
-  private var statsModel: StatsPresenter
+  private var statsPresenter: StatsPresenter
   
-  init(statsModel: StatsPresenter) {
-    self.statsModel = statsModel
+  init(statsPresenter: StatsPresenter) {
+    self.statsPresenter = statsPresenter
   }
 
   func setupWeekTransactions() -> ChartStatsModel {
@@ -28,7 +28,7 @@ class ChartData {
       startDate += TimeInterval(60*60*24)
       
       var allTransactions: [Transaction] = []
-      statsModel.transactions.forEach { transaction in
+      statsPresenter.transactions.forEach { transaction in
         let order = Calendar.current.compare(transaction.date, to: startDate, toGranularity: .day)
         
         if order == .orderedSame {
@@ -43,7 +43,7 @@ class ChartData {
       
     }
     
-    return ChartStatsModel(income: weekIncomes,
+    return ChartStatsModel(name: [""], income: weekIncomes,
                              spend: weekExpenses)
   }
   
@@ -62,9 +62,9 @@ class ChartData {
       var allTransactions: [Transaction] = []
       
       if intermediate >= dateRange.endDate {
-        allTransactions = statsModel.transactions.filter { $0.date > startDate && $0.date < dateRange.endDate }
+        allTransactions = statsPresenter.transactions.filter { $0.date > startDate && $0.date < dateRange.endDate }
       } else {
-        allTransactions = statsModel.transactions.filter { $0.date > startDate && $0.date < intermediate }
+        allTransactions = statsPresenter.transactions.filter { $0.date > startDate && $0.date < intermediate }
       }
       
       let summary = addAllTransactions(allTransactions: allTransactions)
@@ -76,7 +76,7 @@ class ChartData {
       intermediate += TimeInterval(60*60*24*7)
     }
     
-    return ChartStatsModel(income: monthIncomes,
+    return ChartStatsModel(name: [""], income: monthIncomes,
                              spend: monthExpenses)
   }
   
@@ -95,9 +95,9 @@ class ChartData {
       var allTransactions: [Transaction] = []
       
       if intermediate >= dateRange.endDate {
-        allTransactions = statsModel.transactions.filter { $0.date > startDate && $0.date < dateRange.endDate }
+        allTransactions = statsPresenter.transactions.filter { $0.date > startDate && $0.date < dateRange.endDate }
       } else {
-        allTransactions = statsModel.transactions.filter { $0.date > startDate && $0.date < intermediate }
+        allTransactions = statsPresenter.transactions.filter { $0.date > startDate && $0.date < intermediate }
       }
       
       let summary = addAllTransactions(allTransactions: allTransactions)
@@ -109,7 +109,7 @@ class ChartData {
       intermediate += TimeInterval(60*60*24*30.417)
     }
   
-    return ChartStatsModel(income: yearIncomes,
+    return ChartStatsModel(name: [""], income: yearIncomes,
                              spend: yearExpenses)
   }
   
@@ -130,6 +130,63 @@ class ChartData {
     }
     
     return ChartPartsModel(income: summaryIncome, spend: summarySpend)
+  }
+  
+  func setupCategoriesWithAmount(period: Period) -> ChartStatsModel {
+    let allCategories = statsPresenter.getCategoriesWithAmount(for: period)
+  
+    var categoriesNames: [String] = []
+    var categoriesAmounts: [Double] = []
+    
+    allCategories.forEach { category in
+      categoriesNames.append(category.name)
+      categoriesAmounts.append(category.amountSpent)
+    }
+    
+    if categoriesNames.count > 5 && categoriesAmounts.count > 5 {
+      categoriesNames = Array(categoriesNames.prefix(5))
+      categoriesAmounts = Array(categoriesAmounts.prefix(5))
+    }
+    
+    return ChartStatsModel(name: categoriesNames, income: [0.0], spend: categoriesAmounts)
+  }
+  
+  func setupPaymentsWithSpendAmount(period: Period) -> ChartStatsModel {
+    let allPayments = statsPresenter.getPaymentsWithSpendAmount(for: period)
+  
+    var paymentsNames: [String] = []
+    var paymentsAmounts: [Double] = []
+    
+    allPayments.forEach { payment in
+      paymentsNames.append(payment.name)
+      paymentsAmounts.append(payment.amount)
+    }
+    
+    if paymentsNames.count > 3 && paymentsAmounts.count > 3 {
+      paymentsNames = Array(paymentsNames.prefix(3))
+      paymentsAmounts = Array(paymentsAmounts.prefix(3))
+    }
+    
+    return ChartStatsModel(name: paymentsNames, income: [0.0], spend: paymentsAmounts)
+  }
+  
+  func setupPaymentsWithGetAmount(period: Period) -> ChartStatsModel {
+    let allPayments = statsPresenter.getPaymentsWithGetAmount(for: period)
+  
+    var paymentsNames: [String] = []
+    var paymentsAmounts: [Double] = []
+    
+    allPayments.forEach { payment in
+      paymentsNames.append(payment.name)
+      paymentsAmounts.append(payment.amount)
+    }
+    
+    if paymentsNames.count > 3 && paymentsAmounts.count > 3 {
+      paymentsNames = Array(paymentsNames.prefix(3))
+      paymentsAmounts = Array(paymentsAmounts.prefix(3))
+    }
+    
+    return ChartStatsModel(name: paymentsNames, income: paymentsAmounts, spend: [0.0])
   }
   
 }

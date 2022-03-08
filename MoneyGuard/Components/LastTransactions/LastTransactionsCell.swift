@@ -139,10 +139,12 @@ extension LastTransactionsCell {
     paymentNameLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview()
       make.top.equalToSuperview()
+      make.width.equalTo(UIScreen.main.bounds.width - 144)
     }
     
     paymentNameLabel.font = .systemFont(ofSize: 20, weight: .regular)
     paymentNameLabel.text = "Payment"
+  
     
     transactionAmountLabel.snp.makeConstraints{ make in
       make.centerY.equalToSuperview()

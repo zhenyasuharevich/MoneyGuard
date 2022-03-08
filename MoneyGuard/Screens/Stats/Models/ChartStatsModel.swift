@@ -8,6 +8,7 @@
 import Foundation
 
 struct ChartStatsModel {
+  let name: [String]
   let income: [Double]
   let spend: [Double]
 }
@@ -16,3 +17,8 @@ struct ChartPartsModel {
   let income: Double
   let spend: Double
 }
+
+//struct ChartModel {
+//  let name: String
+//  let amoun: Double
+//}

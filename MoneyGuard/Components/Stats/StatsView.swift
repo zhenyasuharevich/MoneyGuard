@@ -160,13 +160,15 @@ extension StatsView {
       make.height.width.equalTo(24)
     }
     
-    statsButtonImageView.backgroundColor = .red
+    statsButtonImageView.backgroundColor = .clear
+    statsButtonImageView.image = UIImage(named: "barChart")?.withTintColor(.white)
     
     statsMainButton.snp.makeConstraints{ make in
       make.top.trailing.bottom.leading.equalToSuperview()
     }
     
     statsMainButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+//    statsMainButton.setImage(statsButtonImage, for: .normal)
     
     statsHeaderLineView.snp.makeConstraints{ make in
       make.top.equalTo(statsHeaderView.snp.bottom)

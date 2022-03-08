@@ -16,8 +16,11 @@ final class StatsController: UIViewController {
   
   private let topBar = TopBar(title: "Stats")
   private let summaryStatsView = SummaryStatView()
-  private let barChart = AAChartView()
-  private let secondBarChart = AAChartView()
+  private let transactionsBarChart = AAChartView()
+  private let favouriteCategories = AAChartView()
+  private let paymentsWithSpendAmount = AAChartView()
+  private let paymentsWithGetAmount = AAChartView()
+  
   
   private var statsModel: StatsPresenter
   
@@ -34,7 +37,7 @@ final class StatsController: UIViewController {
     setupSubviews()
     if let period = summaryStatsView.getPeriod() {
       setupData(for: period)
-      statsModel.getCategoriesWithAmount(for: period)
+     
     }
   }
   
@@ -52,11 +55,15 @@ final class StatsController: UIViewController {
     summaryStatsView.setData(object: summaryStatsObject)
     summaryStatsView.isUserInteractionEnabled = true
   
-    let chartData = ChartData(statsModel: statsModel)
+    let chartData = ChartData(statsPresenter: statsModel)
     
-    setupBarChart(for: period, chartData: chartData, chartType: .column, chartView: barChart)
     
-    setupBarChart(for: period, chartData: chartData, chartType: .area, chartView: secondBarChart)
+    setupTransactionsBarChart(for: period, chartData: chartData, chartType: .line, chartView: transactionsBarChart)
+    
+    setupOtherBarChart(for: period,  chartData: chartData, chartType: .area, chartView: favouriteCategories)
+    setupPaymentsWithGetAmounts(for: period,  chartData: chartData, chartType: .area, chartView: paymentsWithGetAmount)
+    setupPaymentsWithSpendAmounts(for: period,  chartData: chartData, chartType: .area, chartView: paymentsWithSpendAmount)
+    
   }
   
   func setupCategories(period: Period) -> [String]  {
@@ -84,31 +91,22 @@ final class StatsController: UIViewController {
     return categories
   }
   
-//  func setupChartModel() -> AAChartModel {
-//    let model = AAChartModel()
-//      .chartType(.bar)
-//      .animationType(.bounce)
-//      .dataLabelsEnabled(false)
-//      .touchEventEnabled(true)
-//
-//    return model
-//  }
-  
-  func setupBarChart(for period: Period, chartData: ChartData,chartType: AAChartType, chartView: AAChartView) {
-   
+  func setupTransactionsBarChart(for period: Period, chartData: ChartData,chartType: AAChartType, chartView: AAChartView) {
+       
     let model = AAChartModel()
       .chartType(chartType)
       .animationType(.bounce)
       .dataLabelsEnabled(false)
       .touchEventEnabled(true)
-
-    switch period {
       
+    switch period {
+
     case .week :
       let categories = setupCategories(period: period)
       let weekTransactions = chartData.setupWeekTransactions()
       
       model.categories(categories)
+        .title("Week transactions")
         .series([
           AASeriesElement()
             .name("Incomes")
@@ -123,6 +121,7 @@ final class StatsController: UIViewController {
       let weeks = ["First", "Second", "Third", "Fourth", "Fifth"]
       
       model.categories(weeks)
+        .title("Month transactions")
         .series([
           AASeriesElement()
             .name("Incomes")
@@ -137,6 +136,8 @@ final class StatsController: UIViewController {
       let yearTransactions = chartData.setupYearTransactions()
       
       model.categories(categories)
+        .title("Year transactions")
+       
         .series([
           AASeriesElement()
             .name("Incomes")
@@ -152,7 +153,151 @@ final class StatsController: UIViewController {
     chartView.aa_drawChartWithChartModel(model)
   }
   
+  
+  func setupOtherBarChart(for period: Period, chartData: ChartData, chartType: AAChartType, chartView: AAChartView) {
+   
+    let model = AAChartModel()
+      .chartType(chartType)
+      .animationType(.bounce)
+      .dataLabelsEnabled(false)
+      .touchEventEnabled(true)
+    
+    switch period {
+      
+    case .week :
+      let categories = chartData.setupCategoriesWithAmount(period: period)
+      
+      model.categories(categories.name)
+        .title("Week favourite categories")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+      
+    case .month :
+      let categories = chartData.setupCategoriesWithAmount(period: period)
+      model.categories(categories.name)
+        .title("Month favourite categories")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+      
+    case .year :
+      let categories = chartData.setupCategoriesWithAmount(period: period)
+      model.categories(categories.name)
+        .title("Year favourite categories")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+    }
+    
+    model.colorsTheme(["#D23030"])
+    
+    chartView.aa_drawChartWithChartModel(model)
+  }
+  
+  func setupPaymentsWithGetAmounts(for period: Period, chartData: ChartData, chartType: AAChartType, chartView: AAChartView) {
+   
+    let model = AAChartModel()
+      .chartType(chartType)
+      .animationType(.bounce)
+      .dataLabelsEnabled(false)
+      .touchEventEnabled(true)
+    
+    switch period {
+      
+    case .week :
+      let categories = chartData.setupPaymentsWithGetAmount(period: period)
+      
+      model.categories(categories.name)
+        .title("Week most income  payments")
+        .series([
+          AASeriesElement()
+            .name("Incomes")
+            .data(categories.income),
+        ])
+      
+    case .month :
+      let categories = chartData.setupPaymentsWithGetAmount(period: period)
+      model.categories(categories.name)
+        .title("Month most income  payments")
+        .series([
+          AASeriesElement()
+            .name("Incomes")
+            .data(categories.income),
+        ])
+      
+    case .year :
+      let categories = chartData.setupPaymentsWithGetAmount(period: period)
+      model.categories(categories.name)
+        .title("Year most income  payments")
+        .series([
+          AASeriesElement()
+            .name("Incomes")
+            .data(categories.income),
+        ])
+    }
+    
+    model.colorsTheme(["#52CC39"])
+    
+    chartView.aa_drawChartWithChartModel(model)
+  }
+  
+  func setupPaymentsWithSpendAmounts(for period: Period, chartData: ChartData, chartType: AAChartType, chartView: AAChartView) {
+   
+    let model = AAChartModel()
+      .chartType(chartType)
+      .animationType(.bounce)
+      .dataLabelsEnabled(false)
+      .touchEventEnabled(true)
+    
+    switch period {
+      
+    case .week :
+      let categories = chartData.setupPaymentsWithSpendAmount(period: period)
+      
+      model.categories(categories.name)
+        .title("Week most spend payments")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+      
+    case .month :
+      let categories = chartData.setupPaymentsWithSpendAmount(period: period)
+      model.categories(categories.name)
+        .title("Month most spend payments")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+      
+    case .year :
+      let categories = chartData.setupPaymentsWithSpendAmount(period: period)
+      model.categories(categories.name)
+        .title("Year most spend payments")
+        .series([
+          AASeriesElement()
+            .name("Еxpenses")
+            .data(categories.spend),
+        ])
+    }
+    
+    model.colorsTheme(["#D23030"])
+    
+    chartView.aa_drawChartWithChartModel(model)
+  }
+  
 }
+
+
 
 extension StatsController {
   
@@ -164,8 +309,10 @@ extension StatsController {
     mainScrollView.addSubview(scrollContentView)
     
     scrollContentView.addSubview(summaryStatsView)
-    scrollContentView.addSubview(barChart)
-    scrollContentView.addSubview(secondBarChart)
+    scrollContentView.addSubview(transactionsBarChart)
+    scrollContentView.addSubview(favouriteCategories)
+    scrollContentView.addSubview(paymentsWithGetAmount)
+    scrollContentView.addSubview(paymentsWithSpendAmount)
     
     topBar.snp.makeConstraints { make in
       make.leading.trailing.top.equalToSuperview()
@@ -184,7 +331,7 @@ extension StatsController {
     
     scrollContentView.snp.makeConstraints { make in
       make.leading.trailing.top.bottom.equalToSuperview()
-      make.height.equalTo(1200)
+      make.height.equalTo(1500)
       make.left.right.equalTo(view)
     }
     
@@ -196,22 +343,40 @@ extension StatsController {
     }
     summaryStatsView.delegate = self
     
-    barChart.snp.makeConstraints { make in
+    transactionsBarChart.snp.makeConstraints { make in
       make.top.equalTo(summaryStatsView.snp.bottom).offset(20)
       make.leading.equalTo(8)
       make.trailing.equalTo(-8)
       make.height.equalTo(296)
     }
-    barChart.isClearBackgroundColor = true
+    transactionsBarChart.isClearBackgroundColor = true
     
 
-    secondBarChart.snp.makeConstraints { make in
-      make.top.equalTo(barChart.snp.bottom).offset(40)
+    favouriteCategories.snp.makeConstraints { make in
+      make.top.equalTo(transactionsBarChart.snp.bottom).offset(40)
       make.leading.equalTo(8)
       make.trailing.equalTo(-8)
       make.height.equalTo(300)
     }
-    secondBarChart.isClearBackgroundColor = true
+    favouriteCategories.isClearBackgroundColor = true
+    
+    paymentsWithGetAmount.snp.makeConstraints { make in
+      make.top.equalTo(favouriteCategories.snp.bottom).offset(40)
+      make.leading.equalTo(8)
+      make.trailing.equalTo(-8)
+      make.height.equalTo(300)
+    }
+    paymentsWithGetAmount.isClearBackgroundColor = true
+    
+    paymentsWithSpendAmount.snp.makeConstraints { make in
+      make.top.equalTo(paymentsWithGetAmount.snp.bottom).offset(40)
+      make.leading.equalTo(8)
+      make.trailing.equalTo(-8)
+      make.height.equalTo(300)
+    }
+    paymentsWithSpendAmount.isClearBackgroundColor = true
+    
+   
   }
   
 }
