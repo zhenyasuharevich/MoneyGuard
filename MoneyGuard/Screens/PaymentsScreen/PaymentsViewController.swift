@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-protocol PaymentsScreenViewControllerDelegate: AnyObject {
+protocol PaymentsViewControllerDelegate: AnyObject {
   func removePayment(for indexPath: IndexPath)
   func addNewPayment(payment: Payment)
 }
@@ -18,11 +18,9 @@ enum PaymentsViewControllerContentType {
   case listWithInteractiveCell
 }
 
-final class PaymentsScreenViewController: UIViewController {
+final class PaymentsViewController: UIViewController {
   
-  private let topBar = UIView()
-  private let returnButton = UIButton()
-  private let screenNameLabel = UILabel()
+  private let topBar = TopBar(title: "Payments")
   private let overlayView = UIView()
   
   var selectPaymentCompletion: ((Payment) -> Void)?
@@ -44,7 +42,7 @@ final class PaymentsScreenViewController: UIViewController {
     return cv
   }()
   
-  weak var delegate: PaymentsScreenViewControllerDelegate?
+  weak var delegate: PaymentsViewControllerDelegate?
   
   private var payments: [Payment] = []
   
@@ -69,15 +67,9 @@ final class PaymentsScreenViewController: UIViewController {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     
-    topBar.backgroundColor = colorTheme.formBackgroundColor
+    topBar.setupColorTheme(colorTheme, theme)
     view.backgroundColor = colorTheme.backgroundColor
-    returnButton.setTitleColor(colorTheme.textColor, for: .normal)
-    screenNameLabel.textColor = colorTheme.textColor
     collectionView.reloadData()
-  }
-  
-  @objc private func returnButtonPressed() {
-    self.dismiss(animated: true, completion: nil)
   }
   
   func setData(payment: [Payment]) {
@@ -89,7 +81,7 @@ final class PaymentsScreenViewController: UIViewController {
 
 }
 
-extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
+extension PaymentsViewController : UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let widthCell = collectionView.frame.width - 32
@@ -107,7 +99,7 @@ extension PaymentsScreenViewController : UICollectionViewDelegateFlowLayout {
 
 }
 
-extension PaymentsScreenViewController : UICollectionViewDelegate {
+extension PaymentsViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard !(self.contentType == .listWithInteractiveCell) else { return }
     guard let completion = self.selectPaymentCompletion else { print(#line,#function,"Error: no select paymnet completion"); return }
@@ -121,7 +113,7 @@ extension PaymentsScreenViewController : UICollectionViewDelegate {
   
 }
 
-extension PaymentsScreenViewController : UICollectionViewDataSource {
+extension PaymentsViewController : UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     
@@ -176,15 +168,12 @@ extension PaymentsScreenViewController : UICollectionViewDataSource {
   
 }
 
-extension PaymentsScreenViewController {
+extension PaymentsViewController {
   
   private func setupSubviews() {
     view.backgroundColor = .clear
     view.addSubview(topBar)
-    topBar.addSubview(returnButton)
-    topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
-//    view.addSubview(addPaymentView)
     view.addSubview(overlayView)
     
     topBar.snp.makeConstraints { make in
@@ -194,33 +183,7 @@ extension PaymentsScreenViewController {
     topBar.layer.cornerRadius = 20
     topBar.layer.masksToBounds = true
     topBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    
-    returnButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-28)
-      make.leading.equalToSuperview().offset(28)
-      make.height.equalTo(24)
-      make.width.equalTo(24)
-    }
-    returnButton.setTitle("←", for: .normal)
-    returnButton.addTarget(self, action: #selector(returnButtonPressed), for: .touchUpInside)
-    returnButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
-    
-    screenNameLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(returnButton)
-      make.centerX.equalToSuperview()
-    }
-    screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
-    screenNameLabel.text = "All payments"
-    
-//    addPaymentView.snp.makeConstraints { make in
-//      make.top.equalToSuperview().offset(30)
-//      make.trailing.equalToSuperview().offset(-16)
-//      make.leading.equalToSuperview().offset(16)
-//      make.height.equalTo(188)
-//    }
-    
-//    //    addPaymentView.delegate = self
-//    addPaymentView.isHidden = true
+    topBar.delegate = self
     
     overlayView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
@@ -241,7 +204,7 @@ extension PaymentsScreenViewController {
   }
 }
 
-extension PaymentsScreenViewController: CellDelegate {
+extension PaymentsViewController: CellDelegate {
   func deleteButtonPressed(for indexPath: IndexPath) {
     let alert = UIAlertController(title: "Are you sure you want to delete this payment?", message: nil, preferredStyle: .alert)
     
@@ -273,9 +236,15 @@ extension PaymentsScreenViewController: CellDelegate {
   
 }
 
-extension PaymentsScreenViewController: AddPaymentViewDelegate {
+extension PaymentsViewController: AddPaymentViewDelegate {
   func addPayment(newPayment: Payment) {
     guard let delegate = self.delegate else { return }
     delegate.addNewPayment(payment: newPayment)
+  }
+}
+
+extension PaymentsViewController: TopBarDelegate {
+  func returnButtonPressed() {
+    dismiss(animated: true)
   }
 }

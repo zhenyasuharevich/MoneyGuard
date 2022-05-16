@@ -14,9 +14,7 @@ protocol TransactionsViewControllerDelegate: AnyObject {
 
 class TransactionsViewController: UIViewController {
   
-  private let topBar = UIView()
-  private let returnButton = UIButton()
-  private let screenNameLabel = UILabel()
+  private let topBar = TopBar(title: "Transactions")
   
   lazy var collectionView : UICollectionView = {
      let layout = UICollectionViewFlowLayout()
@@ -48,17 +46,10 @@ class TransactionsViewController: UIViewController {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     
-    topBar.backgroundColor = colorTheme.formBackgroundColor
+    topBar.setupColorTheme(colorTheme, theme)
     view.backgroundColor = colorTheme.backgroundColor
-    returnButton.setTitleColor(colorTheme.textColor, for: .normal)
-    screenNameLabel.textColor = colorTheme.textColor
-    
     
     collectionView.reloadData()
-  }
-  
-  @objc private func returnButtonPressed() {
-    self.dismiss(animated: true, completion: nil)
   }
   
   func setData(transactions: [Transaction]) {
@@ -127,8 +118,6 @@ extension TransactionsViewController {
   private func setupSubviews() {
     
     view.addSubview(topBar)
-    topBar.addSubview(returnButton)
-    topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
     
     topBar.snp.makeConstraints { make in
@@ -139,25 +128,7 @@ extension TransactionsViewController {
     topBar.layer.cornerRadius = 20
     topBar.layer.masksToBounds = true
     topBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    
-    returnButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-28)
-      make.leading.equalToSuperview().offset(28)
-      make.height.equalTo(24)
-      make.width.equalTo(24)
-    }
-    
-    returnButton.setTitle("←", for: .normal)
-    returnButton.addTarget(self, action: #selector(returnButtonPressed), for: .touchUpInside)
-    returnButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
-    
-    screenNameLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(returnButton)
-      make.centerX.equalToSuperview()
-    }
-    
-    screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
-    screenNameLabel.text = "All transactions"
+    topBar.delegate = self
     
     collectionView.snp.makeConstraints { make in
       make.leading.trailing.bottom.equalToSuperview()
@@ -168,3 +139,5 @@ extension TransactionsViewController {
   }
   
 }
+
+extension TransactionsViewController: TopBarDelegate { func returnButtonPressed() { dismiss(animated: true, completion: nil) } }

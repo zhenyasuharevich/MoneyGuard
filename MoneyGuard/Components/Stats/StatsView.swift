@@ -36,6 +36,7 @@ enum Period: Int {
 
 protocol StatsViewDelegate: AnyObject {
   func statsViewPeriodDidChange()
+  func statsViewShowDetailsController()
 }
 
 class StatsView: UIView {
@@ -88,7 +89,7 @@ class StatsView: UIView {
   }
   
   @objc func buttonPressed() {
-    print("button tapped!")
+    delegate?.statsViewShowDetailsController()
   }
   
   @objc private func periodControlValueChanged() {
@@ -159,13 +160,15 @@ extension StatsView {
       make.height.width.equalTo(24)
     }
     
-    statsButtonImageView.backgroundColor = .red
+    statsButtonImageView.backgroundColor = .clear
+    statsButtonImageView.image = UIImage(named: "barChart")?.withTintColor(.white)
     
     statsMainButton.snp.makeConstraints{ make in
       make.top.trailing.bottom.leading.equalToSuperview()
     }
     
     statsMainButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+//    statsMainButton.setImage(statsButtonImage, for: .normal)
     
     statsHeaderLineView.snp.makeConstraints{ make in
       make.top.equalTo(statsHeaderView.snp.bottom)
