@@ -19,9 +19,7 @@ enum CategoriesViewControllerContentType {
 
 final class CategoriesViewController: UIViewController {
   
-  private let topBar = UIView()
-  private let returnButton = UIButton()
-  private let screenNameLabel = UILabel()
+  private let topBar = TopBar(title: "Categories")
   
   var selectCategoryCompletion: ((Category) -> Void)?
   
@@ -68,16 +66,9 @@ final class CategoriesViewController: UIViewController {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
     
-    topBar.backgroundColor = colorTheme.formBackgroundColor
+    topBar.setupColorTheme(colorTheme, theme)
     view.backgroundColor = colorTheme.backgroundColor
-    returnButton.setTitleColor(colorTheme.textColor, for: .normal)
-    screenNameLabel.textColor = colorTheme.textColor
-//    addCategoryView.setupColorTheme(colorTheme, theme)
     collectionView.reloadData()
-  }
-  
-  @objc private func returnButtonPressed() {
-    self.dismiss(animated: true, completion: nil)
   }
   
   func setData(categories: [Category]) {
@@ -175,8 +166,6 @@ extension CategoriesViewController {
   private func setupSubview() {
     view.backgroundColor = .clear
     view.addSubview(topBar)
-    topBar.addSubview(returnButton)
-    topBar.addSubview(screenNameLabel)
     view.addSubview(collectionView)
     
     topBar.snp.makeConstraints { make in
@@ -187,25 +176,7 @@ extension CategoriesViewController {
     topBar.layer.cornerRadius = 20
     topBar.layer.masksToBounds = true
     topBar.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    
-    returnButton.snp.makeConstraints { make in
-      make.bottom.equalToSuperview().offset(-28)
-      make.leading.equalToSuperview().offset(28)
-      make.height.equalTo(24)
-      make.width.equalTo(24)
-    }
-    
-    returnButton.setTitle("←", for: .normal)
-    returnButton.addTarget(self, action: #selector(returnButtonPressed), for: .touchUpInside)
-    returnButton.titleLabel?.font = .systemFont(ofSize: 24, weight: .bold)
-    
-    screenNameLabel.snp.makeConstraints { make in
-      make.centerY.equalTo(returnButton)
-      make.centerX.equalToSuperview()
-    }
-    
-    screenNameLabel.font = .systemFont(ofSize: 20, weight: .medium)
-    screenNameLabel.text = "All categories"
+    topBar.delegate = self
     
     collectionView.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(8)
@@ -257,6 +228,10 @@ extension CategoriesViewController: AddCategoryViewDelegate {
     guard let delegate = self.delegate else { return }
     delegate.categoriesScreenAddNewCategoryPressed(category: newCategory)
   }
+}
+
+extension CategoriesViewController: TopBarDelegate {
+  func returnButtonPressed() { dismiss(animated: true) }
 }
 
 

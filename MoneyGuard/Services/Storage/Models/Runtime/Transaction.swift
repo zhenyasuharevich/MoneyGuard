@@ -40,6 +40,7 @@ extension Transaction: RunTimeModelProtocol {
   
   func convertToStorable() -> StorableProtocol {
     StTransaction(identifier: self.identifier,
+                  amount: self.amount,
                   date: self.date,
                   description: self.description,
                   type: self.type,

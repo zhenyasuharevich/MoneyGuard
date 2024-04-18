@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 protocol LastTransactionsViewDelegate: AnyObject {
   func lastTransactionsPressed(for indexPath: IndexPath)
@@ -17,13 +18,6 @@ final class LastTransactionsView: UIView {
   private let transactionsTitleLabel = UILabel()
   private let disclosureIndicatorImageView = UIImageView()
   private let mainActiveButton = UIButton()
-  
-  weak var delegate: LastTransactionsViewDelegate?
-  
-  private var transactions: [Transaction] = []
-  
-  private var currentColorTheme: ColorThemeProtocol?
-  private var currentTheme: ThemeType?
   
   lazy var collectionView : UICollectionView = {
     let layout = UICollectionViewFlowLayout()
@@ -41,6 +35,13 @@ final class LastTransactionsView: UIView {
     return cv
   }()
   
+  weak var delegate: LastTransactionsViewDelegate?
+  
+  private var transactions: [Transaction] = []
+  
+  private var currentColorTheme: ColorThemeProtocol?
+  private var currentTheme: ThemeType?
+  
   override init(frame: CGRect) {
     super.init(frame: .zero)
     setupSubViews()
@@ -51,6 +52,7 @@ final class LastTransactionsView: UIView {
   func setupColorTheme(_ colorTheme: ColorThemeProtocol, _ theme: ThemeType) {
     self.currentColorTheme = colorTheme
     self.currentTheme = theme
+    
     disclosureIndicatorImageView.tintColor = colorTheme.textColor
     transactionsTitleLabel.textColor = colorTheme.textColor
     
@@ -61,7 +63,9 @@ final class LastTransactionsView: UIView {
   
   func setData(transactions: [Transaction]) {
     self.transactions = transactions
-    collectionView.reloadData()
+    DispatchQueue.main.async {
+      self.collectionView.reloadData()
+    }
   }
   
 }
@@ -70,11 +74,35 @@ extension LastTransactionsView : UICollectionViewDataSource {
   
   func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
   
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 6 }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    if transactions.count < 6 {
+      print("TRANSACTIONS COUNT = \(transactions.count)")
+        return transactions.count
+    }
+    print("TRANSACTIONS COUNT = \(transactions.count)")
+    return 6
+  }
+    
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LastTransactionsCell.reuseIdentifier, for: indexPath) as? LastTransactionsCell else { print(#line,#function,"Error: Can't get LastTransactionsCell"); return UICollectionViewCell() }
-    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: 10)
+    
+    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: 6)
+   
+    let transaction = transactions[indexPath.row]
+  
+    cell.setData(transaction: transaction)
+    
+    
+    if transaction.type == .sendMoney {
+      cell.signLabel.text = "-"
+      cell.fromToLabel.text = "From:"
+      cell.imageViewTransaction.backgroundColor = .red
+    } else {
+      cell.signLabel.text = "+"
+      cell.fromToLabel.text = "To:"
+      cell.imageViewTransaction.backgroundColor = .green
+    }
     
     if let colorTheme = self.currentColorTheme,
        let theme = self.currentTheme {
@@ -90,7 +118,7 @@ extension LastTransactionsView : UICollectionViewDataSource {
 
 extension LastTransactionsView: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: 10)
+    let cellType = LastTransactionsCellType.getCellType(for: indexPath, arrayCount: transactions.count)
     
     switch cellType {
     case .otherTransactions:
@@ -109,7 +137,7 @@ extension LastTransactionsView: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { 4 }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 4 }
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 8 }
 }
 
 extension LastTransactionsView {
